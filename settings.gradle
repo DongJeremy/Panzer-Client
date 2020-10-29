@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "Panzer-Client"
+rootProject.name = "PanzerClient"
