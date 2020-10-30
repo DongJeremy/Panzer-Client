@@ -9,10 +9,10 @@ import io.reactivex.Observable;
 public interface GoodsContract {
 
     interface View extends IView {
-        void showHomeInfoData(HomeInfoModel.HomeInfo.Data homeInfoData);
+        //void showHomeInfoData(HomeInfoModel.HomeInfo.Data homeInfoData);
     }
 
     interface Model extends IModel {
-        Observable<HomeInfoModel.HomeInfo> getHomeInfoData();
+        //Observable<HomeInfoModel.HomeInfo> getHomeInfoData();
     }
 }
