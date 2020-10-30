@@ -23,29 +23,29 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class HomePageGridAdapter extends RecyclerView.Adapter<HomePageGridAdapter.ViewHolder> {
+public class HomeShortcutAdapter extends RecyclerView.Adapter<HomeShortcutAdapter.ViewHolder> {
 
-    private List<HomeInfoModel.HomeGrid.Item> mList;
+    private List<HomeInfoModel.HomeInfo.HomeShortcut> mList;
     private final Context mContext;
 
-    public HomePageGridAdapter(Context mContext) {
+    public HomeShortcutAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void setList(List<HomeInfoModel.HomeGrid.Item> list) {
+    public void setList(List<HomeInfoModel.HomeInfo.HomeShortcut> list) {
         this.mList = list;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_list_home_grid, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_list_home_shortcut, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final HomeInfoModel.HomeGrid.Item bean = mList.get(position);
+        final HomeInfoModel.HomeInfo.HomeShortcut bean = mList.get(position);
 //        final String squareType = bean.getType();
 //        final String squareData = bean.getData();
         holder.mAppCompatTextView.setText(bean.getName());

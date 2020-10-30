@@ -75,6 +75,10 @@ public class BaseApplication extends Application {
         //注册监听每个activity的生命周期,便于堆栈式管理
         registerActivityLifecycleCallbacks(mCallbacks);
         BaseShared.getInstance().init(getSharedPreferences(BaseConstant.SHARED_NAME, MODE_PRIVATE));
+        BaseToast.getInstance().init(this);
+        BaseImageLoader.getInstance().init(this);
+
+        isImage = BaseShared.getInstance().getBoolean(BaseConstant.SHARED_SETTING_IMAGE, true);
     }
 
     private void initLeakCanary() {
@@ -274,9 +278,7 @@ public class BaseApplication extends Application {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> tasksInfo = manager.getRunningTasks(1);
         if (tasksInfo.size() > 0) {
-            if (getPackageName().equals(tasksInfo.get(0).topActivity.getPackageName())) {
-                return true;
-            }
+            return getPackageName().equals(tasksInfo.get(0).topActivity.getPackageName());
         }
         return false;
     }

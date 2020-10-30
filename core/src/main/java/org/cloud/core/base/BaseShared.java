@@ -10,7 +10,7 @@ public class BaseShared {
 
     public static BaseShared getInstance() {
         if (instance == null) {
-            synchronized (BaseImageLoader.class) {
+            synchronized (BaseShared.class) {
                 if (instance == null) {
                     instance = new BaseShared();
                 }
