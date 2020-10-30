@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="padding_status_bar_height">0dp</dimen>
+    <dimen name="toolbar_height">48dp</dimen>
+</resources>

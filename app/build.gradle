@@ -12,8 +12,28 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                // 此处指定生成的apk文件名
+                //variant.getPackageApplicationProvider().get().outputDirectory = new File(project.rootDir.absolutePath + "/release")
+                outputFileName = "Panzer.apk"
+            }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../d05660.jks')
+            storePassword 'password'
+            keyAlias 'd05660'
+            keyPassword 'password'
+            v2SigningEnabled false
+        }
     }
 
     buildTypes {
@@ -32,7 +52,19 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.3'
+    implementation 'androidx.navigation:navigation-fragment:2.3.1'
+    implementation 'androidx.navigation:navigation-ui:2.3.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation project(':core')
+    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation "com.youth.banner:banner:2.1.0"
+    implementation "com.sunfusheng:MarqueeView:1.4.1"
+
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }

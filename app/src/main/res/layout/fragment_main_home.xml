@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/window_background"
+    tools:context=".fragment.HomeFragment">
+    <View
+        android:id="@+id/fake_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/padding_status_bar_height"
+        android:background="@color/colorPrimary"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/toolbarLinearLayout"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="48dip"
+        android:background="@color/primary">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/scanImageView"
+            android:scaleType="center"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/selector_color_primary"
+            android:src="@drawable/ic_action_scan_white" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/searchEditText"
+            style="@style/EditText.SearchToolbar" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/messageImageView"
+            android:scaleType="center"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/selector_color_primary"
+            android:src="@drawable/ic_action_message_white" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.youth.banner.Banner
+                android:id="@+id/mainBanner"
+                android:layout_width="match_parent"
+                android:layout_height="200dip"
+                android:orientation="vertical" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/navigationLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dip"
+                android:paddingBottom="8dip"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mainCategoryRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View android:layout_height="1px"
+                android:layout_width="match_parent"
+                android:background="@color/background"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="48dip"
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="48dip"
+                    android:layout_height="48dip"
+                    android:src="@mipmap/ic_home_new_notice" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/background"
+                    android:layout_marginLeft="4dip"
+                    android:layout_marginTop="8dip"
+                    android:layout_marginRight="4dip"
+                    android:layout_marginBottom="8dip" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="32dip"
+                    android:layout_height="32dip"
+                    android:layout_marginLeft="4dip"
+                    android:layout_marginRight="4dip"
+                    android:layout_marginTop="8dp"
+                    android:src="@mipmap/ic_home_notice" />
+
+                <com.sunfusheng.marqueeview.MarqueeView
+                    android:id="@+id/noticeMarqueeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dip"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:mvAnimDuration="1000"
+                    app:mvDirection="bottom_to_top"
+                    app:mvGravity="left"
+                    app:mvInterval="3000"
+                    app:mvSingleLine="true"
+                    app:mvTextColor="@color/greyAdd"
+                    app:mvTextSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/noticeTextView"
+                    android:layout_width="wrap_content"
+                    android:textSize="12sp"
+                    android:ellipsize="end"
+                    android:drawablePadding="8dip"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/greyAdd"
+                    android:layout_height="48dip"
+                    android:paddingLeft="4dip"
+                    android:paddingRight="4dip"
+                    android:text="更多..."
+                    tools:ignore="HardcodedText" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:layout_height="1px"
+                android:layout_width="match_parent"
+                android:background="@color/background" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mainRecyclerView"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:orientation="vertical"/>
+
+            <TextView
+                android:layout_marginTop="500dp"
+                android:text="@string/tab_cate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+</androidx.appcompat.widget.LinearLayoutCompat>

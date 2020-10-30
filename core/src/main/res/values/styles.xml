@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Toolbar" />
+    <style name="Toolbar.Main">
+        <item name="android:layout_height">48dip</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/greySub</item>
+        <item name="contentInsetStartWithNavigation">0dip</item>
+    </style>
+
+    <style name="TextView" />
+    <style name="TextView.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">48dip</item>
+        <item name="android:drawablePadding">8dip</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/greySub</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+</resources>
