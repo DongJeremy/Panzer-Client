@@ -3,6 +3,7 @@ package org.cloud.panzer.fragment;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -12,10 +13,12 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.youth.banner.Banner;
@@ -23,6 +26,7 @@ import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
 
 import org.cloud.core.base.BaseApplication;
+import org.cloud.core.base.BaseBusClient;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseFragment;
 import org.cloud.core.base.BaseImageLoader;
@@ -30,14 +34,17 @@ import org.cloud.core.utils.JsonUtils;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.EvaluateGoodsSimpleListAdapter;
 import org.cloud.panzer.adapter.GoodsCommendListAdapter;
+import org.cloud.panzer.adapter.SpecListAdapter;
 import org.cloud.panzer.adapter.VoucherGoodsListAdapter;
 import org.cloud.panzer.bean.EvaluateGoodsBean;
 import org.cloud.panzer.bean.GoodsCommendBean;
 import org.cloud.panzer.bean.VoucherGoodsBean;
 import org.cloud.panzer.event.GoodsBeanEvent;
+import org.cloud.panzer.event.GoodsIdEvent;
 import org.cloud.panzer.mvp.presenter.GoodsPresenter;
 import org.cloud.panzer.view.CenterTextView;
 import org.cloud.panzer.view.CountdownTextView;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -45,8 +52,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
+
+import static org.greenrobot.eventbus.EventBus.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -175,10 +185,10 @@ public class GoodsFragment extends BaseFragment {
     AppCompatTextView chooseValueOneTextView;
     @BindView(R.id.chooseValueTwoTextView)
     AppCompatTextView chooseValueTwoTextView;
-    //@BindView(R.id.chooseValueOneRecyclerView)
-    //RecyclerView chooseValueOneRecyclerView;
-    //@BindView(R.id.chooseValueTwoRecyclerView)
-    //RecyclerView chooseValueTwoRecyclerView;
+    @BindView(R.id.chooseValueOneRecyclerView)
+    RecyclerView chooseValueOneRecyclerView;
+    @BindView(R.id.chooseValueTwoRecyclerView)
+    RecyclerView chooseValueTwoRecyclerView;
     private View[] chooseLineView;
     private AppCompatTextView[] chooseValueTextView;
     private RecyclerView[] chooseValueRecyclerView;
@@ -210,6 +220,7 @@ public class GoodsFragment extends BaseFragment {
     private ArrayList<HashMap<String, String>> specNameArrayList = new ArrayList<>();
     private ArrayList<HashMap<String, String>> specValueArrayList = new ArrayList<>();
     private ArrayList<HashMap<String, String>> goodsSpecArrayList = new ArrayList<>();
+    private ArrayList<HashMap<String, String>> specListArrayList = new ArrayList<>();
     private String[] specString = new String[]{"", ""};
 
     private String shareUrl;
@@ -217,6 +228,9 @@ public class GoodsFragment extends BaseFragment {
     private String shareTitle;
     private String shareImageUrl = "";
     private String goodsId = "";
+    private String storeId = "";
+    private String memberId = "";
+    private boolean isBackBoolean;
 
     private String goodsStorageString = "";
     private String lowerLimitString = "";
@@ -264,15 +278,31 @@ public class GoodsFragment extends BaseFragment {
         BaseApplication.getInstance().setRecyclerView(getActivity(), voucherRecyclerView, voucherAdapter);
 
         chooseValueRecyclerView = new RecyclerView[2];
-        //chooseValueRecyclerView[0] = chooseValueOneRecyclerView;
-        //chooseValueRecyclerView[1] = chooseValueTwoRecyclerView;
+        chooseValueRecyclerView[0] = chooseValueOneRecyclerView;
+        chooseValueRecyclerView[1] = chooseValueTwoRecyclerView;
 
-        //chooseValueRecyclerView[0].setVisibility(View.GONE);
-        //chooseValueRecyclerView[1].setVisibility(View.GONE);
+        chooseValueRecyclerView[0].setVisibility(View.GONE);
+        chooseValueRecyclerView[1].setVisibility(View.GONE);
     }
 
     @Override
     protected void initData() {
+        specTextView = new AppCompatTextView[2];
+        specTextView[0] = specOneTextView;
+        specTextView[1] = specTwoTextView;
+        chooseLineView = new View[2];
+        chooseLineView[0] = chooseLineOneView;
+        chooseLineView[1] = chooseLineTwoView;
+        chooseValueTextView = new AppCompatTextView[2];
+        chooseValueTextView[0] = chooseValueOneTextView;
+        chooseValueTextView[1] = chooseValueTwoTextView;
+
+        specTextView[0].setVisibility(View.GONE);
+        specTextView[1].setVisibility(View.GONE);
+        chooseLineView[0].setVisibility(View.GONE);
+        chooseLineView[1].setVisibility(View.GONE);
+        chooseValueTextView[0].setVisibility(View.GONE);
+        chooseValueTextView[1].setVisibility(View.GONE);
     }
 
     @Override
@@ -294,12 +324,13 @@ public class GoodsFragment extends BaseFragment {
 
     @Override
     protected void initListener() {
-
+        commendAdapter.setOnItemClickListener((position, goodsCommendBean) -> BaseBusClient.getDefault().post(new GoodsIdEvent(goodsCommendBean.getGoodsId())));
     }
 
     @Subscribe
     public void onGoodsBeanEvent(GoodsBeanEvent event) {
         String jsonString = event.getGoodsBean();
+        initView();
         initData();
         initListener();
         handlerData(jsonString);
@@ -377,12 +408,12 @@ public class GoodsFragment extends BaseFragment {
         saleTextView.append(goodsInfoJSONObject.get("goods_salenum").getAsString());
 
         //满送
-        JsonObject mansongData = mainJsonObject.getAsJsonObject("mansong_info");
-        if (mansongData == null) {
+        JsonElement mansongInfo = mainJsonObject.get("mansong_info");
+        if (mansongInfo instanceof JsonNull) {
             manSongLinearLayout.setVisibility(View.GONE);
         } else {
             manSongLinearLayout.setVisibility(View.VISIBLE);
-            JsonArray jsonArray = mansongData.getAsJsonArray("rules");
+            JsonArray jsonArray = mansongInfo.getAsJsonObject().getAsJsonArray("rules");
             JsonObject manSongJsonObject = jsonArray.get(0).getAsJsonObject();
             temp = "单笔订单满￥" + manSongJsonObject.get("price").getAsString() + "，立减￥" + manSongJsonObject.get("discount").getAsString() + "，送礼品";
             manSongDescTextView.setText(temp);
@@ -394,18 +425,19 @@ public class GoodsFragment extends BaseFragment {
         if (mainJsonObject.has("voucher")) {
             voucherArrayList.clear();
             voucherTextView.setVisibility(View.VISIBLE);
-            temp = mainJsonObject.get("voucher").getAsString();
-//            voucherArrayList.addAll(JsonUtils.json2ArrayList(temp, VoucherGoodsBean.class));
-//            voucherAdapter.notifyDataSetChanged();
+            JsonArray voucher = mainJsonObject.get("voucher").getAsJsonArray();
+            voucherArrayList.addAll(JsonUtils.jsonToList(voucher, VoucherGoodsBean.class));
+            voucherAdapter.notifyDataSetChanged();
         } else {
             voucherTextView.setVisibility(View.GONE);
         }
         //SpecName
-        if (goodsInfoJSONObject.has("spec_name")) {
-            JsonObject jsonObject = goodsInfoJSONObject.getAsJsonObject("spec_name");
-            for (Map.Entry<String, JsonElement> stringJsonElementEntry : jsonObject.entrySet()) {
+        JsonElement specName = goodsInfoJSONObject.get("spec_name");
+        if (!(specName instanceof JsonNull)) {
+            JsonObject jsonObject = specName.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> elementEntry : jsonObject.entrySet()) {
                 HashMap<String, String> hashMap1 = new HashMap<>();
-                String key = stringJsonElementEntry.toString();
+                String key = elementEntry.getKey();
                 String value = jsonObject.get(key).getAsString();
                 hashMap1.put("id", key);
                 hashMap1.put("value", value);
@@ -424,18 +456,18 @@ public class GoodsFragment extends BaseFragment {
             specTextView[0].setVisibility(View.VISIBLE);
         }
         //specValue
-        if (goodsInfoJSONObject.has("spec_value")) {
+        JsonElement specValue = goodsInfoJSONObject.get("spec_value");
+        if (!(specValue instanceof JsonNull)) {
             specValueArrayList = new ArrayList<>();
-            JsonObject jsonObject = goodsInfoJSONObject.getAsJsonObject("spec_value");
+            JsonObject jsonObject = specValue.getAsJsonObject();
             if (specNameArrayList.size() != 0) {
                 for (int i = 0; i < specNameArrayList.size(); i++) {
                     String id = specNameArrayList.get(i).get("id");
                     String value = specNameArrayList.get(i).get("value");
                     JsonObject object = jsonObject.getAsJsonObject(id);
-                    Iterator iterator = object.entrySet().iterator();
-                    while (iterator.hasNext()) {
+                    for (Map.Entry<String, JsonElement> elementEntry : object.entrySet()) {
                         HashMap<String, String> hashMap1 = new HashMap<>();
-                        String key = iterator.next().toString();
+                        String key = elementEntry.getKey();
                         hashMap1.put("value", object.get(key).getAsString());
                         hashMap1.put("parent_value", value);
                         hashMap1.put("parent_id", id);
@@ -446,13 +478,13 @@ public class GoodsFragment extends BaseFragment {
             }
         }
         //goodsSpec
-        if (goodsInfoJSONObject.has("goods_spec")) {
+        JsonElement goodsSpec = goodsInfoJSONObject.get("goods_spec");
+        if (!(goodsSpec instanceof JsonNull)) {
             goodsSpecArrayList = new ArrayList<>();
-            JsonObject jsonObject = goodsInfoJSONObject.getAsJsonObject("goods_spec");
-            Iterator iterator = jsonObject.entrySet().iterator();
-            while (iterator.hasNext()) {
+            JsonObject jsonObject = goodsSpec.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> elementEntry : jsonObject.entrySet()) {
                 HashMap<String, String> hashMap1 = new HashMap<>();
-                String key = iterator.next().toString();
+                String key = elementEntry.getKey();
                 String value = jsonObject.get(key).getAsString();
                 for (int i = 0; i < specValueArrayList.size(); i++) {
                     String id = specValueArrayList.get(i).get("id");
@@ -477,8 +509,8 @@ public class GoodsFragment extends BaseFragment {
         //noinspection unchecked
         ArrayList<HashMap<String, String>>[] specArrayList = new ArrayList[2];
         SpecListAdapter[] specAdapter = new SpecListAdapter[2];
-        temp = mainJSONObject.getString("spec_list");
-        specListArrayList = new ArrayList<>(JsonUtil.json2ArrayList(temp));
+        JsonElement specList = mainJsonObject.get("spec_list");
+        specListArrayList = new ArrayList<>(JsonUtils.jsonToList(specList));
         for (int i = 0; i < specNameArrayList.size(); i++) {
             if (i < 2) {
                 specArrayList[i] = new ArrayList<>();
@@ -533,34 +565,35 @@ public class GoodsFragment extends BaseFragment {
             }
         }
         //虚拟物品
-        if (goodsInfoJSONObject.getString("is_virtual").equals("0")) {
+        if (goodsInfoJSONObject.get("is_virtual").getAsString().equals("0")) {
             areaRelativeLayout.setVisibility(View.VISIBLE);
         } else {
             areaRelativeLayout.setVisibility(View.GONE);
         }
         //店铺信息
-        JSONObject storeInfoJSONObject = new JSONObject(mainJSONObject.getString("store_info"));
-        storeId = storeInfoJSONObject.getString("store_id");
-        memberId = storeInfoJSONObject.getString("member_id");
-        temp = "由 “" + storeInfoJSONObject.getString("store_name") + "” 销售和发货，并享受售后服务";
-        storeNameTextView.setText(storeInfoJSONObject.getString("store_name"));
+        JsonObject storeInfo = mainJsonObject.getAsJsonObject("store_info");
+        storeId = storeInfo.get("store_id").getAsString();
+        memberId = storeInfo.get("member_id").getAsString();
+
+        temp = "由 “" + storeInfo.get("store_name").getAsString() + "” 销售和发货，并享受售后服务";
+        storeNameTextView.setText(storeInfo.get("store_name").getAsString());
         voucherStoreNameTextView.setText(storeNameTextView.getText().toString());
-        storeOwnTextView.setText(storeInfoJSONObject.getString("is_own_shop").equals("1") ? "自营店" : "");
-        jsonObject = new JSONObject(storeInfoJSONObject.getString("store_credit"));
-        jsonObject = new JSONObject(jsonObject.getString("store_desccredit"));
-        storeDescTextView.setText(jsonObject.getString("credit"));
-        storeDescPercentTextView.setText(storeInfoJSONObject.getString("is_own_shop").equals("1") ? "平" : jsonObject.getString("percent_text"));
-        jsonObject = new JSONObject(storeInfoJSONObject.getString("store_credit"));
-        jsonObject = new JSONObject(jsonObject.getString("store_servicecredit"));
-        storeServiceTextView.setText(jsonObject.getString("credit"));
-        storeServicePercentTextView.setText(storeInfoJSONObject.getString("is_own_shop").equals("1") ? "平" : jsonObject.getString("percent_text"));
-        jsonObject = new JSONObject(storeInfoJSONObject.getString("store_credit"));
-        jsonObject = new JSONObject(jsonObject.getString("store_deliverycredit"));
-        storeDeliveryTextView.setText(jsonObject.getString("credit"));
-        storeDeliveryPercentTextView.setText(storeInfoJSONObject.getString("is_own_shop").equals("1") ? "平" : jsonObject.getString("percent_text"));
+        storeOwnTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "自营店" : "");
+        JsonObject storeCredit = storeInfo.getAsJsonObject("store_credit");
+        JsonObject storeDesccredit = storeCredit.getAsJsonObject("store_desccredit");
+        storeDescTextView.setText(storeDesccredit.get("credit").getAsString());
+        storeDescPercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
+
+        JsonObject servicecredit = storeCredit.getAsJsonObject("store_servicecredit");
+        storeServiceTextView.setText(servicecredit.get("credit").getAsString());
+        storeServicePercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
+
+        JsonObject deliverycredit = storeCredit.getAsJsonObject("store_deliverycredit");
+        storeDeliveryTextView.setText(deliverycredit.get("credit").getAsString());
+        storeDeliveryPercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
         serviceDescTextView.setText(temp);
         //服务信息
-        if (goodsInfoJSONObject.has("contractlist") && goodsInfoJSONObject.getString("contractlist").contains("{")) {
+        if (goodsInfoJSONObject.has("contractlist") && !(goodsInfoJSONObject.get("contractlist") instanceof JsonNull)) {
             serviceSevDayTextView.setVisibility(View.VISIBLE);
             serviceQualityTextView.setVisibility(View.VISIBLE);
             serviceReissueTextView.setVisibility(View.VISIBLE);
@@ -572,25 +605,27 @@ public class GoodsFragment extends BaseFragment {
             serviceLogisticsTextView.setVisibility(View.GONE);
         }
         //评价信息
-        jsonObject = new JSONObject(mainJSONObject.getString("goods_evaluate_info"));
+        JsonObject goodsEvaluateInfo = mainJsonObject.getAsJsonObject("goods_evaluate_info");
         evaluateDescTextView.setText("好评率 ");
-        evaluateDescTextView.append(jsonObject.getString("good_percent") + "%");
+        evaluateDescTextView.append(goodsEvaluateInfo.get("good_percent").getAsString() + "%");
         evaluateNumberTextView.setText("(");
-        evaluateNumberTextView.append(jsonObject.getString("all") + "人评价)");
-        if (mainJSONObject.getString("goods_eval_list").equals("null")) {
+        evaluateNumberTextView.append(goodsEvaluateInfo.get("all").getAsString() + "人评价)");
+
+        JsonElement goodsEvalList = mainJsonObject.get("goods_eval_list");
+        if ((goodsEvalList instanceof JsonNull)) {
             evaluateRecyclerView.setVisibility(View.GONE);
         } else {
             evaluateRecyclerView.setVisibility(View.VISIBLE);
             evaluateGoodsArrayList.clear();
-            evaluateGoodsArrayList.addAll(JsonUtil.json2ArrayList(mainJSONObject.getString("goods_eval_list"), EvaluateGoodsBean.class));
+            evaluateGoodsArrayList.addAll(JsonUtils.jsonToList(goodsEvalList.getAsJsonArray(), EvaluateGoodsBean.class));
             evaluateGoodsAdapter.notifyDataSetChanged();
         }
         //商品推荐
         commendArrayList.clear();
-        commendArrayList.addAll(JsonUtil.json2ArrayList(mainJSONObject.getString("goods_commend_list"), GoodsCommendBean.class));
+        commendArrayList.addAll(JsonUtils.jsonToList(mainJsonObject.getAsJsonArray("goods_commend_list"), GoodsCommendBean.class));
         commendAdapter.notifyDataSetChanged();
         //选择页面
-        BaseImageLoader.get().display(goodsImageArrayList.get(0), chooseGoodsImageView);
+        BaseImageLoader.getInstance().display(goodsImageArrayList.get(0), chooseGoodsImageView);
         chooseNameTextView.setText(nameTextView.getText().toString());
         chooseMoneyTextView.setText(moneyTextView.getText().toString());
         chooseStorageTextView.setText("库存：");
@@ -599,6 +634,17 @@ public class GoodsFragment extends BaseFragment {
             chooseNumberEditText.setText(lowerLimitString);
         }
         chooseNumberEditText.setSelection(chooseNumberEditText.getText().length());
-        haveGoods = !goodsStorageString.equals("0");
+//        haveGoods = !goodsStorageString.equals("0");
+    }
+
+    private void refreshSpecData() {
+        for (int i = 0; i < specListArrayList.size(); i++) {
+            String key = specListArrayList.get(i).get("key");
+            if (Objects.requireNonNull(key).contains(specString[0]) && key.contains(specString[1])) {
+                goodsId = specListArrayList.get(i).get("value");
+                break;
+            }
+        }
+        BaseBusClient.getDefault().post(new GoodsIdEvent(goodsId));
     }
 }

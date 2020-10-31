@@ -1,9 +1,13 @@
 package org.cloud.core.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,14 +40,14 @@ public class JsonUtils {
     /**
      * Json转成对象
      *
-     * @param jsonObject
+     * @param jsonElement
      * @param cls
      * @return 对象
      */
-    public static <T> T jsonObjectToBean(JsonObject jsonObject, Class<T> cls) {
+    public static <T> T jsonToBean(JsonElement jsonElement, Class<T> cls) {
         T t = null;
         if (gson != null) {
-            t = gson.fromJson(gson.toJson(jsonObject), cls);
+            t = gson.fromJson(jsonElement, cls);
         }
         return t;
     }
@@ -66,6 +70,23 @@ public class JsonUtils {
     /**
      * json转成list<T>
      *
+     * @param jsonArray
+     * @param cls
+     * @return list<T>
+     */
+    public static <T> List<T> jsonToList(JsonArray jsonArray, Class<T> cls) {
+        List<T> list = new ArrayList<>();
+        if (gson != null) {
+            for (JsonElement jsonElement : jsonArray) {
+                list.add(gson.fromJson(jsonElement, cls)); //cls
+            }
+        }
+        return list;
+    }
+
+    /**
+     * json转成list<T>
+     *
      * @param json
      * @param cls
      * @return list<T>
@@ -75,6 +96,29 @@ public class JsonUtils {
         if (gson != null) {
             list = gson.fromJson(json, new TypeToken<List<T>>() {
             }.getType());
+        }
+        return list;
+    }
+
+    /**
+     * json转成list<T>
+     *
+     * @param jsonElement
+     * @return list<T>
+     */
+    public static ArrayList<HashMap<String, String>> jsonToList(JsonElement jsonElement) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        if (gson != null) {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> elementEntry : jsonObject.entrySet()) {
+                HashMap<String, String> hashMap1 = new HashMap<>();
+                String key = elementEntry.getKey();
+                String value = jsonObject.get(key).getAsString();
+                for (String s : key.split("\\|")) {
+                    hashMap1.put(s, value);
+                }
+                list.add(hashMap1);
+            }
         }
         return list;
     }

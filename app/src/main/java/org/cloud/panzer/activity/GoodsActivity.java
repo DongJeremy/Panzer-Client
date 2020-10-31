@@ -15,11 +15,15 @@ import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseFragmentAdapter;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
+import org.cloud.core.utils.StatusBarUtil;
 import org.cloud.panzer.R;
 import org.cloud.panzer.event.GoodsBeanEvent;
+import org.cloud.panzer.event.GoodsIdEvent;
 import org.cloud.panzer.fragment.GoodsFragment;
 import org.cloud.panzer.mvp.contract.GoodsContract;
 import org.cloud.panzer.mvp.presenter.GoodsPresenter;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,12 +65,15 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
 
     @Override
     protected boolean useEventBus() {
-        return false;
+        return true;
     }
 
     @Override
     protected void initView() {
         navigationTextView = new AppCompatTextView[]{goodsTextView, detailedTextView, evaluateTextView};
+        StatusBarUtil.setTransparentForImageViewInFragment(this, null);
+        StatusBarUtil.setLightMode(this.getActivity());
+        //StatusBarUtil.setColor(this.getActivity(), getResources().getColor(R.color.whiteSub), 0);
     }
 
     @Override
@@ -141,12 +148,19 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
 
     @Override
     public void showGoodsDetailData(String homeInfoData) {
-        BaseBusClient.getInstance().getDefault().post(new GoodsBeanEvent(homeInfoData));
+        BaseBusClient.getDefault().post(new GoodsBeanEvent(homeInfoData));
     }
 
     @Override
     public void showError(String msg) {
 
+    }
+
+    @Subscribe
+    public void onGoodsIdEvent(GoodsIdEvent event) {
+        goodsIdString = event.getGoodsId();
+        Log.e("TEST", goodsIdString);
+        mPresenter.requestGoodsData(goodsIdString);
     }
 
 }

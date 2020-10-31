@@ -21,6 +21,7 @@ import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.HomeBannerAdapter;
 import org.cloud.panzer.adapter.HomeGoodsListAdapter;
 import org.cloud.panzer.adapter.HomeShortcutAdapter;
+import org.cloud.panzer.bean.GoodsCommendBean;
 import org.cloud.panzer.bean.HomeBean;
 import org.cloud.panzer.mvp.contract.HomeContract;
 import org.cloud.panzer.mvp.presenter.HomePresenter;
@@ -149,7 +150,7 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
         ArrayList<HomeBean.GoodsBean.ItemBean> arrayList = new ArrayList<>();
         JsonArray jsonArray = jsonObject.get("item").getAsJsonArray();
         for (int i = 0; i < jsonArray.size(); i++) {
-            arrayList.add(JsonUtils.jsonObjectToBean(jsonArray.get(i).getAsJsonObject(), HomeBean.GoodsBean.ItemBean.class));
+            arrayList.add(JsonUtils.jsonToBean(jsonArray.get(i), HomeBean.GoodsBean.ItemBean.class));
         }
         mGoodsList.clear();
         mGoodsList.addAll(arrayList);
@@ -157,11 +158,8 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
     }
 
     private void handlerAdvList(JsonObject jsonObject) {
-        ArrayList<HomeBean.AdvListBean> arrayList = new ArrayList<>();
         JsonArray jsonArray = jsonObject.get("item").getAsJsonArray();
-        for (int i = 0; i < jsonArray.size(); i++) {
-            arrayList.add(JsonUtils.jsonObjectToBean(jsonArray.get(i).getAsJsonObject(), HomeBean.AdvListBean.class));
-        }
+        ArrayList<HomeBean.AdvListBean> arrayList = new ArrayList<>(JsonUtils.jsonToList(jsonArray, HomeBean.AdvListBean.class));
         if (arrayList.size() == 0) {
             mainBanner.setVisibility(View.GONE);
         } else {
