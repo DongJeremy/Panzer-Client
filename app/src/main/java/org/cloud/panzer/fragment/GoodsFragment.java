@@ -1,6 +1,8 @@
 package org.cloud.panzer.fragment;
 
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -12,10 +14,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.youth.banner.Banner;
+import com.youth.banner.adapter.BannerImageAdapter;
+import com.youth.banner.holder.BannerImageHolder;
 
 import org.cloud.core.base.BaseApplication;
+import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseFragment;
+import org.cloud.core.base.BaseImageLoader;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.EvaluateGoodsSimpleListAdapter;
 import org.cloud.panzer.adapter.GoodsCommendListAdapter;
@@ -23,13 +31,14 @@ import org.cloud.panzer.adapter.VoucherGoodsListAdapter;
 import org.cloud.panzer.bean.EvaluateGoodsBean;
 import org.cloud.panzer.bean.GoodsCommendBean;
 import org.cloud.panzer.bean.VoucherGoodsBean;
-import org.cloud.panzer.mvp.contract.GoodsContract;
-import org.cloud.panzer.mvp.model.HomeInfoModel;
+import org.cloud.panzer.event.GoodsBeanEvent;
 import org.cloud.panzer.mvp.presenter.GoodsPresenter;
 import org.cloud.panzer.view.CenterTextView;
 import org.cloud.panzer.view.CountdownTextView;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.BindView;
 
@@ -38,7 +47,7 @@ import butterknife.BindView;
  * Use the {@link GoodsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GoodsFragment extends BaseFragment<GoodsPresenter> implements GoodsContract.View {
+public class GoodsFragment extends BaseFragment {
 
     @BindView(R.id.headerRelativeLayout)
     RelativeLayout headerRelativeLayout;
@@ -191,6 +200,18 @@ public class GoodsFragment extends BaseFragment<GoodsPresenter> implements Goods
     private VoucherGoodsListAdapter voucherAdapter;
     private ArrayList<VoucherGoodsBean> voucherArrayList;
 
+    private final ArrayList<String> goodsImageArrayList = new ArrayList<>();
+
+    private String shareUrl;
+    private String shareText;
+    private String shareTitle;
+    private String shareImageUrl = "";
+    private String goodsId = "";
+
+    private String goodsStorageString = "";
+    private String lowerLimitString = "";
+    private String upperLimitString = "";
+
     public static GoodsFragment newInstance(String param1, String param2) {
         GoodsFragment fragment = new GoodsFragment();
         Bundle args = new Bundle();
@@ -204,12 +225,15 @@ public class GoodsFragment extends BaseFragment<GoodsPresenter> implements Goods
     }
 
     @Override
-    protected GoodsPresenter createPresenter() {
-        return null;
-    }
-
-    @Override
     protected void initView() {
+
+        mainBanner.setAdapter(new BannerImageAdapter<String>(goodsImageArrayList) {
+
+            @Override
+            public void onBindView(BannerImageHolder holder, String data, int position, int size) {
+                BaseImageLoader.getInstance().display(data, holder.imageView);
+            }
+        });
         LinearLayoutCompat.LayoutParams layoutParams = new LinearLayoutCompat.LayoutParams(BaseApplication.getInstance().getWidth(), BaseApplication.getInstance().getWidth());
         headerRelativeLayout.setLayoutParams(layoutParams);
 
@@ -242,24 +266,22 @@ public class GoodsFragment extends BaseFragment<GoodsPresenter> implements Goods
 
     }
 
+    @Subscribe
+    public void onGoodsBeanEvent(GoodsBeanEvent event) {
+
+        String jsonString = event.getGoodsBean();
+        initData();
+        initListener();
+        handlerData(jsonString);
+    }
+
     @Override
     protected void initData() {
-
     }
 
     @Override
     protected boolean useEventBus() {
-        return false;
-    }
-
-    @Override
-    public void showHomeInfoData(HomeInfoModel.HomeInfo.Data homeInfoData) {
-
-    }
-
-    @Override
-    public void showError(String msg) {
-
+        return true;
     }
 
     @Override
@@ -272,5 +294,77 @@ public class GoodsFragment extends BaseFragment<GoodsPresenter> implements Goods
     public void onStop() {
         super.onStop();
         mainBanner.stop();
+    }
+
+    private void handlerData(String homeInfoData) {
+        String temp = "";
+        JsonObject rootJsonObject = new JsonParser().parse(homeInfoData).getAsJsonObject();
+        int code = rootJsonObject.get("code").getAsInt();
+        if (code != 200) {
+            return;
+        }
+        JsonObject mainJsonObject = rootJsonObject.getAsJsonObject("datas");
+        JsonObject goodsInfoJSONObject = mainJsonObject.getAsJsonObject("goods_content");
+        String[] goodsImages = mainJsonObject.get("goods_image").getAsString().split(",");
+        goodsId = goodsInfoJSONObject.get("goods_id").getAsString();
+        shareUrl = BaseConstant.URL_GOODS_DETAILED + goodsId;
+
+        //轮播图
+        goodsImageArrayList.clear();
+        Collections.addAll(goodsImageArrayList, goodsImages);
+        shareImageUrl = goodsImageArrayList.get(0);
+        mainBanner.setDatas(goodsImageArrayList);
+        mainBanner.start();
+        //商品信息
+        nameTextView.setText(goodsInfoJSONObject.get("goods_name").getAsString());
+        descTextView.setText(goodsInfoJSONObject.get("goods_jingle").getAsString());
+        descTextView.setVisibility(TextUtils.isEmpty(goodsInfoJSONObject.get("goods_jingle").getAsString()) ? View.GONE : View.VISIBLE);
+        goodsStorageString = goodsInfoJSONObject.get("goods_storage").getAsString();
+        shareTitle = nameTextView.getText().toString();
+        shareText = descTextView.getText().toString();
+        moneyTextView.setText("￥");
+        marketPriceTextView.setText("￥");
+        mobileTextView.setVisibility(View.GONE);
+        saleRelativeLayout.setVisibility(View.GONE);
+        if (goodsInfoJSONObject.has("goods_sale_type") && !goodsInfoJSONObject.get("goods_sale_type").getAsString().equals("0")) {
+            activityLinearLayout.setVisibility(View.VISIBLE);
+            activityTitleTextView.setText(goodsInfoJSONObject.get("title").getAsString());
+            switch (goodsInfoJSONObject.get("sale_type").getAsString()) {
+                case "sole":
+                    mobileTextView.setVisibility(View.VISIBLE);
+                    temp = "手机专享价格￥" + goodsInfoJSONObject.get("sale_price").getAsString();
+                    break;
+                case "xianshi":
+                    saleRelativeLayout.setVisibility(View.VISIBLE);
+                    saleTypeTextView.setText("限时打折");
+                    lowerLimitString = goodsInfoJSONObject.get("lower_limit").getAsString();
+                    temp = "直降￥" + goodsInfoJSONObject.get("down_price").getAsString() + "，最低 " + lowerLimitString + " 件起";
+                    saleTimeTextView.init("", Long.parseLong(goodsInfoJSONObject.get("xs_time").getAsString()), "距离结束：", "");
+                    saleTimeTextView.start(0);
+                    break;
+                case "groupbuy":
+                    upperLimitString = goodsInfoJSONObject.get("upper_limit").getAsString();
+                    temp = "直降￥" + goodsInfoJSONObject.get("down_price").getAsString() + "，限购 " + upperLimitString + " 件";
+                    break;
+                case "robbuy":
+                    saleRelativeLayout.setVisibility(View.VISIBLE);
+                    saleTypeTextView.setText("限时抢购");
+                    upperLimitString = goodsInfoJSONObject.get("upper_limit").getAsString();
+                    temp = "限购 " + upperLimitString + " 件，" + goodsInfoJSONObject.get("remark").getAsString();
+                    saleTimeTextView.init("", Long.parseLong(goodsInfoJSONObject.get("end_time").getAsString()), "距离结束：", "");
+                    saleTimeTextView.start(0);
+                    break;
+            }
+            activityDescTextView.setText(temp);
+            moneyTextView.append(goodsInfoJSONObject.get("sale_price").getAsString());
+            marketPriceTextView.append(goodsInfoJSONObject.get("goods_price").getAsString());
+        } else {
+            activityLinearLayout.setVisibility(View.GONE);
+            moneyTextView.append(goodsInfoJSONObject.get("goods_price").getAsString());
+            marketPriceTextView.append(goodsInfoJSONObject.get("goods_marketprice").getAsString());
+        }
+        marketPriceTextView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        saleTextView.setText("销量：");
+        saleTextView.append(goodsInfoJSONObject.get("goods_salenum").getAsString());
     }
 }

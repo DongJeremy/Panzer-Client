@@ -2,28 +2,31 @@ package org.cloud.panzer.activity;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import org.cloud.core.base.BaseActivity;
 import org.cloud.core.base.BaseApplication;
+import org.cloud.core.base.BaseBusClient;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseFragmentAdapter;
+import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
-import org.cloud.core.rx.RxBus;
 import org.cloud.panzer.R;
-import org.cloud.panzer.bean.TestEvent;
+import org.cloud.panzer.event.GoodsBeanEvent;
 import org.cloud.panzer.fragment.GoodsFragment;
+import org.cloud.panzer.mvp.contract.GoodsContract;
+import org.cloud.panzer.mvp.presenter.GoodsPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class GoodsActivity extends BaseActivity {
+public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements GoodsContract.View {
 
     private AppCompatTextView[] navigationTextView;
 
@@ -52,8 +55,38 @@ public class GoodsActivity extends BaseActivity {
     }
 
     @Override
+    protected GoodsPresenter createPresenter() {
+        return new GoodsPresenter();
+    }
+
+    @Override
+    protected boolean useEventBus() {
+        return false;
+    }
+
+    @Override
     protected void initView() {
         navigationTextView = new AppCompatTextView[]{goodsTextView, detailedTextView, evaluateTextView};
+    }
+
+    @Override
+    protected void initData() {
+        goodsIdString = getIntent().getStringExtra(BaseConstant.DATA_ID);
+        if (TextUtils.isEmpty(goodsIdString)) {
+            BaseToast.getInstance().showDataError();
+            BaseApplication.getInstance().finish(getActivity());
+        }
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(new GoodsFragment());
+        //fragmentList.add(new DetailedFragment());
+        //fragmentList.add(new EvaluateFragment());
+
+        mainViewPager.setAdapter(new BaseFragmentAdapter(this, fragmentList));
+        mainViewPager.setOffscreenPageLimit(navigationTextView.length);
+        isShowBoolean = false;
+        setToolbar(mainToolbar, "");
+        updateNavigation(0);
+        mPresenter.requestGoodsData(goodsIdString);
     }
 
     @Override
@@ -88,67 +121,32 @@ public class GoodsActivity extends BaseActivity {
         }
         navigationTextView[position].setTextColor(BaseApplication.getInstance().getColors(R.color.primary));
         mainViewPager.setCurrentItem(position);
-
-    }
-
-    @Override
-    protected void initData() {
-        goodsIdString = getIntent().getStringExtra(BaseConstant.DATA_ID);
-        if (TextUtils.isEmpty(goodsIdString)) {
-            BaseToast.getInstance().showDataError();
-            BaseApplication.getInstance().finish(getActivity());
-        }
-        List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new GoodsFragment());
-        //fragmentList.add(new DetailedFragment());
-        //fragmentList.add(new EvaluateFragment());
-
-        mainViewPager.setAdapter(new BaseFragmentAdapter(this, fragmentList));
-        mainViewPager.setOffscreenPageLimit(navigationTextView.length);
-        isShowBoolean = false;
-        setToolbar(mainToolbar, "");
-        updateNavigation(0);
-        getGoodsInfo();
-
-        RxBus.getDefault().post(new TestEvent(1,"RxBus post test data from homeFragment"));
-    }
-
-    private void getGoodsInfo() {
-//        GoodsModel.get().goodsDetailed(goodsIdString, new BaseHttpListener() {
-//            @Override
-//            public void onSuccess(BaseBean baseBean) {
-//                BaseBusClient.get().post(new GoodsBeanEvent(baseBean));
-//            }
-//            @Override
-//            public void onFailure(String reason) {
-//                if (reason.equals("商品不存在")) {
-//                    BaseToast.get().show(reason);
-//                    BaseApplication.get().finish(getActivity());
-//                } else {
-//                    BaseToast.get().show(reason);
-//                }
-//            }
-//        });
     }
 
     @Override
     public void onReturn() {
-
         if (mainViewPager.getCurrentItem() != 0) {
             mainViewPager.setCurrentItem(0);
             return;
         }
-
 //        if (isShowBoolean) {
 //            BaseBusClient.get().post(new GoodsGoneEvent(true));
 //            return;
 //        }
-
         if (BaseApplication.getInstance().inActivityStackTop() && !BaseApplication.getInstance().inActivityStack(MainActivity.class)) {
             BaseApplication.getInstance().start(getActivity(), MainActivity.class);
         }
-
         super.onReturn();
+    }
+
+    @Override
+    public void showGoodsDetailData(String homeInfoData) {
+        BaseBusClient.getInstance().getDefault().post(new GoodsBeanEvent(homeInfoData));
+    }
+
+    @Override
+    public void showError(String msg) {
 
     }
+
 }

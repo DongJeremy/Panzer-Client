@@ -9,7 +9,7 @@ import io.reactivex.Observable;
 
 public class HomeInfoModel extends BaseModel implements HomeContract.Model {
     @Override
-    public Observable<BaseBean> getHomeInfoData() {
-        return RetrofitUtils.getHttpService().getHomeInfoData();
+    public Observable<String> getHomeInfoData() {
+        return RetrofitUtils.getRawHttpService().getHomeInfoData();
     }
 }

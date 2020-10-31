@@ -16,6 +16,7 @@ import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
 import org.cloud.panzer.PanzerApplication;
 import org.cloud.panzer.R;
+import org.cloud.panzer.bean.HomeBean;
 import org.cloud.panzer.mvp.model.HomeInfoModel;
 
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ import butterknife.BindView;
 public class HomeGoodsListAdapter extends RecyclerView.Adapter<HomeGoodsListAdapter.ViewHolder> {
 
     private final Activity activity;
-    private final ArrayList<HomeInfoModel.HomeInfo.Goods> arrayList;
+    private final ArrayList<HomeBean.GoodsBean.ItemBean> arrayList;
 
-    public HomeGoodsListAdapter(Activity activity, ArrayList<HomeInfoModel.HomeInfo.Goods> arrayList) {
+    public HomeGoodsListAdapter(Activity activity, ArrayList<HomeBean.GoodsBean.ItemBean> arrayList) {
         this.activity = activity;
         this.arrayList = arrayList;
     }
@@ -40,17 +41,17 @@ public class HomeGoodsListAdapter extends RecyclerView.Adapter<HomeGoodsListAdap
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        final HomeInfoModel.HomeInfo.Goods bean = arrayList.get(position);
+        final HomeBean.GoodsBean.ItemBean bean = arrayList.get(position);
 
         int width = BaseApplication.getInstance().getWidth() / 2 - 16;
-        BaseImageLoader.getInstance().displayRadius(bean.getImage(), holder.mainImageView);
+        BaseImageLoader.getInstance().displayRadius(bean.goodsImage, holder.mainImageView);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, width);
         holder.mainImageView.setLayoutParams(layoutParams);
-        holder.nameTextView.setText(bean.getName());
+        holder.nameTextView.setText(bean.goodsName);
         holder.moneyTextView.setText("￥");
-        holder.moneyTextView.append(String.valueOf(bean.getPrice()));
+        holder.moneyTextView.append(String.valueOf(bean.goodsSalePrice));
 
-        holder.mainRelativeLayout.setOnClickListener(view -> ((PanzerApplication) PanzerApplication.getInstance()).startGoods(activity, bean.getId()+""));
+        holder.mainRelativeLayout.setOnClickListener(view -> ((PanzerApplication) PanzerApplication.getInstance()).startGoods(activity, bean.goodsId+""));
     }
 
     @NonNull

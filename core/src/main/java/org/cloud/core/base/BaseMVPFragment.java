@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import com.squareup.leakcanary.RefWatcher;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
+import org.cloud.core.mvp.BasePresenter;
+import org.cloud.core.mvp.IView;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
@@ -24,11 +26,12 @@ import butterknife.Unbinder;
  * @date 2018/6/9 17:12
  * @desc fragment 基类
  */
-public abstract class BaseFragment extends RxFragment {
+public abstract class BaseMVPFragment<T extends BasePresenter> extends RxFragment implements IView {
 
     /**
      * 将代理类通用行为抽出来
      */
+    protected T mPresenter;
     protected Context mContext;
 
     private Unbinder unBinder;
@@ -59,6 +62,10 @@ public abstract class BaseFragment extends RxFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mPresenter = createPresenter();
+        if (mPresenter != null) {
+            mPresenter.attachView(this);
+        }
         initView();
         initListener();
     }
@@ -86,6 +93,9 @@ public abstract class BaseFragment extends RxFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
         if (unBinder != null) {
             unBinder.unbind();
         }
@@ -99,6 +109,16 @@ public abstract class BaseFragment extends RxFragment {
 
     public BaseActivity getBaseActivity() {
         return mActivity;
+    }
+
+    @Override
+    public void showLoading() {
+        mActivity.showLoadingDialog();
+    }
+
+    @Override
+    public void hideLoading() {
+        mActivity.hideLoadingDialog();
     }
 
     /**
@@ -137,6 +157,7 @@ public abstract class BaseFragment extends RxFragment {
      * 返回一个用于显示界面的布局id
      */
     protected abstract @LayoutRes int getLayoutId();
+    protected abstract T createPresenter();
     /**
      * 初始化View的代码写在这个方法中
      */

@@ -53,6 +53,7 @@ public class CountdownTextView extends AppCompatTextView {
     public void init(String format, long seconds, String first, String end) {
         this.first = first;
         this.end = end;
+        cancel();
         mTimerMap = new HashMap<>();
         if (!TextUtils.isEmpty(format)) {
             mStrFormat = format;
@@ -64,6 +65,8 @@ public class CountdownTextView extends AppCompatTextView {
                 if (mSeconds > 0) {
                     mSeconds--;
                     mHandler.sendEmptyMessage(what_count_down_tick);
+                } else {
+                    cancel();
                 }
             }
         };
@@ -75,6 +78,22 @@ public class CountdownTextView extends AppCompatTextView {
             mTimerMap.put(position, timer);
             mTimerMap.get(position).schedule(mTimerTask, 0, 1000);
         }
+    }
+
+    public void cancel() {
+        if (mTimerTask != null) {
+            mTimerTask.cancel();//注意：这儿必须先停止倒计时再初始化控件，否则有可能时间会乱
+            mTimerTask = null;
+        }
+    }
+
+    /**
+     * 与Window解绑自动停止计时
+     **/
+    @Override
+    protected void onDetachedFromWindow() {
+        cancel();
+        super.onDetachedFromWindow();
     }
 
     @Override

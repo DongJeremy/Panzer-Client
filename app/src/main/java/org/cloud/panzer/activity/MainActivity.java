@@ -56,6 +56,11 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected boolean useEventBus() {
+        return false;
+    }
+
+    @Override
     protected void initView() {
         mBottomNavigationView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
         mBottomNavigationView.setItemTextAppearanceActive(R.style.bottom_selected_text);

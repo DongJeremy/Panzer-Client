@@ -3,24 +3,22 @@ package org.cloud.panzer.mvp.presenter;
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
-import org.cloud.panzer.mvp.contract.HomeContract;
-import org.cloud.panzer.mvp.model.HomeInfoModel;
+import org.cloud.panzer.mvp.contract.GoodsContract;
+import org.cloud.panzer.mvp.model.GoodsInfoModel;
 
-public class GoodsPresenter extends BasePresenter<HomeContract.Model, HomeContract.View> {
+public class GoodsPresenter extends BasePresenter<GoodsContract.Model, GoodsContract.View> {
     @Override
-    protected HomeContract.Model createModel() {
-        return new HomeInfoModel();
+    protected GoodsContract.Model createModel() {
+        return new GoodsInfoModel();
     }
 
-    public void requestGridData() {
-        getModel().getHomeInfoData()
+    public void requestGoodsData(String id) {
+        getModel().getGoodsDetailData(id)
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
-                .subscribe(new BaseObserver<HomeInfoModel.HomeInfo>(getView()) {
+                .subscribe(new BaseObserver<String>(getView()) {
                     @Override
-                    public void onSuccess(HomeInfoModel.HomeInfo result) {
-                        if(result.getCode()==200) {
-                            getView().showHomeInfoData(result.getDatas());
-                        }
+                    public void onSuccess(String result) {
+                        getView().showGoodsDetailData(result);
                     }
 
                     @Override
@@ -28,6 +26,5 @@ public class GoodsPresenter extends BasePresenter<HomeContract.Model, HomeContra
                         getView().showError(errMsg);
                     }
                 });
-
     }
 }

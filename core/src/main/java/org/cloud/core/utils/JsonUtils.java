@@ -1,6 +1,7 @@
 package org.cloud.core.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
@@ -30,6 +31,21 @@ public class JsonUtils {
             json = gson.toJson(object);
         }
         return json;
+    }
+
+    /**
+     * Json转成对象
+     *
+     * @param jsonObject
+     * @param cls
+     * @return 对象
+     */
+    public static <T> T jsonObjectToBean(JsonObject jsonObject, Class<T> cls) {
+        T t = null;
+        if (gson != null) {
+            t = gson.fromJson(gson.toJson(jsonObject), cls);
+        }
+        return t;
     }
 
     /**

@@ -89,6 +89,11 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
+    protected boolean useEventBus() {
+        return false;
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.clear();

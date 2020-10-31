@@ -44,6 +44,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         if (useEventBus()) {
             EventBus.getDefault().register(this);//注册eventBus
         }
+        initPreparedData();
         initView();
         initData();
         initListener();
@@ -54,8 +55,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
      *
      * @return
      */
-    protected boolean useEventBus() {
-        return false;
+    protected abstract boolean useEventBus();
+
+    /**
+     * 供子类添加功能
+     * @return
+     */
+    protected void initPreparedData() {
     }
 
     @Override

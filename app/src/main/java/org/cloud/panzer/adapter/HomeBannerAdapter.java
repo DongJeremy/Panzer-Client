@@ -12,13 +12,12 @@ import com.youth.banner.adapter.BannerAdapter;
 import com.youth.banner.util.BannerUtils;
 
 import org.cloud.panzer.R;
-import org.cloud.panzer.mvp.model.HomeInfoModel;
 
 import java.util.List;
 
-public class HomeBannerAdapter extends BannerAdapter<HomeInfoModel.HomeInfo.HomeBanner, HomeBannerAdapter.BannerViewHolder> {
+public class HomeBannerAdapter extends BannerAdapter<String, HomeBannerAdapter.BannerViewHolder> {
 
-    public HomeBannerAdapter(List<HomeInfoModel.HomeInfo.HomeBanner> datas) {
+    public HomeBannerAdapter(List<String> datas) {
         super(datas);
     }
 
@@ -30,11 +29,10 @@ public class HomeBannerAdapter extends BannerAdapter<HomeInfoModel.HomeInfo.Home
     }
 
     @Override
-    public void onBindView(BannerViewHolder holder, HomeInfoModel.HomeInfo.HomeBanner data, int position, int size) {
+    public void onBindView(BannerViewHolder holder, String data, int position, int size) {
         Glide.with(holder.itemView)
-                .load(data.getImage())
+                .load(data)
                 .thumbnail(Glide.with(holder.itemView).load(R.mipmap.banner_loading))
-//                .apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
                 .into(holder.imageView);
     }
 

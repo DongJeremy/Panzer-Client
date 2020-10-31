@@ -1,8 +1,11 @@
 package org.cloud.core.base;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.mvp.IView;
@@ -18,6 +21,10 @@ public abstract class BaseMvpActivity<T extends BasePresenter> extends BaseActiv
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void initPreparedData() {
         mPresenter = createPresenter();
         if (mPresenter != null) {
             mPresenter.attachView(this);
