@@ -1,0 +1,152 @@
+package org.cloud.core.widget;
+
+import android.content.Context;
+import android.os.Handler;
+import android.util.AttributeSet;
+import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
+import com.jwenfeng.library.pulltorefresh.ViewStatus;
+
+import org.cloud.core.base.BaseDecoration;
+
+public class PullRefreshView extends PullToRefreshLayout {
+
+    private boolean isFailure = false;
+    private boolean isLoadMore = false;
+    private Context context = getContext();
+    private OnRefreshListener onRefreshListener = null;
+    private RecyclerView recyclerView = new RecyclerView(context);
+    private BaseDecoration baseDecoration = new BaseDecoration(context, BaseDecoration.VERTICAL);
+
+    public PullRefreshView(Context context) {
+        super(context);
+        initialization();
+    }
+
+    public PullRefreshView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initialization();
+    }
+
+    public PullRefreshView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initialization();
+    }
+
+    //初始化
+
+    private void initialization() {
+
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(baseDecoration);
+        recyclerView.setLayoutParams(layoutParams);
+        addView(recyclerView);
+
+        setRefreshListener(new BaseRefreshListener() {
+            @Override
+            public void refresh() {
+                isLoadMore = false;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (onRefreshListener != null) {
+                            onRefreshListener.onRefresh();
+                        }
+                        finishRefresh();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void loadMore() {
+                isLoadMore = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (onRefreshListener != null) {
+                            onRefreshListener.onLoadMore();
+                        }
+                        finishLoadMore();
+                    }
+                }, 2000);
+            }
+        });
+
+    }
+
+    //公共方法
+
+    public void setFailure() {
+
+        isFailure = true;
+        recyclerView.getAdapter().notifyDataSetChanged();
+        if (recyclerView.getAdapter().getItemCount() == 0) {
+            showView(ViewStatus.ERROR_STATUS);
+        }
+
+    }
+
+    public void setLoading() {
+
+        if (recyclerView.getAdapter().getItemCount() == 0) {
+            isFailure = false;
+            recyclerView.getAdapter().notifyDataSetChanged();
+            showView(ViewStatus.LOADING_STATUS);
+        }
+
+    }
+
+    public void setComplete() {
+
+        isFailure = false;
+        recyclerView.getAdapter().notifyDataSetChanged();
+        if (recyclerView.getAdapter().getItemCount() == 0) {
+            showView(ViewStatus.EMPTY_STATUS);
+        } else {
+            showView(ViewStatus.CONTENT_STATUS);
+            if (isLoadMore) {
+                recyclerView.smoothScrollBy(0, 255);
+            }
+        }
+
+    }
+
+    public boolean isFailure() {
+        return isFailure;
+    }
+
+    public void clearItemDecoration() {
+        recyclerView.removeItemDecoration(baseDecoration);
+    }
+
+    public void setItemDecoration() {
+        recyclerView.addItemDecoration(baseDecoration);
+    }
+
+    public void removeItemDecoration() {
+        recyclerView.removeItemDecoration(baseDecoration);
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    //外部接口
+
+    public void setOnRefreshListener(OnRefreshListener listener) {
+        this.onRefreshListener = listener;
+    }
+
+    public interface OnRefreshListener {
+        void onRefresh();
+        void onLoadMore();
+    }
+}

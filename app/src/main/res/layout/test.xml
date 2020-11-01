@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainRelativeLayout"
     style="@style/Layout.Main">
 
-    <org.cloud.panzer.view.ScrollDetailsLayout
+    <com.wpccw.shop.view.ScrollDetailsLayout
         android:id="@+id/mainSlideDetailsLayout"
         style="@style/Layout.Main"
         android:layout_above="@+id/bottomView"
         app:default_panel="0"
         app:percent="0.4">
+
         <androidx.core.widget.NestedScrollView
             android:id="@+id/mainScrollView"
-            style="@style/Layout.Main"
-            android:layout_above="@+id/lineView">
+            style="@style/Layout.Main">
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/contentLinearLayout"
-                style="@style/Layout.Main">
+                android:id="@+id/scrollLinearLayout"
+                style="@style/Layout.Wrap">
 
                 <RelativeLayout
                     android:id="@+id/headerRelativeLayout"
-                    style="@style/Layout.Wrap"
-                    android:layout_height="240dip">
+                    style="@style/Layout.Wrap">
 
                     <com.youth.banner.Banner
                         android:id="@+id/mainBanner"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
-<!--                    <com.dueeeke.videoplayer.player.IjkVideoView-->
-<!--                        android:id="@+id/mainVideoPlayer"-->
-<!--                        style="@style/Layout.Main" />-->
+                    <com.dueeeke.videoplayer.player.IjkVideoView
+                        android:id="@+id/mainVideoPlayer"
+                        style="@style/Layout.Main" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/imageImageView"
@@ -41,7 +38,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="32dp"
                         android:layout_toStartOf="@+id/favoritesImageView"
                         android:background="@drawable/border_goods_circle"
@@ -58,13 +55,12 @@
                         android:layout_marginBottom="32dp"
                         android:background="@drawable/border_goods_circle"
                         android:src="@drawable/ic_goods_favorite" />
-
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/saleRelativeLayout"
                     style="@style/Layout.Wrap"
-                    android:layout_height="32dip"
+                    android:layout_height="32dp"
                     android:layout_below="@+id/mainBanner"
                     android:background="@mipmap/bg_sale">
 
@@ -73,164 +69,181 @@
                         style="@style/TextView.Normal"
                         android:layout_height="match_parent"
                         android:drawableStart="@mipmap/ic_sale_time"
-                        android:drawableLeft="@mipmap/ic_sale_time"
-                        android:drawablePadding="8dip"
-                        android:paddingLeft="16dip"
-                        android:paddingRight="16dip"
+                        android:drawablePadding="8dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
                         android:textColor="@color/white" />
 
-                    <org.cloud.panzer.view.CountdownTextView
+                    <com.wpccw.shop.view.CountdownTextView
                         android:id="@+id/saleTimeTextView"
                         style="@style/TextView.Normal"
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:paddingLeft="16dip"
-                        android:paddingRight="16dip"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
                         android:textColor="@color/white" />
-
                 </RelativeLayout>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     style="@style/Layout.Wrap"
                     android:background="@color/white"
-                    android:padding="8dip">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/nameTextView"
-                        style="@style/TextView.Name"
-                        android:layout_width="match_parent"
-                        android:paddingLeft="8dip"
-                        android:paddingRight="8dip" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/descTextView"
-                        style="@style/TextView.Name"
-                        android:layout_width="match_parent"
-                        android:paddingLeft="8dip"
-                        android:paddingTop="8dip"
-                        android:paddingRight="8dip"
-                        android:textColor="@color/grey" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
 
                     <RelativeLayout
                         style="@style/Layout.Wrap"
-                        android:paddingLeft="8dip"
-                        android:paddingTop="8dip"
-                        android:paddingRight="8dip">
+                        android:layout_height="wrap_content">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/moneyTextView"
-                            style="@style/TextView.Money"
-                            android:layout_marginEnd="4dip"
-                            android:layout_marginRight="4dip" />
+                            android:id="@+id/priceTextView"
+                            style="@style/TextView.Price"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="8dp"
+                            android:textSize="20sp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/marketPriceTextView"
                             style="@style/TextView.Small"
-                            android:layout_alignTop="@+id/moneyTextView"
-                            android:layout_alignBottom="@id/moneyTextView"
-                            android:layout_marginEnd="4dip"
-                            android:layout_marginRight="4dip"
-                            android:layout_toEndOf="@+id/moneyTextView"
-                            android:layout_toRightOf="@+id/moneyTextView" />
+                            android:layout_alignTop="@+id/priceTextView"
+                            android:layout_alignBottom="@+id/priceTextView"
+                            android:layout_marginEnd="8dp"
+                            android:layout_toEndOf="@+id/priceTextView"
+                            android:textColor="@color/textTwo"
+                            android:textSize="14sp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/mobileTextView"
                             style="@style/TextView.ItemMobileHave"
                             android:layout_alignTop="@+id/marketPriceTextView"
-                            android:layout_alignBottom="@id/marketPriceTextView"
+                            android:layout_alignBottom="@+id/marketPriceTextView"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="2dp"
                             android:layout_toEndOf="@+id/marketPriceTextView"
-                            android:layout_toRightOf="@+id/marketPriceTextView"
+                            android:drawableStart="@null"
+                            android:drawableLeft="@null"
                             android:visibility="gone" />
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/saleTextView"
-                            style="@style/TextView.Small"
-                            android:layout_alignTop="@+id/moneyTextView"
-                            android:layout_alignBottom="@+id/moneyTextView"
+                            android:id="@+id/shareTextView"
+                            style="@style/TextView.Normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="24dp"
                             android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true" />
-
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="-32dp"
+                            android:background="@drawable/border_grey_sub_16dip"
+                            android:drawableStart="@mipmap/ic_goods_redpacket"
+                            android:drawablePadding="4dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="40dp"
+                            android:text="分享有礼" />
                     </RelativeLayout>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/nameTextView"
+                        style="@style/TextView.Max"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/descTextView"
+                        style="@style/TextView.Normal"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="4dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColor="@color/textTwo" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/activityLinearLayout"
                         style="@style/Layout.Horizontal"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="8dip"
-                        android:paddingTop="8dip"
-                        android:paddingRight="8dip">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextView.Smalls"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="4dip"
-                            android:layout_marginRight="4dip"
-                            android:text="促销"
-                            tools:ignore="HardcodedText" />
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/border_layout_dash"
+                        android:padding="8dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/activityTitleTextView"
-                            style="@style/TextView.GoodsActivity"
+                            style="@style/TextView.Activity"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="4dip"
-                            android:layout_marginRight="4dip" />
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/border_dash" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/activityDescTextView"
-                            style="@style/TextView.Smalls"
-                            android:layout_height="match_parent" />
-
+                            style="@style/TextView.Small"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/textTwo" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/manSongLinearLayout"
                         style="@style/Layout.Horizontal"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="8dip"
-                        android:paddingTop="4dip"
-                        android:paddingRight="8dip">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/border_layout_dash"
+                        android:padding="8dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextView.Smalls"
+                            style="@style/TextView.Activity"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="4dip"
-                            android:layout_marginRight="4dip"
-                            android:text="满送"
-                            tools:ignore="HardcodedText" />
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/border_dash"
+                            android:text="满即送" />
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextView.GoodsActivity"
-                            android:layout_marginEnd="4dip"
-                            android:layout_marginRight="4dip"
-                            android:text="满即送"
-                            tools:ignore="HardcodedText" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/manSongDescTextView"
-                            style="@style/TextView.Smalls"
+                            android:id="@+id/manSongTextView"
+                            style="@style/TextView.Small"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="4dip"
-                            android:layout_marginRight="4dip" />
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/manSongGoodsImageView"
-                            android:layout_width="16dip"
-                            android:layout_height="16dip" />
-
+                            android:layout_marginEnd="8dp"
+                            android:textColor="@color/textTwo" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/zengPinLinearLayout"
+                        style="@style/Layout.Horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/border_layout_dash"
+                        android:padding="8dp">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/TextView.Activity"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/border_dash"
+                            android:text="赠品" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/zengPinTextView"
+                            style="@style/TextView.Small"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:textColor="@color/textTwo" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/zengPinImageView"
+                            android:layout_width="16dp"
+                            android:layout_height="match_parent" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/voucherTextView"
-                    style="@style/TextView.Tool"
+                    android:id="@+id/couponTextView"
+                    style="@style/TextView.ToolMini"
+                    android:background="@color/background"
                     android:drawableStart="@mipmap/ic_voucher_goods"
-                    android:drawableLeft="@mipmap/ic_voucher_goods"
-                    android:paddingLeft="16dip"
-                    android:paddingRight="16dip"
-                    android:text="点击领取店铺代金券"
-                    tools:ignore="HardcodedText" />
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="点击领取店铺代金券" />
 
                 <View style="@style/View.Line" />
 
@@ -239,40 +252,32 @@
                     style="@style/Layout.Horizontal"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:paddingLeft="16dip"
-                    android:paddingTop="8dip"
-                    android:paddingRight="16dip"
-                    android:paddingBottom="8dip">
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/areaSendTextView"
                         style="@style/TextView.Small"
-                        android:layout_marginEnd="4dip"
-                        android:layout_marginRight="4dip"
+                        android:layout_marginEnd="8dp"
                         android:text="送至"
-                        tools:ignore="HardcodedText" />
+                        android:textColor="@color/textTwo" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/areaAddressTextView"
-                        style="@style/TextView.Money"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dip"
-                        android:layout_marginRight="4dip"
-                        android:layout_toEndOf="@+id/areaSendTextView"
-                        android:layout_toRightOf="@+id/areaSendTextView"
-                        android:text="全国"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        style="@style/TextView.Activity"
+                        android:layout_alignTop="@+id/areaSendTextView"
+                        android:layout_alignBottom="@+id/areaSendTextView"
+                        android:layout_marginEnd="8dp"
+                        android:layout_toEndOf="@+id/areaSendTextView" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/areaHaveTextView"
                         style="@style/TextView.Small"
-                        android:layout_marginEnd="4dip"
-                        android:layout_marginRight="4dip"
+                        android:layout_marginEnd="8dp"
                         android:layout_toEndOf="@+id/areaAddressTextView"
-                        android:layout_toRightOf="@+id/areaAddressTextView"
-                        android:text="有货"
-                        tools:ignore="HardcodedText" />
+                        android:textColor="@color/textTwo" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/areaChooseTextView"
@@ -280,21 +285,28 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/areaAddressTextView"
                         android:layout_alignStart="@+id/areaAddressTextView"
-                        android:layout_alignLeft="@+id/areaAddressTextView"
-                        android:layout_marginTop="4dip"
-                        android:text="点击选择送货地区"
-                        android:textColor="@color/grey"
-                        tools:ignore="HardcodedText" />
+                        android:layout_marginTop="4dp"
+                        android:text="点击选择送货区域"
+                        android:textColor="@color/textTwo" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/saleTextView"
+                        style="@style/TextView.Small"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/areaImageView"
+                        android:gravity="center"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp"
+                        android:textColor="@color/textTwo" />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="20dip"
-                        android:layout_height="20dip"
+                        android:id="@+id/areaImageView"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:scaleType="center"
                         android:src="@drawable/ic_location_goods" />
-
                 </RelativeLayout>
 
                 <View style="@style/View.Line" />
@@ -302,53 +314,82 @@
                 <RelativeLayout
                     android:id="@+id/specRelativeLayout"
                     style="@style/Layout.Horizontal"
-                    android:layout_height="40dip"
+                    android:layout_height="40dp"
                     android:background="@drawable/selector_color_white"
-                    android:paddingLeft="16dip"
-                    android:paddingTop="8dip"
-                    android:paddingRight="16dip"
-                    android:paddingBottom="8dip">
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/specChooseTextView"
                         style="@style/TextView.Small"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="4dip"
-                        android:layout_marginRight="4dip"
+                        android:layout_marginEnd="8dp"
                         android:text="已选"
-                        tools:ignore="HardcodedText" />
+                        android:textColor="@color/textTwo" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/specOneTextView"
-                        style="@style/TextView.GoodsActivity"
+                        style="@style/TextView.Activity"
                         android:layout_alignTop="@+id/specChooseTextView"
                         android:layout_alignBottom="@+id/specChooseTextView"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
                         android:layout_toEndOf="@+id/specChooseTextView"
-                        android:layout_toRightOf="@+id/specChooseTextView"
-                        android:text="默认"
-                        tools:ignore="HardcodedText" />
+                        android:text="默认" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/specTwoTextView"
-                        style="@style/TextView.GoodsActivity"
+                        style="@style/TextView.Activity"
                         android:layout_alignTop="@+id/specChooseTextView"
                         android:layout_alignBottom="@+id/specChooseTextView"
-                        android:layout_marginStart="8dip"
-                        android:layout_marginLeft="8dip"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
                         android:layout_toEndOf="@+id/specOneTextView"
-                        android:layout_toRightOf="@+id/specOneTextView"
-                        android:text="默认"
-                        tools:ignore="HardcodedText" />
+                        android:text="默认" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/specThrTextView"
+                        style="@style/TextView.Activity"
+                        android:layout_alignTop="@+id/specChooseTextView"
+                        android:layout_alignBottom="@+id/specChooseTextView"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_toEndOf="@+id/specTwoTextView"
+                        android:text="默认" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/specFouTextView"
+                        style="@style/TextView.Activity"
+                        android:layout_alignTop="@+id/specChooseTextView"
+                        android:layout_alignBottom="@+id/specChooseTextView"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_toEndOf="@+id/specThrTextView"
+                        android:text="默认" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/specFivTextView"
+                        style="@style/TextView.Activity"
+                        android:layout_alignTop="@+id/specChooseTextView"
+                        android:layout_alignBottom="@+id/specChooseTextView"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_toEndOf="@+id/specFouTextView"
+                        android:text="默认" />
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="16dip"
-                        android:layout_height="16dip"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:scaleType="center"
-                        android:src="@mipmap/ic_dot_right" />
-
+                        android:src="@mipmap/ic_arrow_right" />
                 </RelativeLayout>
 
                 <View style="@style/View.Line" />
@@ -357,134 +398,97 @@
                     style="@style/Layout.Horizontal"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:paddingLeft="16dip"
-                    android:paddingTop="8dip"
-                    android:paddingRight="16dip"
-                    android:paddingBottom="8dip">
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/serviceServiceTextView"
                         style="@style/TextView.Small"
-                        android:layout_marginEnd="4dip"
-                        android:layout_marginRight="4dip"
+                        android:layout_marginEnd="8dp"
                         android:text="服务"
-                        tools:ignore="HardcodedText" />
+                        android:textColor="@color/textTwo" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/serviceDescTextView"
                         style="@style/TextView.Small"
-                        android:layout_marginEnd="4dip"
-                        android:layout_marginRight="4dip"
+                        android:layout_marginEnd="8dp"
                         android:layout_toEndOf="@+id/serviceServiceTextView"
-                        android:layout_toRightOf="@+id/serviceServiceTextView" />
+                        android:textColor="@color/textTwo" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/serviceSevDayTextView"
                         style="@style/TextView.Small"
                         android:layout_below="@+id/serviceDescTextView"
-                        android:layout_marginTop="4dip"
-                        android:layout_marginEnd="8dip"
-                        android:layout_marginRight="8dip"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_toEndOf="@+id/serviceServiceTextView"
-                        android:layout_toRightOf="@+id/serviceServiceTextView"
-                        android:drawableStart="@mipmap/ic_goods_sev_day"
-                        android:drawableLeft="@mipmap/ic_goods_sev_day"
-                        android:drawablePadding="4dip"
-                        android:text="7天退货"
-                        android:textColor="@color/primary"
-                        tools:ignore="HardcodedText" />
+                        android:textColor="@color/primary" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/serviceQualityTextView"
                         style="@style/TextView.Small"
                         android:layout_below="@+id/serviceDescTextView"
-                        android:layout_marginTop="4dip"
-                        android:layout_marginEnd="8dip"
-                        android:layout_marginRight="8dip"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_toEndOf="@+id/serviceSevDayTextView"
-                        android:layout_toRightOf="@+id/serviceSevDayTextView"
-                        android:drawableStart="@mipmap/ic_goods_quality"
-                        android:drawableLeft="@mipmap/ic_goods_quality"
-                        android:drawablePadding="4dip"
-                        android:text="品质承诺"
-                        android:textColor="@color/primary"
-                        tools:ignore="HardcodedText" />
+                        android:textColor="@color/primary" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/serviceReissueTextView"
                         style="@style/TextView.Small"
                         android:layout_below="@+id/serviceDescTextView"
-                        android:layout_marginTop="4dip"
-                        android:layout_marginEnd="8dip"
-                        android:layout_marginRight="8dip"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_toEndOf="@+id/serviceQualityTextView"
-                        android:layout_toRightOf="@+id/serviceQualityTextView"
-                        android:drawableStart="@mipmap/ic_goods_reissue"
-                        android:drawableLeft="@mipmap/ic_goods_reissue"
-                        android:drawablePadding="4dip"
-                        android:text="破损补寄"
-                        android:textColor="@color/primary"
-                        tools:ignore="HardcodedText" />
+                        android:textColor="@color/primary" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/serviceLogisticsTextView"
                         style="@style/TextView.Small"
                         android:layout_below="@+id/serviceDescTextView"
-                        android:layout_marginTop="4dip"
-                        android:layout_marginEnd="8dip"
-                        android:layout_marginRight="8dip"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_toEndOf="@+id/serviceReissueTextView"
-                        android:layout_toRightOf="@+id/serviceReissueTextView"
-                        android:drawableStart="@mipmap/ic_goods_logistics"
-                        android:drawableLeft="@mipmap/ic_goods_logistics"
-                        android:drawablePadding="4dip"
-                        android:text="急速物流"
-                        android:textColor="@color/primary"
-                        tools:ignore="HardcodedText" />
-
+                        android:textColor="@color/primary" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/evaluateRelativeLayout"
                     style="@style/Layout.Horizontal"
-                    android:layout_height="40dip"
-                    android:layout_marginTop="16dip"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
                     android:background="@drawable/selector_color_white"
-                    android:paddingLeft="16dip"
-                    android:paddingTop="8dip"
-                    android:paddingRight="16dip"
-                    android:paddingBottom="8dip">
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/evaluateServiceTextView"
                         style="@style/TextView.Small"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="4dip"
-                        android:layout_marginRight="4dip"
+                        android:layout_marginEnd="8dp"
                         android:text="商品评价"
-                        tools:ignore="HardcodedText" />
+                        android:textColor="@color/textTwo" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/evaluateDescTextView"
                         style="@style/TextView.Small"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="4dip"
-                        android:layout_marginRight="4dip"
+                        android:layout_marginEnd="8dp"
                         android:layout_toEndOf="@+id/evaluateServiceTextView"
-                        android:layout_toRightOf="@+id/evaluateServiceTextView"
-                        android:text="好评率100%"
-                        android:textColor="@color/primary"
-                        tools:ignore="HardcodedText" />
+                        android:text="好评率"
+                        android:textColor="@color/primary" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/evaluateNumberTextView"
                         style="@style/TextView.Small"
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:drawableEnd="@mipmap/ic_dot_right"
-                        android:drawableRight="@mipmap/ic_dot_right" />
-
+                        android:drawableEnd="@mipmap/ic_arrow_right"
+                        android:textColor="@color/textTwo" />
                 </RelativeLayout>
 
                 <View style="@style/View.Line" />
@@ -498,29 +502,26 @@
                     android:id="@+id/storeRelativeLayout"
                     style="@style/Layout.Tool"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dip"
-                    android:paddingLeft="16dip"
-                    android:paddingRight="16dip">
+                    android:layout_marginTop="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/storeNameTextView"
                         style="@style/TextView.ToolTitle"
-                        android:layout_height="40dip"
-                        android:drawableStart="@mipmap/ic_store_goods"
-                        android:drawableLeft="@mipmap/ic_store_goods"
-                        android:drawablePadding="4dip"
-                        android:text="店铺名字"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        android:layout_height="40dp"
+                        android:drawableStart="@drawable/ic_store_default"
+                        android:drawablePadding="8dp"
+                        android:textColor="@color/text" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/storeOwnTextView"
-                        style="@style/TextView.ToolValueDot"
-                        android:layout_height="40dip"
+                        style="@style/TextView.ToolValueArrow"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
                         android:text="自营店铺"
                         android:textColor="@color/primary"
-                        android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        android:textSize="12sp" />
 
                     <View
                         android:id="@+id/storeLineView"
@@ -529,14 +530,8 @@
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         style="@style/Layout.Horizontal"
-                        android:layout_height="40dip"
+                        android:layout_height="40dp"
                         android:layout_below="@+id/storeLineView">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextView.Small"
-                            android:layout_height="match_parent"
-                            android:text="描述相符："
-                            tools:ignore="HardcodedText" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/storeDescTextView"
@@ -546,15 +541,11 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/storeDescPercentTextView"
-                            style="@style/TextView.GoodsActivity"
+                            style="@style/TextView.Activity"
                             android:layout_height="match_parent"
-                            android:layout_margin="8dip" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextView.Small"
-                            android:layout_height="match_parent"
-                            android:text="服务态度："
-                            tools:ignore="HardcodedText" />
+                            android:layout_margin="10dp"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/storeServiceTextView"
@@ -564,15 +555,11 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/storeServicePercentTextView"
-                            style="@style/TextView.GoodsActivity"
+                            style="@style/TextView.Activity"
                             android:layout_height="match_parent"
-                            android:layout_margin="8dip" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            style="@style/TextView.Small"
-                            android:layout_height="match_parent"
-                            android:text="发货速度："
-                            tools:ignore="HardcodedText" />
+                            android:layout_margin="10dp"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/storeDeliveryTextView"
@@ -582,24 +569,20 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/storeDeliveryPercentTextView"
-                            style="@style/TextView.GoodsActivity"
+                            style="@style/TextView.Activity"
                             android:layout_height="match_parent"
-                            android:layout_margin="8dip" />
-
+                            android:layout_margin="10dp"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
-
                 </RelativeLayout>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextView.Tool"
-                    android:layout_height="40dip"
-                    android:layout_marginTop="16dip"
-                    android:background="@color/white"
-                    android:paddingLeft="16dip"
-                    android:paddingRight="16dip"
-                    android:text="店铺推荐"
-                    android:textSize="12sp"
-                    tools:ignore="HardcodedText" />
+                    android:layout_height="40dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="店铺推荐" />
 
                 <View style="@style/View.Line" />
 
@@ -607,19 +590,22 @@
                     android:id="@+id/commendRecyclerView"
                     style="@style/Layout.Main"
                     android:background="@color/white"
-                    android:padding="8dip" />
+                    android:padding="8dp" />
 
-                <View
-                    style="@style/View.Line"
-                    android:layout_height="16dip" />
-
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextView.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:text="下拉查看商品详情"
+                    android:textColor="@color/textTwo" />
             </androidx.appcompat.widget.LinearLayoutCompat>
-
         </androidx.core.widget.NestedScrollView>
+
         <WebView
             android:id="@+id/mainWebView"
             style="@style/Layout.Wrap" />
-    </org.cloud.panzer.view.ScrollDetailsLayout>
+    </com.wpccw.shop.view.ScrollDetailsLayout>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/toolbarLinearLayout"
@@ -855,7 +841,7 @@
         android:layout_height="48dp"
         android:layout_alignParentBottom="true">
 
-        <org.cloud.panzer.view.CenterTextView
+        <com.wpccw.shop.view.CenterTextView
             android:id="@+id/customerTextView"
             style="@style/TextView.Normal"
             android:layout_height="48dp"
@@ -868,7 +854,7 @@
 
         <View style="@style/View.Horizontal" />
 
-        <org.cloud.panzer.view.CenterTextView
+        <com.wpccw.shop.view.CenterTextView
             android:id="@+id/storeTextView"
             style="@style/TextView.Normal"
             android:layout_height="48dp"
@@ -925,8 +911,7 @@
             android:drawableStart="@mipmap/ic_store_goods"
             android:drawablePadding="4dp"
             android:text="领取店铺代金券"
-            android:textSize="14sp"
-            android:drawableLeft="@mipmap/ic_store_goods" />
+            android:textSize="14sp" />
 
         <View
             style="@style/View.Line"
@@ -1113,12 +1098,10 @@
             android:layout_below="@+id/shareQrcodeImageView"
             android:layout_alignStart="@+id/shareQrcodeImageView"
             android:layout_alignEnd="@+id/shareQrcodeImageView"
-            android:layout_alignLeft="@+id/shareQrcodeImageView"
-            android:layout_alignRight="@+id/shareQrcodeImageView"
             android:layout_marginTop="-8dp"
             android:layout_marginBottom="12dp"
             android:gravity="center"
-            android:text="使用灯世界扫一扫\10支持微信支付宝扫码"/>
+            android:text="使用灯世界扫一扫\10支持微信支付宝扫码" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/sharePriceTextView"
@@ -1136,22 +1119,22 @@
             android:paddingEnd="12dp"
             android:paddingBottom="12dp">
 
-            <org.cloud.panzer.view.CenterTextView
+            <com.wpccw.shop.view.CenterTextView
                 android:id="@+id/shareAutoTextView"
                 style="@style/TextView.Normal"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_weight="1"
-                android:text="自动保存"
-                android:drawableLeft="@drawable/ic_check" />
+                android:drawableStart="@drawable/ic_check"
+                android:text="自动保存" />
 
-            <org.cloud.panzer.view.CenterTextView
+            <com.wpccw.shop.view.CenterTextView
                 android:id="@+id/shareSaveTextView"
                 style="@style/TextView.Normal"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ic_download"
+                android:drawableStart="@drawable/ic_download"
                 android:text="保存图片" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </RelativeLayout>

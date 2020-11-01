@@ -1,19 +1,14 @@
 package org.cloud.core.base;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.widget.Toast;
+
+import org.cloud.core.R;
 
 public class BaseToast {
     private static BaseToast instance;
-
     private Toast mToast;
-
     private Context mContext;
-
-    protected Handler handler = new Handler(Looper.getMainLooper());
-
     public static BaseToast getInstance() {
         if (instance == null) {
             synchronized (BaseToast.class) {
@@ -22,7 +17,6 @@ public class BaseToast {
                 }
             }
         }
-
         return instance;
     }
 
@@ -31,49 +25,38 @@ public class BaseToast {
     }
 
     public void show(int resId) {
-        showToast(resId, Toast.LENGTH_SHORT);
-    }
-
-    public void show(String paramString) {
-        showToast(paramString, Toast.LENGTH_SHORT);
-    }
-
-    private void showToast(final String tips, final int duration) {
-        if (android.text.TextUtils.isEmpty(tips)) {
-            return;
+        if (this.mToast != null) {
+            this.mToast.cancel();
         }
-        handler.post(() -> {
-            if (mToast == null) {
-                mToast = Toast.makeText(mContext, tips, duration);
-            } else {
-                mToast.setText(tips);
-                mToast.setDuration(duration);
-            }
-            mToast.show();
-        });
+        this.mToast = Toast.makeText(this.mContext, resId, Toast.LENGTH_LONG);
+        this.mToast.show();
     }
 
-    private void showToast(final int tips, final int duration) {
-        handler.post(() -> {
-            if (mToast == null) {
-                mToast = Toast.makeText(mContext, tips, duration);
-            } else {
-                mToast.setText(tips);
-                mToast.setDuration(duration);
-            }
-            mToast.show();
-        });
+    public void show(String str) {
+        if (this.mToast != null) {
+            this.mToast.cancel();
+        }
+        this.mToast = Toast.makeText(this.mContext, str, Toast.LENGTH_LONG);
+        this.mToast.show();
     }
 
     public void showDataError() {
-        show("数据错误");
+        show(this.mContext.getString(R.string.data_error));
     }
 
-    public native void showFailure();
+    public void showFailure() {
+        show(this.mContext.getString(R.string.failure));
+    }
 
-    public native void showNetworkTimeout();
+    public void showNetworkTimeout() {
+        show(this.mContext.getString(R.string.network_timeout));
+    }
 
-    public native void showReturnOneMoreTime();
+    public void showReturnOneMoreTime() {
+        show(this.mContext.getString(R.string.return_one_more_time));
+    }
 
-    public native void showSuccess();
+    public void showSuccess() {
+        show(this.mContext.getString(R.string.success));
+    }
 }

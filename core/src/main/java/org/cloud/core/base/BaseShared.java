@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 public class BaseShared {
 
     private static BaseShared instance;
-
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sharedPreferencesEditor;
 
     public static BaseShared getInstance() {
         if (instance == null) {
@@ -16,12 +16,12 @@ public class BaseShared {
                 }
             }
         }
-
         return instance;
     }
 
     public void init(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
+        this.sharedPreferencesEditor = sharedPreferences.edit();
     }
 
     /**
@@ -52,7 +52,7 @@ public class BaseShared {
      * @param value 存储节点的值
      */
     public void putBoolean(String key, boolean value) {
-        sharedPreferences.edit().putBoolean(key, value).apply();
+        this.sharedPreferencesEditor.putBoolean(key, value).apply();
     }
 
     /**
@@ -62,6 +62,6 @@ public class BaseShared {
      * @param value 存储节点的值String
      */
     public void putString(String key, String value) {
-        sharedPreferences.edit().putString(key, value).apply();
+        this.sharedPreferencesEditor.putString(key, value).apply();
     }
 }
