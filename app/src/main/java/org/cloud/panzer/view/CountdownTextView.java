@@ -180,8 +180,5 @@ public class CountdownTextView extends AppCompatTextView {
         }
 
         return result;
-
     }
-
 }
-
