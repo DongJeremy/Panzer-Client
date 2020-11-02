@@ -66,9 +66,8 @@ dependencies {
     implementation "com.youth.banner:banner:2.1.0"
     implementation "com.sunfusheng:MarqueeView:1.4.1"
 
-    implementation 'com.github.dueeeke.dkplayer:dkplayer-java:2.5.5'
-    implementation 'com.github.dueeeke.dkplayer:dkplayer-armv7a:2.5.5'
-    implementation 'com.github.dueeeke.dkplayer:dkplayer-ui:2.5.5'
+    implementation 'com.github.dueeeke.dkplayer:dkplayer-java:3.2.6'
+    implementation 'com.github.dueeeke.dkplayer:dkplayer-ui:3.2.6'
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }

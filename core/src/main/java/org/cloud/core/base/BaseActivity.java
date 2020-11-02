@@ -5,6 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
@@ -14,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.cloud.core.R;
+import org.cloud.core.utils.StatusBarUtil;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
@@ -44,6 +49,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         if (useEventBus()) {
             EventBus.getDefault().register(this);//注册eventBus
         }
+        StatusBarUtil.setStatusBarMode(this, true, R.color.white);
         initPreparedData();
         initView();
         initData();
@@ -170,13 +176,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /** 初始数据的代码写在这个方法中，用于从服务器获取数据 */
     protected abstract void initData();
 
-    public void setToolbar(Toolbar toolbar) {
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(view -> onReturn());
-    }
-
     public Activity getActivity() {
         return activity;
     }
@@ -185,15 +184,31 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         finish();
     }
 
+    public void setToolbar(Toolbar toolbar) {
+        toolbar.setTitle("");
+        toolbar.setContentInsetStartWithNavigation(0);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(view -> onReturn());
+    }
+
+    public void setToolbar(Toolbar toolbar, int i) {
+        toolbar.setTitle("");
+        toolbar.setContentInsetStartWithNavigation(0);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        AppCompatTextView viewById = findViewById(R.id.titleTextView);
+        viewById.setText(i);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(view -> onReturn());
+    }
+
     public void setToolbar(Toolbar toolbar, String title) {
         toolbar.setTitle("");
+        toolbar.setContentInsetStartWithNavigation(0);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
-
-        if (!TextUtils.isEmpty(title)) {
-            AppCompatTextView appCompatTextView = (AppCompatTextView) findViewById(R.id.titleTextView);
-            appCompatTextView.setText(title);
-        }
-
+        AppCompatTextView viewById = findViewById(R.id.titleTextView);
+        viewById.setGravity(Gravity.CENTER);
+        viewById.setText(title);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(view -> onReturn());
     }

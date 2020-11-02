@@ -127,13 +127,13 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
         if(code!=200) {
             return;
         }
-        JsonArray index = rootJsonObject.getAsJsonObject("datas").getAsJsonArray("index");
+        JsonArray index = rootJsonObject.getAsJsonArray("datas");
         JsonObject jsonObject;
         for (int i = 0; i < index.size(); i++) {
             jsonObject = index.get(i).getAsJsonObject();
             //广告图
-            if (jsonObject.has("show_list")) {
-                handlerAdvList(jsonObject.get("show_list").getAsJsonObject());
+            if (jsonObject.has("adv_list")) {
+                handlerAdvList(jsonObject.get("adv_list").getAsJsonObject());
             }
             //Home7
             if (jsonObject.has("home7")) {

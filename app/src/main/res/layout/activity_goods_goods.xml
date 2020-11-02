@@ -10,7 +10,7 @@
         android:id="@+id/mainSlideDetailsLayout"
         style="@style/Layout.Main"
         android:layout_above="@+id/bottomView"
-        app:default_panel="0"
+        app:default_panel="front"
         app:percent="0.4">
         <androidx.core.widget.NestedScrollView
             android:id="@+id/mainScrollView"
@@ -29,11 +29,12 @@
                     <com.youth.banner.Banner
                         android:id="@+id/mainBanner"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent" >
 
-<!--                    <com.dueeeke.videoplayer.player.IjkVideoView-->
-<!--                        android:id="@+id/mainVideoPlayer"-->
-<!--                        style="@style/Layout.Main" />-->
+                        <com.dueeeke.videoplayer.player.VideoView
+                            android:id="@+id/mainVideoPlayer"
+                            style="@style/Layout.Main" />
+                    </com.youth.banner.Banner>
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/imageImageView"
@@ -45,7 +46,9 @@
                         android:layout_marginBottom="32dp"
                         android:layout_toStartOf="@+id/favoritesImageView"
                         android:background="@drawable/border_goods_circle"
-                        android:src="@drawable/ic_goods_image" />
+                        android:src="@drawable/ic_goods_image"
+                        android:layout_toLeftOf="@+id/favoritesImageView"
+                        android:layout_marginEnd="16dp" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/favoritesImageView"
@@ -57,7 +60,9 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="32dp"
                         android:background="@drawable/border_goods_circle"
-                        android:src="@drawable/ic_goods_favorite" />
+                        android:src="@drawable/ic_goods_favorite"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="16dp" />
 
                 </RelativeLayout>
 
@@ -628,7 +633,7 @@
         <View
             android:id="@+id/toolbarView"
             style="@style/View.Line"
-            android:background="@color/white" />
+            android:background="@color/whiteSub" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/mainToolbar"
@@ -645,7 +650,8 @@
 
         <View
             android:id="@+id/toolbarLineView"
-            style="@style/View.Line" />
+            style="@style/View.Line"/>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -670,21 +676,25 @@
             style="@style/ImageView.Goods"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/chooseNameTextView"
             style="@style/TextView.Normal"
             android:layout_width="match_parent"
-            android:layout_toEndOf="@+id/chooseGoodsImageView"
-            android:maxLines="2" />
+            android:layout_toRightOf="@+id/chooseGoodsImageView"
+            android:maxLines="2"
+            android:layout_toEndOf="@+id/chooseGoodsImageView" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/choosePriceTextView"
             style="@style/TextView.Price"
             android:layout_below="@+id/chooseNameTextView"
-            android:layout_marginEnd="4dp"
-            android:layout_toEndOf="@+id/chooseGoodsImageView" />
+            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@+id/chooseGoodsImageView"
+            android:layout_toEndOf="@+id/chooseGoodsImageView"
+            android:layout_marginEnd="4dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/chooseMobileTextView"
@@ -693,17 +703,19 @@
             android:layout_alignBottom="@+id/choosePriceTextView"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            android:layout_toEndOf="@+id/choosePriceTextView"
+            android:layout_toRightOf="@+id/choosePriceTextView"
             android:drawableStart="@null"
             android:drawableLeft="@null"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_toEndOf="@+id/choosePriceTextView" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/chooseStorageTextView"
             style="@style/TextView.Small"
             android:layout_below="@+id/chooseNameTextView"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:layout_alignParentRight="true" />
 
         <View
             android:id="@+id/chooseLineOneView"
@@ -825,7 +837,8 @@
             android:layout_alignTop="@+id/chooseAddTextView"
             android:layout_alignBottom="@+id/chooseAddTextView"
             android:layout_toStartOf="@+id/chooseNumberEditText"
-            android:text="-" />
+            android:text="-"
+            android:layout_toLeftOf="@+id/chooseNumberEditText" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/chooseNumberEditText"
@@ -834,14 +847,16 @@
             android:layout_alignBottom="@+id/chooseAddTextView"
             android:layout_toStartOf="@+id/chooseAddTextView"
             android:imeOptions="actionDone"
-            android:text="1" />
+            android:text="1"
+            android:layout_toLeftOf="@+id/chooseAddTextView" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/chooseAddTextView"
             style="@style/TextView.Selector"
             android:layout_below="@+id/chooseLineSixView"
             android:layout_alignParentEnd="true"
-            android:text="+" />
+            android:text="+"
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
 
     <View
@@ -864,7 +879,8 @@
             android:drawableStart="@drawable/ic_goods_customer"
             android:drawablePadding="8dp"
             android:text="客服"
-            android:textColor="@color/textThird" />
+            android:textColor="@color/textThird"
+            android:drawableLeft="@drawable/ic_goods_customer" />
 
         <View style="@style/View.Horizontal" />
 
@@ -877,7 +893,8 @@
             android:drawableStart="@drawable/ic_goods_store"
             android:drawablePadding="8dp"
             android:text="进店"
-            android:textColor="@color/textThird" />
+            android:textColor="@color/textThird"
+            android:drawableLeft="@drawable/ic_goods_store" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/addCartTextView"
@@ -1092,7 +1109,9 @@
             android:layout_toStartOf="@+id/shareQrcodeImageView"
             android:ellipsize="end"
             android:maxLines="3"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/shareQrcodeImageView" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/shareQrcodeImageView"
@@ -1105,7 +1124,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:scaleType="center"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/shareTipsTextView"

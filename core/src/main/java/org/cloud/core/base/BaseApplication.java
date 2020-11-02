@@ -146,6 +146,10 @@ public class BaseApplication extends Application {
         return ContextCompat.getColor(this, id);
     }
 
+    public int getStatusBarHeight() {
+        return getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android"));
+    }
+
     public void setFocus(View view) {
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
@@ -153,6 +157,7 @@ public class BaseApplication extends Application {
         view.requestFocusFromTouch();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     public void setWebView(WebView webView) {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
@@ -161,6 +166,11 @@ public class BaseApplication extends Application {
         webSettings.setLoadsImagesAutomatically(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setJavaScriptEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+//        webSettings.setlayoutalgorithm(layoutalgorithm.single_column);
+//        webSettings.setloadwithoverviewmode(true);
         webSettings.setDatabaseEnabled(true);
         webSettings.setAllowFileAccess(true);
         webSettings.setSupportZoom(false);

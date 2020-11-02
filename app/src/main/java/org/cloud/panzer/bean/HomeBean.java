@@ -200,7 +200,7 @@ public class HomeBean implements Serializable {
             @SerializedName("goods_name")
             public String goodsName = "";
 
-            @SerializedName("goods_sale_price")
+            @SerializedName("goods_promotion_price")
             public String goodsSalePrice = "";
         }
     }

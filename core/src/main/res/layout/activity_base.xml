@@ -13,8 +13,8 @@
         android:background="@color/white"
         contentInsetStartWithNavigation="0dip">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/titleTextView"
-            style="@style/TextView.Title" />
+<!--        <androidx.appcompat.widget.AppCompatTextView-->
+<!--            android:id="@+id/titleTextView"-->
+<!--            style="@style/TextView.Title" />-->
     </androidx.appcompat.widget.Toolbar>
 </androidx.appcompat.widget.LinearLayoutCompat>

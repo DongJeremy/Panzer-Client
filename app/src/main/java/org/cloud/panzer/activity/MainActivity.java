@@ -65,7 +65,8 @@ public class MainActivity extends BaseActivity {
         mBottomNavigationView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
         mBottomNavigationView.setItemTextAppearanceActive(R.style.bottom_selected_text);
         mBottomNavigationView.setItemTextAppearanceInactive(R.style.bottom_normal_text);
-        StatusBarUtil.setColor(this.getActivity(), getResources().getColor(R.color.primary), 0);
+        StatusBarUtil.setStatusBarMode(this, false, R.color.primary);
+        //StatusBarUtil.setColor(this.getActivity(), getResources().getColor(R.color.primary), 0);
     }
 
     @Override
