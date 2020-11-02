@@ -1,6 +1,7 @@
 package org.cloud.panzer.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.AppCompatEditText;
@@ -552,6 +554,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         // mainWebView
         String imagesUrlString = BaseConstant.URL_GOODS_BODY + goodsIdString;
         Log.e("DEBUG", imagesUrlString);
+
         mainWebView.loadUrl(imagesUrlString);
 
         //goodsSpec

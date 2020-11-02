@@ -17,7 +17,7 @@ public class GoodsCommendBean implements Serializable {
     @SerializedName("goods_price")
     private String goodsPrice = "";
 
-    @SerializedName("goods_sale_price")
+    @SerializedName("goods_promotion_price")
     private String goodsSalePrice = "";
 
     public String getGoodsId() {
