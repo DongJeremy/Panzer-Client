@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/window_background"
-    tools:context=".fragment.HomeFragment">
+    tools:context=".ui.main.HomeFragment">
     <View
         android:id="@+id/fake_status_bar"
         android:layout_width="match_parent"

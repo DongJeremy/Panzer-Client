@@ -1,14 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragment.CartFragment">
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLinearLayout"
+    style="@style/Layout.Main">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment4" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/toolbarLinearLayout"
+        style="@style/Layout.Horizontal"
+        android:layout_height="48dp"
+        android:background="@color/primary">
 
-</FrameLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/scanImageView"
+            style="@style/ImageView.Toolbar"
+            android:background="@drawable/selector_color_primary"
+            android:src="@drawable/ic_action_scan_white" />
+
+        <RelativeLayout
+            style="@style/Layout.Main"
+            android:layout_weight="1">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/searchEditText"
+                style="@style/EditText.SearchToolbar"
+                android:layout_centerVertical="true"
+                android:focusable="true" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/photoImageView"
+                style="@style/ImageView.Toolbar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_photo_white"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/Layout.Wrap"
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/messageImageView"
+                style="@style/ImageView.Toolbar"
+                android:background="@drawable/selector_color_primary"
+                android:src="@drawable/ic_action_message_white" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/messageDotTextView"
+                style="@style/TextView.PrimaryDot"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/border_white_8dip"
+                android:textColor="@color/primary"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="8dp" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <RelativeLayout
+        android:id="@+id/tipsRelativeLayout"
+        style="@style/Layout.Main"
+        android:layout_weight="1"
+        android:background="@color/background">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_above="@+id/tipsTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/border_grey_40dip"
+            android:scaleType="center"
+            android:src="@mipmap/ic_default_cart" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tipsTextView"
+            style="@style/TextView.Normal"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:text="您尚未登录！" />
+    </RelativeLayout>
+
+    <org.cloud.core.widget.PullRefreshView
+        android:id="@+id/mainPullRefreshView"
+        style="@style/Layout.Main"
+        android:layout_weight="1" />
+
+    <View
+        android:id="@+id/lineView"
+        style="@style/View.Line" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/operaLinearLayout"
+        style="@style/Layout.Horizontal"
+        android:layout_height="48dp"
+        android:background="@color/white">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/mainCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:checked="true" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/moneyTextView"
+            style="@style/TextView.Normal"
+            android:layout_weight="1"
+            android:text="合计金额" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/balanceTextView"
+            style="@style/TextView.Normal"
+            android:layout_width="96dp"
+            android:layout_height="48dp"
+            android:background="@drawable/selector_color_primary"
+            android:gravity="center"
+            android:text="结 算"
+            android:textColor="@color/white" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

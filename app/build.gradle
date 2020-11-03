@@ -69,5 +69,7 @@ dependencies {
     implementation 'com.github.dueeeke.dkplayer:dkplayer-java:3.2.6'
     implementation 'com.github.dueeeke.dkplayer:dkplayer-ui:3.2.6'
 
+    implementation 'com.github.XuDaojie:QRCode-Android:v0.4.2'
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }

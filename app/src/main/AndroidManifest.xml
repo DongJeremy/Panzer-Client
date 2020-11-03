@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".PanzerApplication"
@@ -15,8 +19,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Main">
+        <activity android:name=".ui.common.FindPassActivity"></activity>
+        <activity android:name=".ui.common.RegisterActivity" />
+        <activity android:name=".ui.common.LoginWebActivity" />
+        <activity android:name=".ui.home.ChatListActivity" />
+        <activity android:name=".ui.common.LoginActivity" />
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".ui.common.SplashActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Load"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
@@ -27,11 +36,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
-            android:name=".activity.GoodsActivity"
+            android:name=".ui.goods.GoodsActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" /> <!-- 二维码扫描 -->
+        <activity
+            android:name="io.github.xudaojie.qrcodelib.CaptureActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
     </application>

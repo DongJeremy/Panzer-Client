@@ -15,4 +15,5 @@
     <color name="greyAdd">#777777</color>
     <color name="boy">#57A8F2</color>
     <color name="girl">#FBA69D</color>
+    <color name="white_transparent">#77ffffff</color>
 </resources>

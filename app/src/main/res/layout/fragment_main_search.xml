@@ -1,14 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragment.SearchFragment">
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLinearLayout"
+    style="@style/Layout.Main">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment3" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/toolbarLinearLayout"
+        style="@style/Layout.Horizontal"
+        android:layout_height="48dp"
+        android:background="@color/primary">
 
-</FrameLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/scanImageView"
+            style="@style/ImageView.Toolbar"
+            android:background="@drawable/selector_color_primary"
+            android:src="@drawable/ic_action_scan_white" />
+
+        <RelativeLayout
+            style="@style/Layout.Main"
+            android:layout_weight="1">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/searchEditText"
+                style="@style/EditText.SearchToolbar"
+                android:layout_centerVertical="true"
+                android:focusable="true" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/photoImageView"
+                style="@style/ImageView.Toolbar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_action_photo_white"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/searchImageView"
+            style="@style/ImageView.Toolbar"
+            android:background="@drawable/selector_color_primary"
+            android:src="@drawable/ic_action_search_white" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        style="@style/View.Line"
+        android:layout_height="8dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextView.Line"
+        android:background="@color/background"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="指定内容搜索" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        style="@style/Layout.Horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dengshiTextView"
+            style="@style/TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_border_white_24dip"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="灯饰"
+            android:textColor="@color/title"
+            android:layout_marginRight="8dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/peijianTextView"
+            style="@style/TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_border_white_24dip"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="综合"
+            android:textColor="@color/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/storeTextView"
+            style="@style/TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_border_white_24dip"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="店铺"
+            android:textColor="@color/title"
+            android:layout_marginLeft="8dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        style="@style/Layout.Horizontal"
+        android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fuwuTextView"
+            style="@style/TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_border_white_24dip"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="服务"
+            android:textColor="@color/title"
+            android:layout_marginRight="8dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/quanziTextView"
+            style="@style/TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_border_white_24dip"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="资讯"
+            android:textColor="@color/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/helpTextView"
+            style="@style/TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_border_white_24dip"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="帮助"
+            android:textColor="@color/title"
+            android:layout_marginLeft="8dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        style="@style/View.Line"
+        android:layout_height="8dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextView.Line"
+        android:background="@color/background"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="热门搜索" />
+
+    <View
+        style="@style/View.Line"
+        android:layout_height="8dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/keyRecyclerView"
+        style="@style/Layout.Main"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp" />
+
+    <View
+        style="@style/View.Line"
+        android:layout_height="8dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextView.Line"
+        android:background="@color/background"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="历史记录" />
+
+    <View
+        style="@style/View.Line"
+        android:layout_height="8dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/historyRecyclerView"
+        style="@style/Layout.Main"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp" />
+
+    <View
+        style="@style/View.Line"
+        android:layout_height="match_parent" />
+</androidx.appcompat.widget.LinearLayoutCompat>

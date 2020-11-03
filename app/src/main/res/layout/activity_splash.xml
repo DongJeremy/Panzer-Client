@@ -5,20 +5,8 @@
     android:id="@+id/splashConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SplashActivity"
+    tools:context=".ui.common.SplashActivity"
     android:fitsSystemWindows="true">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="100dp"
-        android:text="@string/splash_text"
-        android:textColor="@color/font_color"
-        android:textSize="45sp"
-        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btn_skip"

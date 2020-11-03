@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,6 +42,7 @@ import com.squareup.leakcanary.RefWatcher;
 
 import org.cloud.core.R;
 import org.cloud.core.app.AppManager;
+import org.cloud.core.utils.LoadingViewUtils;
 import org.cloud.core.utils.cache.CacheManager;
 
 import java.util.List;
@@ -59,6 +61,10 @@ public class BaseApplication extends Application {
 
     public void setImage(boolean image) {
         isImage = image;
+    }
+
+    public boolean isLogin() {
+        return !TextUtils.isEmpty(BaseShared.getInstance().getString(BaseConstant.SHARED_KEY));
     }
 
     private RefWatcher mRefWatcher;
@@ -160,7 +166,7 @@ public class BaseApplication extends Application {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    public void setWebView(WebView webView) {
+    public void setWebView(BaseActivity activity, WebView webView) {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setPluginState(WebSettings.PluginState.ON);
@@ -173,11 +179,35 @@ public class BaseApplication extends Application {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-//        webSettings.setLoadWithOverviewMode(true);
-//        webSettings.setUseWideViewPort(true);
-        //webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setUseWideViewPort(true);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                LoadingViewUtils.showLoading(activity, true);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                imgReset(webView);
+                if (LoadingViewUtils.isLoading(activity)) {
+                    LoadingViewUtils.hideLoading(activity);
+                }
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+    }
+
+    private void imgReset(WebView webView) {
+        webView.loadUrl("javascript:(function(){document.getElementsByTagName('body')[0].style.margin='0';" +
+                "var objs = document.getElementsByTagName('img');" +
+                "for(var i=0;i<objs.length;i++){var img=objs[i];img.style.maxWidth='100%';img.style.height='auto';}" +
+                "})()");
     }
 
     public void hideKeyboard(Activity activity) {
@@ -331,6 +361,7 @@ public class BaseApplication extends Application {
         intent.addCategory("android.intent.category.HOME");
         start(activity, intent);
     }
+
     public void startLocation(Activity activity) {
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         start(activity, intent);
@@ -343,6 +374,15 @@ public class BaseApplication extends Application {
 
     public void start(Activity activity, Intent intent) {
         activity.startActivity(intent);
+    }
+
+    public void start(Activity activity, Class cls, int code) {
+        Intent intent = new Intent(activity, cls);
+        activity.startActivityForResult(intent, code);
+    }
+
+    public void start(Activity activity, Intent intent, int code) {
+        activity.startActivityForResult(intent, code);
     }
 
     public void startCall(Activity activity, String mobile) {

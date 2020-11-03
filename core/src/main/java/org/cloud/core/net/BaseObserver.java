@@ -1,6 +1,7 @@
 package org.cloud.core.net;
 
 import android.accounts.NetworkErrorException;
+import android.util.Log;
 
 import org.cloud.core.mvp.IView;
 import org.cloud.core.net.exception.ServerException;
@@ -36,6 +37,7 @@ public abstract class BaseObserver<T> implements Observer<T> {
     @Override
     public void onSubscribe(Disposable d) {
         showLoadingDialog();
+        Log.e("DEBUG", "获取数据中");
     }
 
     @Override
@@ -67,6 +69,7 @@ public abstract class BaseObserver<T> implements Observer<T> {
     @Override
     public void onComplete() {
         hideLoadingDialog();
+        Log.e("DEBUG", "获取数据完毕");
     }
 
     /**

@@ -10,6 +10,12 @@ public class BaseConstant {
     public static final String SHARED_SETTING_PUSH = "shared_settingd_push";
     public static final String SHARED_SETTING_IMAGE = "shared_setting_image";
 
+    public static final int CODE_LOGIN = 2000;
+
+    public static final int TIME_EXIT = 1000;
+    public static final String DATA_URL = "url";
+    public static final String DATA_KEY = "key";
+
     public static final String URL = "https://www.wpccw.com/";
     public static final String URL_API = URL + "api/mobile/index.php";
     public static final String URL_LOGIN_WB = URL_API + "?w=connect&t=get_sina_oauth2";
