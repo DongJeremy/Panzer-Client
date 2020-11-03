@@ -27,14 +27,14 @@ public class HomeBean implements Serializable {
         public String image;
         public String type;
         public String data;
-        public String iconName;
+        public String word;
         public String iconColor;
 
-        public ShortcutBean(String image, String type, String data, String iconName, String iconColor) {
+        public ShortcutBean(String image, String type, String data, String word, String iconColor) {
             this.image = image;
             this.type = type;
             this.data = data;
-            this.iconName = iconName;
+            this.word = word;
             this.iconColor = iconColor;
         }
 

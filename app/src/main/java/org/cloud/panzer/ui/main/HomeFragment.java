@@ -23,7 +23,7 @@ import org.cloud.panzer.PanzerApplication;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.HomeBannerAdapter;
 import org.cloud.panzer.adapter.HomeGoodsListAdapter;
-import org.cloud.panzer.adapter.HomeShortcutAdapter;
+import org.cloud.panzer.adapter.HomeNavListAdapter;
 import org.cloud.panzer.bean.HomeBean;
 import org.cloud.panzer.mvp.contract.HomeContract;
 import org.cloud.panzer.mvp.presenter.HomePresenter;
@@ -31,7 +31,6 @@ import org.cloud.panzer.ui.home.ChatListActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import io.github.xudaojie.qrcodelib.CaptureActivity;
@@ -39,7 +38,7 @@ import io.github.xudaojie.qrcodelib.CaptureActivity;
 @SuppressWarnings("rawtypes")
 public class HomeFragment extends BaseMVPFragment<HomePresenter> implements HomeContract.View {
 
-    private HomeShortcutAdapter mHomeShortcutAdapter;
+    private HomeNavListAdapter mHomeNavListAdapter;
     private HomeGoodsListAdapter mHomeGoodsListAdapter;
     private List<HomeBean.ShortcutBean> mShortcutList = new ArrayList<>();
     private List<String> mBannerList = new ArrayList<>();
@@ -83,7 +82,7 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
 
     @Override
     protected void initView() {
-        mHomeShortcutAdapter = new HomeShortcutAdapter(mContext);
+        mHomeNavListAdapter = new HomeNavListAdapter(getActivity(), mShortcutList);
         mainBanner.setAdapter(new HomeBannerAdapter(mBannerList));
         mainBanner.setIndicator(new RectangleIndicator(getActivity()));
         mainBanner.setIndicatorSpace((int) BannerUtils.dp2px(4));
@@ -102,8 +101,9 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
     @Override
     protected void initData() {
         mPresenter.requestGridData();
+
+        BaseApplication.getInstance().setRecyclerView(getActivity(), mRecyclerView, mHomeNavListAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 5));
-        mRecyclerView.setAdapter(mHomeShortcutAdapter);
         BaseApplication.getInstance().setRecyclerView(getActivity(), mainRecyclerView, mHomeGoodsListAdapter);
         mainRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
         mainRecyclerView.setPadding(BaseApplication.getInstance().dipToPx(2), 0, BaseApplication.getInstance().dipToPx(2), 0);
@@ -149,8 +149,8 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
                 handlerAdvList(jsonObject.get("adv_list").getAsJsonObject());
             }
             //Home7
-            if (jsonObject.has("home7")) {
-                handlerHome7(jsonObject.get("home7").getAsJsonObject());
+            if (jsonObject.has("home_nav")) {
+                handlerHome7(jsonObject.get("home_nav").getAsJsonObject());
             }
             //Goods
             if (jsonObject.has("goods")) {
@@ -194,25 +194,9 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
     private void handlerHome7(JsonObject jsonObject) {
         mShortcutList.clear();
         //第一个
-        mShortcutList.add(new HomeBean.ShortcutBean(jsonObject.get("square_image").getAsString(),
-                jsonObject.get("square_type").getAsString(),
-                jsonObject.get("square_data").getAsString(),
-                jsonObject.get("square_ico_name").getAsString(),
-                jsonObject.get("square_ico_color").getAsString()));
-        for (int i = 1; i < 10; i++) {
-            String rectangleImage = String.format(Locale.getDefault(), "rectangle%d_image", i);
-            String rectangleType = String.format(Locale.getDefault(), "rectangle%d_type", i);
-            String rectangleData = String.format(Locale.getDefault(), "rectangle%d_data", i);
-            String rectangleName = String.format(Locale.getDefault(), "rectangle%d_ico_name", i);
-            String rectangleColor = String.format(Locale.getDefault(), "rectangle%d_ico_color", i);
-            mShortcutList.add(new HomeBean.ShortcutBean(
-                    jsonObject.get(rectangleImage).getAsString(),
-                    jsonObject.get(rectangleType).getAsString(),
-                    jsonObject.get(rectangleData).getAsString(),
-                    jsonObject.get(rectangleName).getAsString(),
-                    jsonObject.get(rectangleColor).getAsString()));
-        }
-        mHomeShortcutAdapter.setList(mShortcutList);
-        mHomeShortcutAdapter.notifyDataSetChanged();
+        JsonArray jsonArray = jsonObject.get("item").getAsJsonArray();
+        ArrayList<HomeBean.ShortcutBean> arrayList = new ArrayList<>(JsonUtils.jsonToList(jsonArray, HomeBean.ShortcutBean.class));
+        mShortcutList.addAll(arrayList);
+        mHomeNavListAdapter.notifyDataSetChanged();
     }
 }
