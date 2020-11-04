@@ -7,10 +7,10 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.youth.banner.adapter.BannerAdapter;
 import com.youth.banner.util.BannerUtils;
 
+import org.cloud.core.base.BaseImageLoader;
 import org.cloud.panzer.R;
 
 import java.util.List;
@@ -30,10 +30,7 @@ public class HomeBannerAdapter extends BannerAdapter<String, HomeBannerAdapter.B
 
     @Override
     public void onBindView(BannerViewHolder holder, String data, int position, int size) {
-        Glide.with(holder.itemView)
-                .load(data)
-                .thumbnail(Glide.with(holder.itemView).load(R.mipmap.banner_loading))
-                .into(holder.imageView);
+        BaseImageLoader.getInstance().display(data, holder.imageView);
     }
 
     public static class BannerViewHolder extends RecyclerView.ViewHolder {

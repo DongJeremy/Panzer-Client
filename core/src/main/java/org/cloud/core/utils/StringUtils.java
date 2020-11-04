@@ -2,6 +2,8 @@ package org.cloud.core.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -455,5 +457,29 @@ public class StringUtils {
             return true;
         }
         return false;
+    }
+
+    public static List<String> getUrlFromString(String parseString) {
+        List<String> list = new ArrayList<>();
+        Pattern imgPattern = Pattern.compile("<(img|IMG)(.*?)(/>|></img>|>)");
+        Pattern srcPattern = Pattern.compile("(src|SRC)=([\"'])(.*?)([\"'])");
+        Matcher mImg = imgPattern.matcher(parseString);
+        boolean foundFlag = mImg.find();
+        if (foundFlag) {
+            while (foundFlag) {
+                String strImg = mImg.group(2);
+                //开始匹配<img />标签中的src
+                if (strImg != null) {
+                    Matcher mSrc = srcPattern.matcher(strImg);
+                    if (mSrc.find()) {
+                        String srcString = mSrc.group(3);
+                        list.add(srcString);
+                    }
+                    //匹配content中是否存在下一个<img />标签，有则继续以上步骤匹配<img />标签中的src
+                    foundFlag = mImg.find();
+                }
+            }
+        }
+        return list;
     }
 }

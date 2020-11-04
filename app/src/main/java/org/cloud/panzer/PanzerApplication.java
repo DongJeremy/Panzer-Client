@@ -9,6 +9,9 @@ import org.cloud.panzer.ui.common.LoginActivity;
 import org.cloud.panzer.ui.goods.GoodsActivity;
 
 public class PanzerApplication extends BaseApplication {
+
+    public static final String TAG = "PANZER_DEBUG";
+
     public void startGoods(Activity activity, String goodsId) {
         Intent intent = new Intent(activity, GoodsActivity.class);
         intent.putExtra(BaseConstant.DATA_ID, goodsId);

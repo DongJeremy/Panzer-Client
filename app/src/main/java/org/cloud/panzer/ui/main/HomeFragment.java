@@ -2,35 +2,32 @@ package org.cloud.panzer.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sunfusheng.marqueeview.MarqueeView;
-import com.youth.banner.Banner;
-import com.youth.banner.indicator.RectangleIndicator;
-import com.youth.banner.util.BannerUtils;
 
 import org.cloud.core.base.BaseApplication;
 import org.cloud.core.base.BaseMVPFragment;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.panzer.PanzerApplication;
 import org.cloud.panzer.R;
-import org.cloud.panzer.adapter.HomeBannerAdapter;
-import org.cloud.panzer.adapter.HomeGoodsListAdapter;
-import org.cloud.panzer.adapter.HomeNavListAdapter;
+import org.cloud.panzer.adapter.HomeListAdapter;
+import org.cloud.panzer.bean.ArticleBean;
 import org.cloud.panzer.bean.HomeBean;
 import org.cloud.panzer.mvp.contract.HomeContract;
 import org.cloud.panzer.mvp.presenter.HomePresenter;
 import org.cloud.panzer.ui.home.ChatListActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import io.github.xudaojie.qrcodelib.CaptureActivity;
@@ -38,30 +35,24 @@ import io.github.xudaojie.qrcodelib.CaptureActivity;
 @SuppressWarnings("rawtypes")
 public class HomeFragment extends BaseMVPFragment<HomePresenter> implements HomeContract.View {
 
-    private HomeNavListAdapter mHomeNavListAdapter;
-    private HomeGoodsListAdapter mHomeGoodsListAdapter;
-    private List<HomeBean.ShortcutBean> mShortcutList = new ArrayList<>();
-    private List<String> mBannerList = new ArrayList<>();
-    private ArrayList<HomeBean.GoodsBean.ItemBean> mGoodsList = new ArrayList<>();
-
-    @BindView(R.id.mainBanner)
-    @SuppressWarnings("rawtypes")
-    Banner mainBanner;
-
-    @BindView(R.id.messageImageView)
-    AppCompatImageView messageImageView;
-
-    @BindView(R.id.noticeMarqueeView)
-    MarqueeView noticeMarqueeView;
-
-    @BindView(R.id.mainCategoryRecyclerView)
-    RecyclerView mRecyclerView;
+    public ArrayList<ArticleBean> articleArrayList;
+    public HomeListAdapter mainAdapter;
+    public ArrayList<HomeBean> mainArrayList;
 
     @BindView(R.id.mainRecyclerView)
     RecyclerView mainRecyclerView;
-
+    @BindView(R.id.mainSwipeRefreshLayout)
+    SwipeRefreshLayout mainSwipeRefreshLayout;
+    @BindView(R.id.messageDotTextView)
+    AppCompatTextView messageDotTextView;
+    @BindView(R.id.messageImageView)
+    AppCompatImageView messageImageView;
+    @BindView(R.id.photoImageView)
+    AppCompatImageView photoImageView;
     @BindView(R.id.scanImageView)
     AppCompatImageView scanImageView;
+    @BindView(R.id.searchEditText)
+    AppCompatEditText searchEditText;
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -82,12 +73,11 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
 
     @Override
     protected void initView() {
-        mHomeNavListAdapter = new HomeNavListAdapter(getActivity(), mShortcutList);
-        mainBanner.setAdapter(new HomeBannerAdapter(mBannerList));
-        mainBanner.setIndicator(new RectangleIndicator(getActivity()));
-        mainBanner.setIndicatorSpace((int) BannerUtils.dp2px(4));
-        mainBanner.setIndicatorRadius(0);
-        mHomeGoodsListAdapter = new HomeGoodsListAdapter(getActivity(), mGoodsList);
+        this.mainArrayList = new ArrayList<>();
+        this.articleArrayList = new ArrayList<>();
+        this.mainAdapter = new HomeListAdapter(getActivity(), this.mainArrayList);
+        BaseApplication.getInstance().setRecyclerView(getActivity(), mainRecyclerView, mainAdapter);
+        BaseApplication.getInstance().setSwipeRefreshLayout(mainSwipeRefreshLayout);
     }
 
     @Override
@@ -100,13 +90,8 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
 
     @Override
     protected void initData() {
-        mPresenter.requestGridData();
-
-        BaseApplication.getInstance().setRecyclerView(getActivity(), mRecyclerView, mHomeNavListAdapter);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 5));
-        BaseApplication.getInstance().setRecyclerView(getActivity(), mainRecyclerView, mHomeGoodsListAdapter);
-        mainRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
-        mainRecyclerView.setPadding(BaseApplication.getInstance().dipToPx(2), 0, BaseApplication.getInstance().dipToPx(2), 0);
+        mPresenter.requestHomeInfoData();
+        mPresenter.requestArticleListData();
     }
 
     @Override
@@ -120,83 +105,66 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mainBanner.start();
-        noticeMarqueeView.startFlipping();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mainBanner.stop();
-        noticeMarqueeView.stopFlipping();
-    }
-
-    @Override
     public void showHomeInfoData(String homeInfoData) {
-        JsonObject rootJsonObject = new JsonParser().parse(homeInfoData).getAsJsonObject();
-        int code = rootJsonObject.get("code").getAsInt();
-        if (code != 200) {
+        JsonElement datasFromJson = getDatasFromJson(homeInfoData);
+        if (datasFromJson instanceof JsonNull) {
             return;
         }
-        JsonArray index = rootJsonObject.getAsJsonArray("datas");
-        JsonObject jsonObject;
-        for (int i = 0; i < index.size(); i++) {
-            jsonObject = index.get(i).getAsJsonObject();
-            //广告图
+        JsonArray jsonArrays = datasFromJson.getAsJsonArray();
+        for (int i = 0; i < jsonArrays.size(); i++) {
+            JsonObject jsonObject = jsonArrays.get(i).getAsJsonObject();
+            HomeBean homeBean = new HomeBean();
             if (jsonObject.has("adv_list")) {
-                handlerAdvList(jsonObject.get("adv_list").getAsJsonObject());
+                homeBean.setType("adv_list");
+                homeBean.setAdvListBean(JsonUtils.jsonToBean(jsonObject.get("adv_list"), HomeBean.AdvListBean.class));
+                this.mainArrayList.add(homeBean);
             }
-            //Home7
             if (jsonObject.has("home_nav")) {
-                handlerHome7(jsonObject.get("home_nav").getAsJsonObject());
+                homeBean.setType("home_nav");
+                homeBean.setHomeNavBean(JsonUtils.jsonToBean(jsonObject.get("home_nav"), HomeBean.HomeNavBean.class));
+                this.mainArrayList.add(homeBean);
             }
-            //Goods
+            if (jsonObject.has("home1")) {
+                homeBean.setType("home1");
+                homeBean.setHome1Bean(JsonUtils.jsonToBean(jsonObject.get("home1"), HomeBean.Home1Bean.class));
+                this.mainArrayList.add(homeBean);
+            }
             if (jsonObject.has("goods")) {
-                handlerGoods(jsonObject.get("goods").getAsJsonObject());
+                homeBean.setType("goods");
+                homeBean.setGoodsBean(JsonUtils.jsonToBean(jsonObject.get("goods"), HomeBean.GoodsBean.class));
+                this.mainArrayList.add(homeBean);
             }
         }
+        this.mainAdapter.notifyDataSetChanged();
     }
 
-    private void handlerGoods(JsonObject jsonObject) {
-        ArrayList<HomeBean.GoodsBean.ItemBean> arrayList = new ArrayList<>();
-        JsonArray jsonArray = jsonObject.get("item").getAsJsonArray();
-        for (int i = 0; i < jsonArray.size(); i++) {
-            arrayList.add(JsonUtils.jsonToBean(jsonArray.get(i), HomeBean.GoodsBean.ItemBean.class));
+    @Override
+    public void showArticleListData(String articleListData) {
+        JsonElement datasFromJson = getDatasFromJson(articleListData);
+        if (datasFromJson instanceof JsonNull) {
+            return;
         }
-        mGoodsList.clear();
-        mGoodsList.addAll(arrayList);
-        mHomeGoodsListAdapter.notifyDataSetChanged();
-    }
-
-    private void handlerAdvList(JsonObject jsonObject) {
-        JsonArray jsonArray = jsonObject.get("item").getAsJsonArray();
-        ArrayList<HomeBean.AdvListBean> arrayList = new ArrayList<>(JsonUtils.jsonToList(jsonArray, HomeBean.AdvListBean.class));
-        if (arrayList.size() == 0) {
-            mainBanner.setVisibility(View.GONE);
-        } else {
-            mainBanner.setVisibility(View.VISIBLE);
-            List<String> image = new ArrayList<>();
-            final List<String> type = new ArrayList<>();
-            final List<String> data = new ArrayList<>();
-            for (int i = 0; i < arrayList.size(); i++) {
-                image.add(arrayList.get(i).image);
-                type.add(arrayList.get(i).type);
-                data.add(arrayList.get(i).data);
+        JsonArray jsonArrays = datasFromJson.getAsJsonObject().getAsJsonArray("article_list");
+        this.articleArrayList.addAll(JsonUtils.jsonToList(jsonArrays, ArticleBean.class));
+        if (articleArrayList.size() != 0) {
+            HomeBean homeBean = new HomeBean();
+            homeBean.setType("article");
+            homeBean.setArticleList(HomeFragment.this.articleArrayList);
+            if (mainArrayList.size() == 0) {
+                this.mainArrayList.add(homeBean);
+            } else {
+                this.mainArrayList.add(2, homeBean);
             }
-            mainBanner.setOnBannerListener((o, position) -> BaseApplication.getInstance().startTypeValue(getActivity(), type.get(position), data.get(position)));
-            mainBanner.setDatas(image);
-            mainBanner.start();
         }
+        this.mainAdapter.notifyDataSetChanged();
     }
 
-    private void handlerHome7(JsonObject jsonObject) {
-        mShortcutList.clear();
-        //第一个
-        JsonArray jsonArray = jsonObject.get("item").getAsJsonArray();
-        ArrayList<HomeBean.ShortcutBean> arrayList = new ArrayList<>(JsonUtils.jsonToList(jsonArray, HomeBean.ShortcutBean.class));
-        mShortcutList.addAll(arrayList);
-        mHomeNavListAdapter.notifyDataSetChanged();
+    private JsonElement getDatasFromJson(String jsonString) {
+        JsonObject rootJsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
+        int code = rootJsonObject.get("code").getAsInt();
+        if (code != 200) {
+            return JsonNull.INSTANCE;
+        }
+        return rootJsonObject.get("datas");
     }
 }

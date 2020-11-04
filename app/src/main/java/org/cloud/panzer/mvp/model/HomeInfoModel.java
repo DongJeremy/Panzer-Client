@@ -12,4 +12,9 @@ public class HomeInfoModel extends BaseModel implements HomeContract.Model {
     public Observable<String> getHomeInfoData() {
         return RetrofitUtils.getRawHttpService().getHomeInfoData();
     }
+
+    @Override
+    public Observable<String> getArticleListData() {
+        return RetrofitUtils.getRawHttpService().getArticleListData();
+    }
 }

@@ -17,7 +17,6 @@ import org.cloud.core.base.BaseViewHolder;
 import org.cloud.panzer.PanzerApplication;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.HomeBean;
-import org.cloud.panzer.mvp.model.HomeInfoModel;
 
 import java.util.ArrayList;
 
@@ -44,14 +43,15 @@ public class HomeGoodsListAdapter extends RecyclerView.Adapter<HomeGoodsListAdap
         final HomeBean.GoodsBean.ItemBean bean = arrayList.get(position);
 
         int width = BaseApplication.getInstance().getWidth() / 2 - 16;
-        BaseImageLoader.getInstance().displayRadius(bean.goodsImage, holder.mainImageView);
+        BaseImageLoader.getInstance().displayRadius(bean.getGoodsImage(), holder.mainImageView);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, width);
         holder.mainImageView.setLayoutParams(layoutParams);
-        holder.nameTextView.setText(bean.goodsName);
+        holder.nameTextView.setText(bean.getGoodsName());
         holder.moneyTextView.setText("￥");
-        holder.moneyTextView.append(String.valueOf(bean.goodsSalePrice));
+        holder.moneyTextView.append(String.valueOf(bean.getGoodsPromotionPrice()));
 
-        holder.mainRelativeLayout.setOnClickListener(view -> ((PanzerApplication) PanzerApplication.getInstance()).startGoods(activity, bean.goodsId+""));
+        holder.mainRelativeLayout.setOnClickListener(view ->
+                ((PanzerApplication) PanzerApplication.getInstance()).startGoods(activity, bean.getGoodsId()+""));
     }
 
     @NonNull

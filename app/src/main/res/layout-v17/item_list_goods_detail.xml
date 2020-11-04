@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLinearLayout"
+    style="@style/Layout.Wrap"
+    android:layout_margin="0dip"
+    android:padding="0dip">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/detailsImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:transitionName="sharedView"
+        android:scaleType="fitXY" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

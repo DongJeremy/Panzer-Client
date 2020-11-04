@@ -2,6 +2,7 @@ package org.cloud.panzer.ui.goods;
 
 import android.graphics.Paint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
@@ -38,6 +39,7 @@ import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.EvaluateGoodsSimpleListAdapter;
 import org.cloud.panzer.adapter.GoodsCommendListAdapter;
+import org.cloud.panzer.adapter.GoodsDetailListAdapter;
 import org.cloud.panzer.adapter.SpecListAdapter;
 import org.cloud.panzer.adapter.VoucherGoodsListAdapter;
 import org.cloud.panzer.bean.EvaluateGoodsBean;
@@ -53,10 +55,15 @@ import org.cloud.panzer.view.ScrollDetailsLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
+
+import static org.cloud.core.utils.StringUtils.getUrlFromString;
 
 public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements GoodsContract.View {
 
@@ -67,8 +74,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     @BindView(R.id.headerRelativeLayout)
     RelativeLayout headerRelativeLayout;
     @BindView(R.id.mainBanner)
-    @SuppressWarnings("rawtypes")
-    Banner mainBanner;
+    Banner<String, BannerImageAdapter> mainBanner;
     @BindView(R.id.mainVideoPlayer)
     VideoView mainVideoPlayer;
 
@@ -211,8 +217,11 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     @BindView(R.id.voucherLinearLayout)
     LinearLayoutCompat voucherLinearLayout;
 
-    @BindView(R.id.mainWebView)
-    WebView mainWebView;
+//    @BindView(R.id.mainWebView)
+//    WebView mainWebView;
+
+    @BindView(R.id.detailsImagesView)
+    RecyclerView detailsImagesView;
 
 //    @BindView(R.id.voucherStoreNameTextView)
 //    AppCompatTextView voucherStoreNameTextView;
@@ -231,6 +240,10 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     private ArrayList<VoucherGoodsBean> voucherArrayList;
 
     private final ArrayList<String> goodsImageArrayList = new ArrayList<>();
+
+    private final ArrayList<String> goodsImagesList = new ArrayList<>();
+    private GoodsDetailListAdapter goodsDetailListAdapter;
+
     private ArrayList<HashMap<String, String>> specNameArrayList = new ArrayList<>();
     private ArrayList<HashMap<String, String>> specValueArrayList = new ArrayList<>();
     private ArrayList<HashMap<String, String>> goodsSpecArrayList = new ArrayList<>();
@@ -286,7 +299,11 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         this.toolbarView.setAlpha(0.0f);
         this.toolbarLineView.setAlpha(0.0f);
         // 配置WebView
-        BaseApplication.getInstance().setWebView(this, mainWebView);
+        //BaseApplication.getInstance().setWebView(this, mainWebView);
+        // 配置详情图片页面
+        goodsDetailListAdapter = new GoodsDetailListAdapter(goodsImagesList);
+        BaseApplication.getInstance().setRecyclerView(getActivity(), detailsImagesView, goodsDetailListAdapter);
+        detailsImagesView.setLayoutManager(new LinearLayoutManager(this));
 
         RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.shareImageView.getLayoutParams();
         layoutParams3.height = BaseApplication.getInstance().getWidth() - BaseApplication.getInstance().dipToPx(112);
@@ -330,10 +347,9 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             BaseApplication.getInstance().finish(getActivity());
         }
         isShowBoolean = false;
-        //setToolbar(mainToolbar, "");
-        //updateNavigation(0);
         // 获取数据
-        mPresenter.requestGoodsData(goodsIdString);
+        mPresenter.requestGoodsDetailData(goodsIdString);
+        mPresenter.requestGoodsImagesData(goodsIdString);
 
         specTextView = new AppCompatTextView[2];
         specTextView[0] = specOneTextView;
@@ -362,8 +378,9 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             } else if (i == 1) {
                 setToolbar(this.mainToolbar, "商品介绍");
                 // mainWebView
-                String imagesUrlString = BaseConstant.URL_GOODS_BODY + goodsIdString;
-                mainWebView.loadUrl(imagesUrlString);
+
+//                String imagesUrlString = BaseConstant.URL_GOODS_BODY + goodsIdString;
+//                mainWebView.loadUrl(imagesUrlString);
             }
         });
         mainScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
@@ -387,7 +404,8 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         });
         commendAdapter.setOnItemClickListener((position, bean) -> {
             goodsIdString = bean.getGoodsId();
-            mPresenter.requestGoodsData(goodsIdString);
+            mPresenter.requestGoodsDetailData(goodsIdString);
+            mPresenter.requestGoodsImagesData(goodsIdString);
         });
     }
 
@@ -648,15 +666,22 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         JsonObject storeCredit = storeInfo.getAsJsonObject("store_credit");
         JsonObject storeDesccredit = storeCredit.getAsJsonObject("store_desccredit");
         storeDescTextView.setText(storeDesccredit.get("credit").getAsString());
-        storeDescPercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
+        if(!(storeDesccredit.get("percent_text") instanceof JsonNull)) {
+            storeDescPercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
+        }
 
         JsonObject servicecredit = storeCredit.getAsJsonObject("store_servicecredit");
         storeServiceTextView.setText(servicecredit.get("credit").getAsString());
-        storeServicePercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
+        if(!(storeDesccredit.get("percent_text") instanceof JsonNull)) {
+            storeServicePercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
+        }
 
         JsonObject deliverycredit = storeCredit.getAsJsonObject("store_deliverycredit");
         storeDeliveryTextView.setText(deliverycredit.get("credit").getAsString());
-        storeDeliveryPercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
+
+        if(!(storeDesccredit.get("percent_text") instanceof JsonNull)) {
+            storeDeliveryPercentTextView.setText(storeInfo.get("is_own_shop").getAsString().equals("1") ? "平" : storeDesccredit.get("percent_text").getAsString());
+        }
         serviceDescTextView.setText(temp);
         //服务信息
         if (goodsInfoJSONObject.has("contractlist") && !(goodsInfoJSONObject.get("contractlist") instanceof JsonNull)) {
@@ -717,6 +742,14 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     @Override
     public void showGoodsDetailData(String homeInfoData) {
         handlerData(homeInfoData);
+    }
+
+    @Override
+    public void showGoodsImagesData(String goodsInfoData) {
+        List<String> list = getUrlFromString(goodsInfoData);
+        goodsImagesList.clear();
+        goodsImagesList.addAll(list);
+        goodsDetailListAdapter.notifyDataSetChanged();
     }
 
     @Override

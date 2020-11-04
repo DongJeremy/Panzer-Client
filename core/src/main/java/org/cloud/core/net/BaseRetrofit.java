@@ -114,7 +114,7 @@ public class BaseRetrofit {
                             .connectTimeout(15, TimeUnit.SECONDS)//连接超时时间
                             .readTimeout(15, TimeUnit.SECONDS)//读取超时时间
                             .writeTimeout(15, TimeUnit.SECONDS)//写入超时时间
-                            .retryOnConnectionFailure(false);//连接不上是否重连,false不重连
+                            .retryOnConnectionFailure(true);//连接不上是否重连,false不重连
 
                     //忽略ssl证书,android10及以上的版本就不用了
                     if (Build.VERSION.SDK_INT < 29) {

@@ -9,15 +9,29 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.CustomViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
 import org.cloud.core.R;
 import org.jetbrains.annotations.NotNull;
@@ -122,6 +136,81 @@ public class BaseImageLoader {
             Glide.with(context).load(R.mipmap.ic_launcher).into(imageView);
         }
     }
+
+    public void displayFitXY(String url, ImageView imageView) {
+        if (BaseApplication.getInstance().isImage()) {
+            Glide.with(context)
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            if (imageView == null) {
+                                return false;
+                            }
+                            if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
+                                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                            }
+                            ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                            int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+                            float scale = (float) vw / (float) resource.getIntrinsicWidth();
+                            int vh = Math.round(resource.getIntrinsicHeight() * scale);
+                            params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
+                            imageView.setLayoutParams(params);
+                            return false;
+                        }
+                    })
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .into(imageView);
+        } else {
+            Glide.with(context).load(R.mipmap.ic_launcher).into(imageView);
+        }
+    }
+
+    public void displayFitCenter(String url, ImageView imageView) {
+        if (BaseApplication.getInstance().isImage()) {
+            Glide.with(context)
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            if (imageView == null) {
+                                return false;
+                            }
+                            if (imageView.getScaleType() != ImageView.ScaleType.FIT_CENTER) {
+                                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            }
+                            ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                            int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+                            float scale = (float) vw / (float) resource.getIntrinsicWidth();
+                            int vh = Math.round(resource.getIntrinsicHeight() * scale);
+                            params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
+                            imageView.setLayoutParams(params);
+                            return false;
+                        }
+                    })
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .into(imageView);
+        } else {
+            Glide.with(context).load(R.mipmap.ic_launcher).into(imageView);
+        }
+    }
+
+
+
 
     public void displayCircle(String url, ImageView imageView) {
 

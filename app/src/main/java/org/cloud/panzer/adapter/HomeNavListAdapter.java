@@ -23,10 +23,10 @@ import butterknife.BindView;
 
 public class HomeNavListAdapter extends RecyclerView.Adapter<HomeNavListAdapter.ViewHolder> {
 
-    private final List<HomeBean.ShortcutBean> mList;
+    private final List<HomeBean.HomeNavBean.ItemBean> mList;
     private final Activity activity;
 
-    public HomeNavListAdapter(Activity activity, List<HomeBean.ShortcutBean> mList) {
+    public HomeNavListAdapter(Activity activity, List<HomeBean.HomeNavBean.ItemBean> mList) {
         this.mList = mList;
         this.activity = activity;
     }
@@ -40,11 +40,11 @@ public class HomeNavListAdapter extends RecyclerView.Adapter<HomeNavListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final HomeBean.ShortcutBean bean = mList.get(position);
-        BaseImageLoader.getInstance().display(bean.image, holder.mainImageView);
-        holder.mainTextView.setText(bean.word);
+        final HomeBean.HomeNavBean.ItemBean bean = mList.get(position);
+        BaseImageLoader.getInstance().display(bean.getImage(), holder.mainImageView);
+        holder.mainTextView.setText(bean.getWord());
         holder.mainLinearLayout.setOnClickListener(v -> {
-            BaseApplication.getInstance().startTypeValue(this.activity, bean.type, bean.data);
+            BaseApplication.getInstance().startTypeValue(this.activity, bean.getType(), bean.getData());
         });
     }
 
@@ -61,6 +61,7 @@ public class HomeNavListAdapter extends RecyclerView.Adapter<HomeNavListAdapter.
         LinearLayoutCompat mainLinearLayout;
         @BindView(R.id.mainTextView)
         AppCompatTextView mainTextView;
+
         public ViewHolder(@NonNull View view) {
             super(view);
         }

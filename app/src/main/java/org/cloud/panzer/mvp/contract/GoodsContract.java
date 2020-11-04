@@ -8,10 +8,12 @@ import io.reactivex.Observable;
 public interface GoodsContract {
 
     interface View extends IView {
-        void showGoodsDetailData(String homeInfoData);
+        void showGoodsDetailData(String goodsInfoData);
+        void showGoodsImagesData(String goodsInfoData);
     }
 
     interface Model extends IModel {
         Observable<String> getGoodsDetailData(String id);
+        Observable<String> getGoodsImagesData(String id);
     }
 }

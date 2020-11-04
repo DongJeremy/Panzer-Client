@@ -14,13 +14,31 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
         return new HomeInfoModel();
     }
 
-    public void requestGridData() {
+    public void requestHomeInfoData() {
         getModel().getHomeInfoData()
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()){
                     @Override
                     public void onSuccess(String result) {
                         getView().showHomeInfoData(result);
+                    }
+
+                    @Override
+                    public void onFailure(String errMsg, boolean isNetError) {
+                        Log.e("ERROR", errMsg);
+                        getView().showError(errMsg);
+                    }
+                });
+
+    }
+
+    public void requestArticleListData() {
+        getModel().getArticleListData()
+                .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
+                .subscribe(new BaseObserver<String>(getView()){
+                    @Override
+                    public void onSuccess(String result) {
+                        getView().showArticleListData(result);
                     }
 
                     @Override

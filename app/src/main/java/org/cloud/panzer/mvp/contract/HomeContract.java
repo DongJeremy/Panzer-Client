@@ -9,9 +9,11 @@ public interface HomeContract {
 
     interface View extends IView {
         void showHomeInfoData(String homeInfoData);
+        void showArticleListData(String articleListData);
     }
 
     interface Model extends IModel {
         Observable<String> getHomeInfoData();
+        Observable<String> getArticleListData();
     }
 }
