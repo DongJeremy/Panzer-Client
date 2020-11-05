@@ -240,30 +240,25 @@ public class CartFragment extends BaseMVPFragment<CartPresenter> implements Cart
     }
 
     @Override
-    public void showCartDeleteData(String cartListData) {
-        MemberCartModel.get().cartDel(goodsBean.getCartId(), new BaseHttpListener() {
-            @Override
-            public void onSuccess(BaseBean baseBean) {
-                mainArrayList.get(position).getGoods().remove(positionGoods);
-                if (mainArrayList.get(position).getGoods().size() == 0) {
-                    mainArrayList.remove(position);
-                }
-                if (mainArrayList.size() == 0) {
-                    tipsEmpty();
-                }
-                if (position == 0) {
-                    mainAdapter.notifyDataSetChanged();
-                } else {
-                    mainAdapter.notifyItemChanged(position);
-                }
-                calc();
-            }
+    public void showCartEditQuantity(String cartEditData) {
+        getCart();
+    }
 
-            @Override
-            public void onFailure(String reason) {
-                BaseToast.get().show(reason);
-            }
-        });
+    @Override
+    public void showCartDeleteData(int position, int positionGoods, String cartListData) {
+        mainArrayList.get(position).getGoods().remove(positionGoods);
+        if (mainArrayList.get(position).getGoods().size() == 0) {
+            mainArrayList.remove(position);
+        }
+        if (mainArrayList.size() == 0) {
+            tipsEmpty();
+        }
+        if (position == 0) {
+            mainAdapter.notifyDataSetChanged();
+        } else {
+            mainAdapter.notifyItemChanged(position);
+        }
+        calc();
     }
 
     @Override
@@ -297,7 +292,7 @@ public class CartFragment extends BaseMVPFragment<CartPresenter> implements Cart
     }
 
     private void cartDel(final int position, final int positionGoods, CartBean.GoodsBean goodsBean) {
-        mPresenter.requestCartDelete(goodsBean.getCartId());
+        mPresenter.requestCartDelete(goodsBean.getCartId(), position, positionGoods);
     }
 
     private void calc() {

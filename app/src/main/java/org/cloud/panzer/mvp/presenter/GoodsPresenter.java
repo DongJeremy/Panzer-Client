@@ -1,5 +1,8 @@
 package org.cloud.panzer.mvp.presenter;
 
+import org.cloud.core.base.BaseConstant;
+import org.cloud.core.base.BaseShared;
+import org.cloud.core.base.BaseToast;
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
@@ -40,6 +43,24 @@ public class GoodsPresenter extends BasePresenter<GoodsContract.Model, GoodsCont
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
                         getView().showError(errMsg);
+                    }
+                });
+    }
+
+    public void requestCartAdd(String id, String quantity) {
+        String key = BaseShared.getInstance().getString(BaseConstant.SHARED_KEY);
+        getModel().cartAddGoods(key, id, quantity)
+                .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
+                .subscribe(new BaseObserver<String>(getView()) {
+                    @Override
+                    public void onSuccess(String result) {
+                        getView().showSuccessAddGoods(result);
+                    }
+
+                    @Override
+                    public void onFailure(String errMsg, boolean isNetError) {
+                        getView().showError(errMsg);
+                        BaseToast.getInstance().show(errMsg);
                     }
                 });
     }

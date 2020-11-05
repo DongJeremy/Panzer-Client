@@ -43,7 +43,7 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showCartListData(result);
+                        getView().showCartEditQuantity(result);
                     }
 
                     @Override
@@ -54,14 +54,14 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
                 });
     }
 
-    public void requestCartDelete(String cartId) {
+    public void requestCartDelete(String cartId, final int position, final int positionGoods) {
         String key = BaseShared.getInstance().getString(BaseConstant.SHARED_KEY);
         getModel().cartDelete(key, cartId)
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showCartDeleteData(result);
+                        getView().showCartDeleteData(position, positionGoods, result);
                     }
 
                     @Override

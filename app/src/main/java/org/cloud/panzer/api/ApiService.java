@@ -4,6 +4,8 @@ import org.cloud.panzer.bean.LoginBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -26,14 +28,17 @@ public interface ApiService {
     @GET("index.php?act=member_cart&op=cart_list")
     Observable<String> getCartListData(@Query("key") String key);
 
+    @FormUrlEncoded
     @POST("index.php?act=member_cart&op=cart_edit_quantity")
-    Observable<String> cartEditQuantity(@Query("key") String key, @Query("cart_id") String cartId, @Query("quantity") String quantity);
+    Observable<String> cartEditQuantity(@Field("key") String key, @Field("cart_id") String cartId, @Field("quantity") String quantity);
 
+    @FormUrlEncoded
     @POST("index.php?act=member_cart&op=cart_del")
-    Observable<String> cartDelete(@Query("key") String key, @Query("cart_id") String cartId);
+    Observable<String> cartDelete(@Field("key") String key, @Field("cart_id") String cartId);
 
+    @FormUrlEncoded
     @POST("index.php?act=member_cart&op=cart_add")
-    Observable<String> cartAdd(@Query("key") String key, @Query("cart_id") String cartId, @Query("quantity") String quantity);
+    Observable<String> cartAdd(@Field("key") String key, @Field("goods_id") String goodsId, @Field("quantity") String quantity);
 
     @POST("index.php")
     Observable<String> login(@Body LoginBean loginBean);

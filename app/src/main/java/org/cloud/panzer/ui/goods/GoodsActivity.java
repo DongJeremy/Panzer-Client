@@ -1,9 +1,11 @@
 package org.cloud.panzer.ui.goods;
 
 import android.graphics.Paint;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 
@@ -226,14 +228,11 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     @BindView(R.id.voucherLinearLayout)
     LinearLayoutCompat voucherLinearLayout;
 
-//    @BindView(R.id.mainWebView)
-//    WebView mainWebView;
-
     @BindView(R.id.detailsImagesView)
     RecyclerView detailsImagesView;
 
     //    @BindView(R.id.voucherStoreNameTextView)
-//    AppCompatTextView voucherStoreNameTextView;
+    //    AppCompatTextView voucherStoreNameTextView;
     @BindView(R.id.voucherRecyclerView)
     RecyclerView voucherRecyclerView;
     @BindView(R.id.nightTextView)
@@ -443,6 +442,67 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 addCart();
             }
         });
+        chooseAddTextView.setOnClickListener(view -> {
+            String number = (Integer.parseInt(Objects.requireNonNull(chooseNumberEditText.getText()).toString()) + 1) + "";
+            chooseNumberEditText.setText(number);
+            changeNumber();
+        });
+        chooseNumberEditText.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                changeNumber();
+            }
+            return false;
+        });
+        chooseSubTextView.setOnClickListener(view -> {
+            String number = (Integer.parseInt(Objects.requireNonNull(chooseNumberEditText.getText()).toString()) - 1) + "";
+            chooseNumberEditText.setText(number);
+            changeNumber();
+        });
+
+    }
+
+    private void changeNumber() {
+
+        if (TextUtils.isEmpty(Objects.requireNonNull(chooseNumberEditText.getText()).toString())) {
+            BaseToast.getInstance().show("数量不能为空！");
+            chooseNumberEditText.setText("1");
+            chooseNumberEditText.setSelection(1);
+            return;
+        }
+
+        int number = Integer.parseInt(chooseNumberEditText.getText().toString());
+
+        if (number <= 0) {
+            BaseToast.getInstance().show("最低要买 1 件");
+            number = 1;
+        }
+
+        if (!TextUtils.isEmpty(upperLimitString)) {
+            int upper = Integer.parseInt(upperLimitString);
+            if (number > upper) {
+                number = upper;
+                BaseToast.getInstance().show("每人最高限购：" + number + " 件");
+            }
+        }
+
+        if (!TextUtils.isEmpty(lowerLimitString)) {
+            int lower = Integer.parseInt(lowerLimitString);
+            if (number < lower) {
+                number = lower;
+                BaseToast.getInstance().show("最低要购买：" + number + " 件");
+            }
+        }
+
+        int storage = Integer.parseInt(goodsStorageString);
+
+        if (number > storage) {
+            number = storage;
+            BaseToast.getInstance().show("库存不足！");
+        }
+
+        String temp = number + "";
+        chooseNumberEditText.setText(temp);
+        chooseNumberEditText.setSelection(temp.length());
 
     }
 
@@ -467,31 +527,18 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         if (chooseRelativeLayout.getVisibility() == View.VISIBLE) {
             chooseRelativeLayout.setVisibility(View.GONE);
             BaseAnimClient.objectAnimator(this.chooseRelativeLayout, BaseAnimClient.TRABSLATION_Y,
-                    () -> {
-                        this.chooseRelativeLayout.setVisibility(View.GONE);
-                    }, 0.0f, (float) BaseApplication.getInstance().getHeight());
+                    () -> this.chooseRelativeLayout.setVisibility(View.GONE),
+                    0.0f, (float) BaseApplication.getInstance().getHeight());
         }
 
     }
 
     private void addCart() {
-//        if (!BaseApplication.getInstance().isLogin()) {
-//            BaseApplication.getInstance().startLogin(getActivity());
-//        } else {
-//            MemberCartModel.get().cartAdd(this.goodsId,
-//                    ((Editable) Objects.requireNonNull(this.chooseNumberEditText.getText())).toString(),
-//                    new BaseHttpListener() {
-//                        public void onSuccess(BaseBean baseBean) {
-//                            BaseToast.getInstance().showSuccess();
-//                            GoodsActivity.this.goneChooseLayout();
-//                        }
-//
-//                        public void onFailure(String str) {
-//                            BaseToast.getInstance().show(str);
-//                        }
-//                    });
-//        }
-        BaseToast.getInstance().show("加入成功");
+        if (!BaseApplication.getInstance().isLogin()) {
+            //BaseApplication.getInstance().startLogin(getActivity());
+        } else {
+            mPresenter.requestCartAdd(this.goodsId, ((Editable) Objects.requireNonNull(this.chooseNumberEditText.getText())).toString());
+        }
     }
 
     @Override
@@ -693,7 +740,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         for (int i = 0; i < specNameArrayList.size(); i++) {
             specArrayList[i] = new ArrayList<>();
             String value = specNameArrayList.get(i).get("value");
-            Log.e("specValueArrayList", specValueArrayList.size() + "");
             for (int j = 0; j < specValueArrayList.size(); j++) {
                 if (value.equals(specValueArrayList.get(j).get("parent_value"))) {
                     HashMap<String, String> hashMap = new HashMap<>(specValueArrayList.get(j));
@@ -848,6 +894,12 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         goodsImagesList.clear();
         goodsImagesList.addAll(list);
         goodsDetailListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showSuccessAddGoods(String goodsInfoData) {
+        BaseToast.getInstance().showSuccess();
+        GoodsActivity.this.goneChooseLayout();
     }
 
     @Override

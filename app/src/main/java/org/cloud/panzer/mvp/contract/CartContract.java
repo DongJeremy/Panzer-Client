@@ -10,7 +10,8 @@ public interface CartContract {
 
     interface View extends IView {
         void showCartListData(String cartListData);
-        void showCartDeleteData(String cartListData);
+        void showCartEditQuantity(String cartEditData);
+        void showCartDeleteData(int position, int positionGoods, String cartListData);
     }
 
     interface Model extends IModel {
