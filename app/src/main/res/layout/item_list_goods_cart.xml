@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainRelativeLayout"
+    style="@style/Layout.Wrap"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/mainCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:layout_marginStart="8dp"
+        android:checked="true"
+        android:layout_marginLeft="8dp" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/mainImageView"
+        style="@style/ImageView.GoodsVer"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toEndOf="@+id/mainCheckBox"
+        android:layout_toRightOf="@+id/mainCheckBox" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/nameTextView"
+        style="@style/TextView.Name"
+        android:layout_toStartOf="@+id/deleteImageView"
+        android:layout_toEndOf="@+id/mainImageView"
+        android:textSize="12sp"
+        android:layout_toRightOf="@+id/mainImageView"
+        android:layout_toLeftOf="@+id/deleteImageView" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/deleteImageView"
+        style="@style/ImageView.Item"
+        android:layout_width="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_delete_item"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentRight="true" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/moneyTextView"
+        style="@style/TextView.Money"
+        android:layout_alignBottom="@+id/mainImageView"
+        android:layout_marginEnd="4dp"
+        android:layout_toEndOf="@+id/mainImageView"
+        android:textSize="12sp"
+        android:layout_marginRight="4dp"
+        android:layout_toRightOf="@+id/mainImageView" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/mobileTextView"
+        style="@style/TextView.ItemMobileHave"
+        android:layout_alignTop="@+id/moneyTextView"
+        android:layout_alignBottom="@+id/moneyTextView"
+        android:layout_toEndOf="@+id/moneyTextView"
+        android:layout_toRightOf="@+id/moneyTextView" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/activityTextView"
+        style="@style/TextView.GoodsActivity"
+        android:layout_alignTop="@+id/moneyTextView"
+        android:layout_alignBottom="@+id/moneyTextView"
+        android:layout_margin="2dp"
+        android:layout_toEndOf="@+id/moneyTextView"
+        android:layout_toRightOf="@+id/moneyTextView" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/subTextView"
+        style="@style/TextView.Selector"
+        android:layout_alignTop="@+id/addTextView"
+        android:layout_alignBottom="@+id/addTextView"
+        android:layout_toStartOf="@+id/numberEditText"
+        android:text="-"
+        android:layout_toLeftOf="@+id/numberEditText" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/numberEditText"
+        style="@style/EditText.Selector"
+        android:layout_alignTop="@+id/addTextView"
+        android:layout_alignBottom="@+id/addTextView"
+        android:layout_toStartOf="@+id/addTextView"
+        android:enabled="false"
+        android:focusable="false"
+        android:layout_toLeftOf="@+id/addTextView" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/addTextView"
+        style="@style/TextView.Selector"
+        android:layout_alignBottom="@+id/mainImageView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:text="+"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp" />
+</RelativeLayout>

@@ -87,6 +87,7 @@ public class BaseApplication extends Application {
         BaseImageLoader.getInstance().init(this);
 
         isImage = BaseShared.getInstance().getBoolean(BaseConstant.SHARED_SETTING_IMAGE, true);
+        BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, BaseConstant.SHARED_KEY_TEMP);
     }
 
     private void initLeakCanary() {

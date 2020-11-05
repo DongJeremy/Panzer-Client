@@ -3,8 +3,12 @@ package org.cloud.core.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+
+import org.cloud.core.base.BaseConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,13 +115,12 @@ public class JsonUtils {
         if (gson != null) {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             for (Map.Entry<String, JsonElement> elementEntry : jsonObject.entrySet()) {
-                HashMap<String, String> hashMap1 = new HashMap<>();
+                HashMap<String, String> hashMap = new HashMap<>();
                 String key = elementEntry.getKey();
                 String value = jsonObject.get(key).getAsString();
-                for (String s : key.split("\\|")) {
-                    hashMap1.put(s, value);
-                }
-                list.add(hashMap1);
+                hashMap.put(BaseConstant.DATA_KEY, key);
+                hashMap.put("value", value);
+                list.add(hashMap);
             }
         }
         return list;
@@ -151,5 +154,14 @@ public class JsonUtils {
             }.getType());
         }
         return map;
+    }
+
+    public static JsonElement parseJsonBody(String jsonString) {
+        JsonObject rootJsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
+        int code = rootJsonObject.get("code").getAsInt();
+        if (code != 200) {
+            return JsonNull.INSTANCE;
+        }
+        return rootJsonObject.get("datas");
     }
 }

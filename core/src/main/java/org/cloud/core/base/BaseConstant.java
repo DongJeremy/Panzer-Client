@@ -6,6 +6,7 @@ public class BaseConstant {
 
     public static final String SHARED_NAME = "yokey_shopnc";
     public static final String SHARED_KEY = "shared_key";
+    public static final String SHARED_KEY_TEMP = "294acd2a7620450a8b37ce365adee6b1";
     public static final String SHARED_SELLER_KEY = "shared_seller_key";
     public static final String SHARED_SETTING_PUSH = "shared_settingd_push";
     public static final String SHARED_SETTING_IMAGE = "shared_setting_image";

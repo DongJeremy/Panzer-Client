@@ -106,7 +106,7 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
 
     @Override
     public void showHomeInfoData(String homeInfoData) {
-        JsonElement datasFromJson = getDatasFromJson(homeInfoData);
+        JsonElement datasFromJson = JsonUtils.parseJsonBody(homeInfoData);
         if (datasFromJson instanceof JsonNull) {
             return;
         }
@@ -140,7 +140,7 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
 
     @Override
     public void showArticleListData(String articleListData) {
-        JsonElement datasFromJson = getDatasFromJson(articleListData);
+        JsonElement datasFromJson = JsonUtils.parseJsonBody(articleListData);
         if (datasFromJson instanceof JsonNull) {
             return;
         }
@@ -157,14 +157,5 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
             }
         }
         this.mainAdapter.notifyDataSetChanged();
-    }
-
-    private JsonElement getDatasFromJson(String jsonString) {
-        JsonObject rootJsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        int code = rootJsonObject.get("code").getAsInt();
-        if (code != 200) {
-            return JsonNull.INSTANCE;
-        }
-        return rootJsonObject.get("datas");
     }
 }
