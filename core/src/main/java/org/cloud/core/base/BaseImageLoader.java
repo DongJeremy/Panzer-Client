@@ -20,11 +20,16 @@ import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.BaseRequestOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -209,9 +214,6 @@ public class BaseImageLoader {
         }
     }
 
-
-
-
     public void displayCircle(String url, ImageView imageView) {
 
         if (BaseApplication.getInstance().isImage()) {
@@ -223,23 +225,27 @@ public class BaseImageLoader {
     }
 
     public void displayRadius(String url, ImageView imageView) {
-
         if (BaseApplication.getInstance().isImage()) {
             Glide.with(context).load(url).apply(new RequestOptions().transform(new RadiusTransform(context, 2))).into(imageView);
         } else {
             Glide.with(context).load(R.mipmap.ic_launcher).apply(new RequestOptions().transform(new RadiusTransform(context, 2))).into(imageView);
         }
+    }
 
+    public void displayRadius(String url, ImageView imageView, int corner) {
+        RequestOptions requestOptions = new RequestOptions();
+        Transformation[] transformationArr = {new CenterCrop(), new RoundedCorners(corner)};
+        ((RequestBuilder) ((RequestBuilder) Glide.with(this.context)
+                .load(url).apply((BaseRequestOptions<?>) (RequestOptions) requestOptions.transform((Transformation<Bitmap>[]) transformationArr))
+                .dontAnimate()).placeholder(imageView.getDrawable())).into(imageView);
     }
 
     public void display(String url, int width, int height, ImageView imageView) {
-
         if (BaseApplication.getInstance().isImage()) {
             Glide.with(context).load(url).apply(new RequestOptions().override(width, height)).into(imageView);
         } else {
             Glide.with(context).load(R.mipmap.ic_launcher).apply(new RequestOptions().override(width, height)).into(imageView);
         }
-
     }
 
     static class CircleTransform extends BitmapTransformation {

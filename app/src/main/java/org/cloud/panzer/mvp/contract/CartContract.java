@@ -4,7 +4,6 @@ import org.cloud.core.mvp.IModel;
 import org.cloud.core.mvp.IView;
 
 import io.reactivex.Observable;
-import retrofit2.http.Query;
 
 public interface CartContract {
 
@@ -15,8 +14,8 @@ public interface CartContract {
     }
 
     interface Model extends IModel {
-        Observable<String> getCartListData(String key);
-        Observable<String> cartEditQuantity(String key, String cartId, String quantity);
-        Observable<String> cartDelete(String key, String cartId);
+        Observable<String> getCartListData();
+        Observable<String> cartEditQuantity(String cartId, String quantity);
+        Observable<String> cartDelete(String cartId);
     }
 }

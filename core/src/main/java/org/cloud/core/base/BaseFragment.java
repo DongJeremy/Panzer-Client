@@ -15,6 +15,7 @@ import com.squareup.leakcanary.RefWatcher;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -26,9 +27,6 @@ import butterknife.Unbinder;
  */
 public abstract class BaseFragment extends RxFragment {
 
-    /**
-     * 将代理类通用行为抽出来
-     */
     protected Context mContext;
 
     private Unbinder unBinder;
@@ -59,12 +57,21 @@ public abstract class BaseFragment extends RxFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initPreparedData();
         initView();
         initListener();
     }
 
+    /**
+     * 供子类添加功能
+     *
+     * @return
+     */
+    protected void initPreparedData() {
+    }
+
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
         mContext = context;
         if (context instanceof BaseActivity) {
@@ -76,11 +83,6 @@ public abstract class BaseFragment extends RxFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     @Override
@@ -97,32 +99,12 @@ public abstract class BaseFragment extends RxFragment {
         initLeakCanary();
     }
 
+    /**
+     * 获取当前所属activity
+     * @return baseActivity
+     */
     public BaseActivity getBaseActivity() {
         return mActivity;
-    }
-
-    /**
-     * 含有Bundle通过Class跳转界面
-     **/
-    public void startActivityForResult(Class<?> cls, Bundle bundle, int requestCode) {
-        Intent intent = new Intent();
-        intent.setClass(getBaseActivity(), cls);
-        if (bundle != null) {
-            intent.putExtras(bundle);
-        }
-        startActivityForResult(intent, requestCode);
-    }
-
-    /**
-     * 含有Bundle通过Class跳转界面
-     **/
-    public void startActivity(Class<?> cls, Bundle bundle) {
-        Intent intent = new Intent();
-        intent.setClass(getBaseActivity(), cls);
-        if (bundle != null) {
-            intent.putExtras(bundle);
-        }
-        startActivity(intent);
     }
 
     /**
@@ -149,19 +131,9 @@ public abstract class BaseFragment extends RxFragment {
      * 初始数据的代码写在这个方法中，用于从服务器获取数据
      */
     protected abstract void initData();
+    /**
+     * 是否使用eventbus
+     */
     protected abstract boolean useEventBus();
 
-    /**
-     * 通过Class跳转界面
-     **/
-    public void startActivity(Class<?> cls) {
-        startActivity(cls, null);
-    }
-
-    /**
-     * 通过Class跳转界面
-     **/
-    public void startActivityForResult(Class<?> cls, int requestCode) {
-        startActivityForResult(cls, null, requestCode);
-    }
 }

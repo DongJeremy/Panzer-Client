@@ -1,24 +1,34 @@
 package org.cloud.panzer.ui.common;
 
-import android.content.Intent;
+import android.text.TextUtils;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 
-import org.cloud.core.base.BaseActivity;
-import org.cloud.core.base.BaseApplication;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.cloud.core.base.BaseConstant;
+import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseShared;
 import org.cloud.core.base.BaseToast;
+import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.utils.StatusBarUtils;
+import org.cloud.core.utils.StringUtils;
+import org.cloud.panzer.App;
 import org.cloud.panzer.R;
-import org.cloud.panzer.ui.main.MainActivity;
+import org.cloud.panzer.mvp.contract.LoginContract;
+import org.cloud.panzer.mvp.presenter.LoginPresenter;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements LoginContract.View {
 
     @BindView(R.id.mainToolbar)
     Toolbar mainToolbar;
@@ -60,9 +70,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-        registerTextView.setOnClickListener(view -> BaseApplication.getInstance().start(getActivity(), RegisterActivity.class));
+        registerTextView.setOnClickListener(view -> App.getInstance().startRegister(getActivity()));
 
-        findPassTextView.setOnClickListener(view -> BaseApplication.getInstance().start(getActivity(), FindPassActivity.class));
+        findPassTextView.setOnClickListener(view -> App.getInstance().startFindPass(getActivity()));
 
         loginTextView.setOnClickListener(view -> login());
 
@@ -75,9 +85,9 @@ public class LoginActivity extends BaseActivity {
         });
 
         wbImageView.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), LoginWebActivity.class);
-            intent.putExtra(BaseConstant.DATA_URL, BaseConstant.URL_LOGIN_WB);
-            BaseApplication.getInstance().start(getActivity(), intent, BaseConstant.CODE_LOGIN);
+//            Intent intent = new Intent(getActivity(), LoginWebActivity.class);
+//            intent.putExtra(BaseConstant.DATA_URL, BaseConstant.URL_LOGIN_WB);
+//            App.getInstance().start(getActivity(), intent, BaseConstant.CODE_LOGIN);
         });
     }
 
@@ -97,56 +107,63 @@ public class LoginActivity extends BaseActivity {
 //        }
 //    }
 
-    @Override
-    public void onActivityResult(int req, int res, Intent data) {
-        super.onActivityResult(req, res, data);
-        if (res == RESULT_OK) {
-            if (req == BaseConstant.CODE_LOGIN) {
-                BaseToast.getInstance().show("登录成功！");
-                String key = data.getStringExtra(BaseConstant.DATA_KEY);
-                //MemberHttpClient.get().updateKey(key);
-                BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, key);
-                BaseApplication.getInstance().start(getActivity(), MainActivity.class);
-                BaseApplication.getInstance().finish(getActivity());
-            }
-        }
-    }
-
+//    @Override
+//    public void onActivityResult(int req, int res, Intent data) {
+//        super.onActivityResult(req, res, data);
+//        if (res == RESULT_OK) {
+//            if (req == BaseConstant.CODE_LOGIN) {
+//                BaseToast.getInstance().show("登录成功！");
+//                String key = data.getStringExtra(BaseConstant.DATA_KEY);
+//                //MemberHttpClient.get().updateKey(key);
+//                BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, key);
+//                App.getInstance().startMain(getActivity());
+//                App.getInstance().finish(getActivity());
+//            }
+//        }
+//    }
 
     private void login() {
+        App.getInstance().hideKeyboard(getActivity());
 
-//        BaseApplication.get().hideKeyboard(getActivity());
-//
-//        String username = Objects.requireNonNull(usernameEditText.getText()).toString();
-//        String password = Objects.requireNonNull(passwordEditText.getText()).toString();
-//
-//        if (TextUtils.isEmpty(username) || TextUtil.isEmail(password)) {
-//            BaseToast.get().show("请输入所有的信息！");
-//            return;
-//        }
-//
-//        loginTextView.setEnabled(false);
-//        loginTextView.setText("登录中...");
-//
-//        LoginModel.get().index(username, password, new BaseHttpListener() {
-//            @Override
-//            public void onSuccess(BaseBean baseBean) {
-//                loginTextView.setEnabled(true);
-//                loginTextView.setText("登 录");
-//                BaseToast.get().show("登录成功！");
-//                MemberHttpClient.get().updateKey(JsonUtil.getDatasString(baseBean.getDatas(), "key"));
-//                BaseShared.get().putString(BaseConstant.SHARED_KEY, JsonUtil.getDatasString(baseBean.getDatas(), "key"));
-//                BaseApplication.get().start(getActivity(), MainActivity.class);
-//                BaseApplication.get().finish(getActivity());
-//            }
-//
-//            @Override
-//            public void onFailure(String reason) {
-//                loginTextView.setEnabled(true);
-//                loginTextView.setText("登 录");
-//                BaseToast.get().show(reason);
-//            }
-//        });
+        String username = Objects.requireNonNull(usernameEditText.getText()).toString();
+        String password = Objects.requireNonNull(passwordEditText.getText()).toString();
 
+        if (TextUtils.isEmpty(username) || StringUtils.isEmail(password)) {
+            BaseToast.getInstance().show("请输入所有的信息！");
+            return;
+        }
+
+        loginTextView.setEnabled(false);
+        loginTextView.setText("登录中...");
+        mPresenter.requestLogin(username, password);
+    }
+
+    @Override
+    protected LoginPresenter createPresenter() {
+        return new LoginPresenter();
+    }
+
+    @Override
+    public void showLoginSuccess(String loginData) {
+        JsonObject rootJsonObject = new JsonParser().parse(loginData).getAsJsonObject();
+        int code = rootJsonObject.get("code").getAsInt();
+        if (code != 200) {
+            loginTextView.setEnabled(true);
+            loginTextView.setText("登 录");
+            BaseToast.getInstance().show("用户名或密码错误");
+            return;
+        }
+        JsonObject jsonObject = rootJsonObject.getAsJsonObject("datas");
+        String key = jsonObject.get("key").getAsString();
+        BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, key);
+        App.getInstance().startMain(getActivity());
+        App.getInstance().finish(getActivity());
+    }
+
+    @Override
+    public void showError(String reason) {
+        loginTextView.setEnabled(true);
+        loginTextView.setText("登 录");
+        BaseToast.getInstance().show(reason);
     }
 }

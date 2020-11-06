@@ -43,20 +43,20 @@ public abstract class BaseObserver<T> implements Observer<T> {
     @Override
     public void onNext(T result) {
         hideLoadingDialog();
-        onSuccess(result);
+        if(isSuccessFul(result)) {
+            onSuccess(result);
+        } else {
+            onLogicError();
+        }
     }
 
     @Override
     public void onError(Throwable e) {
         hideLoadingDialog();
-        if (e instanceof ConnectException
+        onFailure(ServerException.handleException(e).getMessage(), e instanceof ConnectException
                 || e instanceof TimeoutException
                 || e instanceof NetworkErrorException
-                || e instanceof UnknownHostException) {
-            onFailure(ServerException.handleException(e).getMessage(), true);
-        } else {
-            onFailure(ServerException.handleException(e).getMessage(), false);
-        }
+                || e instanceof UnknownHostException);
     }
 
     /**
@@ -80,13 +80,20 @@ public abstract class BaseObserver<T> implements Observer<T> {
     public abstract void onSuccess(T result);
 
     /**
+     * 请求成功返回
+     *
+     */
+    public abstract boolean isSuccessFul(T result);
+
+    public abstract void onLogicError();
+
+    /**
      * 请求失败返回
      *
      * @param errMsg     失败信息
      * @param isNetError 是否是网络异常
      */
     public abstract void onFailure(String errMsg, boolean isNetError);
-
 
     /**
      * 显示 LoadingDialog

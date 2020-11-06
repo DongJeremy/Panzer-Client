@@ -26,20 +26,24 @@ public interface ApiService {
     Observable<String> getGoodsDetailData(@Query("goods_id") String id);
 
     @GET("index.php?act=member_cart&op=cart_list")
-    Observable<String> getCartListData(@Query("key") String key);
+    Observable<String> getCartListData();
 
     @FormUrlEncoded
     @POST("index.php?act=member_cart&op=cart_edit_quantity")
-    Observable<String> cartEditQuantity(@Field("key") String key, @Field("cart_id") String cartId, @Field("quantity") String quantity);
+    Observable<String> cartEditQuantity(@Field("cart_id") String cartId, @Field("quantity") String quantity);
 
     @FormUrlEncoded
     @POST("index.php?act=member_cart&op=cart_del")
-    Observable<String> cartDelete(@Field("key") String key, @Field("cart_id") String cartId);
+    Observable<String> cartDelete(@Field("cart_id") String cartId);
 
     @FormUrlEncoded
     @POST("index.php?act=member_cart&op=cart_add")
-    Observable<String> cartAdd(@Field("key") String key, @Field("goods_id") String goodsId, @Field("quantity") String quantity);
+    Observable<String> cartAdd(@Field("goods_id") String goodsId, @Field("quantity") String quantity);
 
-    @POST("index.php")
-    Observable<String> login(@Body LoginBean loginBean);
+    @FormUrlEncoded
+    @POST("index.php?act=login&op=index&client=wap")
+    Observable<String> login(@Field("username") String username, @Field("password") String password, @Field("client") String client);
+
+    @POST("index.php?act=member_index&op=index")
+    Observable<String> memberIndex();
 }

@@ -8,7 +8,7 @@ import io.reactivex.Observable;
 
 public class MineModel extends BaseModel implements MineContract.Model {
     @Override
-    public Observable<String> getHomeInfoData() {
-        return RetrofitUtils.getRawHttpService().getHomeInfoData();
+    public Observable<String> getMemberIndex() {
+        return RetrofitUtils.getRawHttpService().memberIndex();
     }
 }

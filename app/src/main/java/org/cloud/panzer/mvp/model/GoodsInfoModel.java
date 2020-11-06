@@ -18,7 +18,7 @@ public class GoodsInfoModel extends BaseModel implements GoodsContract.Model {
     }
 
     @Override
-    public Observable<String> cartAddGoods(String key, String goodsId, String quantity) {
-        return RetrofitUtils.getRawHttpService().cartAdd(key, goodsId, quantity);
+    public Observable<String> cartAddGoods(String goodsId, String quantity) {
+        return RetrofitUtils.getRawHttpService().cartAdd(goodsId, quantity);
     }
 }

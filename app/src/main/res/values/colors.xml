@@ -31,6 +31,7 @@
     <color name="background">#F1F1F1</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="backgroundStore">#66000000</color>
+    <color name="backgroundName">#aa000000</color>
 
     <color name="textThird">#999999</color>
     <color name="text">#333333</color>

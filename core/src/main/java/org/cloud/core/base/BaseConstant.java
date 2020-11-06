@@ -23,4 +23,10 @@ public class BaseConstant {
     public static final String URL_STORE_INFO = URL + "mobile/html/store_intro.html?store_id=";
     public static final String URL_GOODS_DETAILED = URL + "mobile/html/product_detail.html?goods_id=";
     public static final String URL_GOODS_BODY = URL + "mobile/index.php?act=goods&op=goods_body&goods_id=";
+
+    public static final String SHARED_A_LEVEL_TYD = "shared_a_level_tyd";
+    public static final String SHARED_B_LEVEL_TYD = "shared_b_level_tyd";
+    public static final String SHARED_C_LEVEL_HHR = "shared_c_level_hhr";
+    public static final String SHARED_C_LEVEL_TYD = "shared_c_level_tyd";
+
 }

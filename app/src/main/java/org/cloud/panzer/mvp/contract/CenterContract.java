@@ -3,15 +3,13 @@ package org.cloud.panzer.mvp.contract;
 import org.cloud.core.mvp.IModel;
 import org.cloud.core.mvp.IView;
 
-import io.reactivex.Observable;
-
-public interface MineContract {
+public interface CenterContract {
 
     interface View extends IView {
-        void showMemberIndex(String homeInfoData);
+        //void showCenterSuccess(String loginData);
     }
 
     interface Model extends IModel {
-        Observable<String> getMemberIndex();
+        //Observable<String> postLogin(String username, String password, String client);
     }
 }

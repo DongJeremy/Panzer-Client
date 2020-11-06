@@ -1,6 +1,5 @@
 package org.cloud.panzer.ui.main;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -20,24 +19,23 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.cloud.core.base.BaseApplication;
-import org.cloud.core.base.BaseMVPFragment;
+import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.widget.PullRefreshView;
+import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.CartListAdapter;
 import org.cloud.panzer.bean.CartBean;
 import org.cloud.panzer.mvp.contract.CartContract;
 import org.cloud.panzer.mvp.presenter.CartPresenter;
-import org.cloud.panzer.ui.common.LoginActivity;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import io.github.xudaojie.qrcodelib.CaptureActivity;
 
-public class CartFragment extends BaseMVPFragment<CartPresenter> implements CartContract.View {
+public class CartFragment extends BaseMvpFragment<CartPresenter> implements CartContract.View {
 
     @BindView(R.id.scanImageView)
     AppCompatImageView scanImageView;
@@ -84,7 +82,7 @@ public class CartFragment extends BaseMVPFragment<CartPresenter> implements Cart
 
     @Override
     protected void initView() {
-        if (BaseApplication.getInstance().isLogin()) {
+        if (App.getInstance().isLogin()) {
             this.tipsTextView.setText("请稍后...");
         }
         this.countInt = 0;
@@ -98,11 +96,10 @@ public class CartFragment extends BaseMVPFragment<CartPresenter> implements Cart
 
     @Override
     protected void initListener() {
-        scanImageView.setOnClickListener(v ->
-                startActivityForResult(new Intent(getActivity(), CaptureActivity.class), 1003));
+        scanImageView.setOnClickListener(v -> startActivityForResult(new Intent(getActivity(), CaptureActivity.class), 1003));
         tipsRelativeLayout.setOnClickListener(v -> {
-            if (!BaseApplication.getInstance().isLogin()) {
-                BaseApplication.getInstance().start((Activity) getActivity(), LoginActivity.class);
+            if (!App.getInstance().isLogin()) {
+                App.getInstance().startLogin(getActivity());
             } else {
                 getCart();
             }
@@ -136,7 +133,7 @@ public class CartFragment extends BaseMVPFragment<CartPresenter> implements Cart
 
             @Override
             public void onGoods(int position, int positionGoods, CartBean.GoodsBean goodsBean) {
-                //BaseApplication.getInstance().startGoods(getActivity(), goodsBean.getGoodsId());
+                App.getInstance().startGoods(getActivity(), goodsBean.getGoodsId());
             }
 
             @Override
@@ -178,7 +175,7 @@ public class CartFragment extends BaseMVPFragment<CartPresenter> implements Cart
 
             @Override
             public void onStore(int position, CartBean cartBean) {
-                //BaseApplication.getInstance().startStore(getActivity(), cartBean.getStoreId());
+                App.getInstance().startStore(getActivity(), cartBean.getStoreId());
             }
         });
     }
@@ -212,11 +209,7 @@ public class CartFragment extends BaseMVPFragment<CartPresenter> implements Cart
     @Override
     public void showCartListData(String cartListData) {
         mainArrayList.clear();
-        JsonElement datasFromJson = JsonUtils.parseJsonBody(cartListData);
-        if (datasFromJson instanceof JsonNull) {
-            return;
-        }
-        JsonObject mainJsonObject = datasFromJson.getAsJsonObject();
+        JsonObject mainJsonObject = new JsonParser().parse(cartListData).getAsJsonObject();
         JsonArray cartList = mainJsonObject.getAsJsonArray("cart_list");
         moneyFloat = mainJsonObject.get("sum").getAsFloat();
         countInt = mainJsonObject.get("cart_count").getAsInt();
@@ -264,7 +257,9 @@ public class CartFragment extends BaseMVPFragment<CartPresenter> implements Cart
     @Override
     public void onResume() {
         super.onResume();
-        getCart();
+        if (App.getInstance().isLogin()) {
+            getCart();
+        }
     }
 
     private void tipsEmpty() {

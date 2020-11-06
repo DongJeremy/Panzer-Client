@@ -5,6 +5,7 @@ import android.util.Log;
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
+import org.cloud.core.utils.JsonUtils;
 import org.cloud.panzer.mvp.contract.HomeContract;
 import org.cloud.panzer.mvp.model.HomeInfoModel;
 
@@ -20,7 +21,17 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
                 .subscribe(new BaseObserver<String>(getView()){
                     @Override
                     public void onSuccess(String result) {
-                        getView().showHomeInfoData(result);
+                        getView().showHomeInfoData(JsonUtils.parseJsonData(result));
+                    }
+
+                    @Override
+                    public boolean isSuccessFul(String result) {
+                        return JsonUtils.checkJsonCodeSuccess(result);
+                    }
+
+                    @Override
+                    public void onLogicError() {
+
                     }
 
                     @Override
@@ -38,7 +49,17 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
                 .subscribe(new BaseObserver<String>(getView()){
                     @Override
                     public void onSuccess(String result) {
-                        getView().showArticleListData(result);
+                        getView().showArticleListData(JsonUtils.parseJsonData(result));
+                    }
+
+                    @Override
+                    public boolean isSuccessFul(String result) {
+                        return JsonUtils.checkJsonCodeSuccess(result);
+                    }
+
+                    @Override
+                    public void onLogicError() {
+
                     }
 
                     @Override

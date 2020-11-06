@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
-import org.cloud.core.base.BaseMVPFragment;
+import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.panzer.R;
 import org.cloud.panzer.mvp.contract.SearchContract;
 import org.cloud.panzer.mvp.presenter.SearchPresenter;
@@ -13,7 +13,7 @@ import org.cloud.panzer.mvp.presenter.SearchPresenter;
 import butterknife.BindView;
 import io.github.xudaojie.qrcodelib.CaptureActivity;
 
-public class SearchFragment extends BaseMVPFragment<SearchPresenter> implements SearchContract.View {
+public class SearchFragment extends BaseMvpFragment<SearchPresenter> implements SearchContract.View {
 
     @BindView(R.id.scanImageView)
     AppCompatImageView scanImageView;

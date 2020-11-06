@@ -156,12 +156,13 @@ public class JsonUtils {
         return map;
     }
 
-    public static JsonElement parseJsonBody(String jsonString) {
+    public static boolean checkJsonCodeSuccess(String jsonString) {
         JsonObject rootJsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        int code = rootJsonObject.get("code").getAsInt();
-        if (code != 200) {
-            return JsonNull.INSTANCE;
-        }
-        return rootJsonObject.get("datas");
+        return rootJsonObject.get("code").getAsInt() == 200;
+    }
+
+    public static String parseJsonData(String jsonString) {
+        JsonObject rootJsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
+        return objectToJson(rootJsonObject.get("datas"));
     }
 }

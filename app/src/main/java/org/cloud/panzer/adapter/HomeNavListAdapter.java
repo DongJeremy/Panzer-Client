@@ -11,9 +11,9 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseApplication;
 import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.HomeBean;
 
@@ -44,7 +44,7 @@ public class HomeNavListAdapter extends RecyclerView.Adapter<HomeNavListAdapter.
         BaseImageLoader.getInstance().display(bean.getImage(), holder.mainImageView);
         holder.mainTextView.setText(bean.getWord());
         holder.mainLinearLayout.setOnClickListener(v -> {
-            BaseApplication.getInstance().startTypeValue(this.activity, bean.getType(), bean.getData());
+            App.getInstance().startTypeValue(this.activity, bean.getType(), bean.getData());
         });
     }
 

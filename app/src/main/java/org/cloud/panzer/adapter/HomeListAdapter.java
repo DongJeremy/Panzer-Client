@@ -1,7 +1,6 @@
 package org.cloud.panzer.adapter;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sunfusheng.marqueeview.MarqueeView;
 import com.youth.banner.Banner;
-import com.youth.banner.adapter.BannerAdapter;
 import com.youth.banner.indicator.RectangleIndicator;
 import com.youth.banner.util.BannerUtils;
 
-import org.cloud.core.base.BaseApplication;
 import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.ArticleBean;
 import org.cloud.panzer.bean.HomeBean;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import butterknife.BindView;
 
@@ -37,9 +33,9 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ViewHo
     private final Activity activity;
     private final ArrayList<HomeBean> arrayList;
 
-    public HomeListAdapter(Activity activity, ArrayList<HomeBean> arrayList2) {
+    public HomeListAdapter(Activity activity, ArrayList<HomeBean> arrayList) {
         this.activity = activity;
-        this.arrayList = arrayList2;
+        this.arrayList = arrayList;
     }
 
     @NonNull
@@ -75,7 +71,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ViewHo
                         dataList.add(advList.get(i).getData());
                     }
                     holder.mainBanner.setOnBannerListener((data, position1) ->
-                            BaseApplication.getInstance().startTypeValue(activity, typeList.get(position1), dataList.get(position1))
+                            App.getInstance().startTypeValue(activity, typeList.get(position1), dataList.get(position1))
                     );
                     holder.mainBanner.setDatas(imageList);
                     holder.mainBanner.start();
@@ -92,20 +88,20 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ViewHo
             case "home_nav":
                 holder.navLinearLayout.setVisibility(View.VISIBLE);
                 HomeNavListAdapter homeNavListAdapter = new HomeNavListAdapter(activity, bean.getHomeNavBean().getItem());
-                BaseApplication.getInstance().setRecyclerView(BaseApplication.getInstance(), holder.mainNavRecyclerView, homeNavListAdapter);
+                App.getInstance().setRecyclerView(App.getInstance(), holder.mainNavRecyclerView, homeNavListAdapter);
                 holder.mainNavRecyclerView.setLayoutManager(new GridLayoutManager(activity, 5));
                 break;
             case "home1":
                 holder.home1ImageView.setVisibility(View.VISIBLE);
                 BaseImageLoader.getInstance().display(bean.getHome1Bean().getImage(), holder.home1ImageView);
-                holder.home1ImageView.setOnClickListener(view -> BaseApplication.getInstance().startTypeValue(activity, bean.getHome1Bean().getType(), bean.getHome1Bean().getData()));
+                holder.home1ImageView.setOnClickListener(view -> App.getInstance().startTypeValue(activity, bean.getHome1Bean().getType(), bean.getHome1Bean().getData()));
                 break;
             case "goods":
                 holder.mainRecyclerView.setVisibility(View.VISIBLE);
                 HomeGoodsListAdapter homeGoodsListAdapter = new HomeGoodsListAdapter(activity, bean.getGoodsBean().getItem());
-                BaseApplication.getInstance().setRecyclerView(BaseApplication.getInstance(), holder.mainRecyclerView, homeGoodsListAdapter);
+                App.getInstance().setRecyclerView(App.getInstance(), holder.mainRecyclerView, homeGoodsListAdapter);
                 holder.mainRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));
-                holder.mainRecyclerView.setPadding(BaseApplication.getInstance().dipToPx(2), 0, BaseApplication.getInstance().dipToPx(2), 0);
+                holder.mainRecyclerView.setPadding(App.getInstance().dipToPx(2), 0, App.getInstance().dipToPx(2), 0);
                 break;
         }
     }
@@ -137,7 +133,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ViewHo
         }
     }
 
-    public void setBanner(Banner banner, List<String> list, BannerAdapter bannerAdapter) {
+    public void setBanner(Banner<String, HomeBannerAdapter> banner, List<String> list, HomeBannerAdapter bannerAdapter) {
         banner.setAdapter(bannerAdapter);
         banner.setIndicator(new RectangleIndicator(activity));
         banner.setIndicatorSpace((int) BannerUtils.dp2px(4));

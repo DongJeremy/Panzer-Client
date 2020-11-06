@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainRelativeLayout"
+    style="@style/Layout.Main">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/mainToolbar"
+        style="@style/Toolbar.Main">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titleTextView"
+            style="@style/TextView.Title" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:id="@+id/lineView"
+        style="@style/View.Line"
+        android:layout_below="@+id/mainToolbar" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        style="@style/Layout.Main"
+        android:layout_below="@+id/lineView">
+
+        <RelativeLayout
+            android:id="@+id/avatarRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/avatarTextView"
+                style="@style/TextView.Normal"
+                android:text="用户头像"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/avatarTextView"
+                android:layout_marginTop="4dp"
+                android:text="修改当前用户的头像" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/ic_dot_right"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/passwordRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/passwordTextView"
+                style="@style/TextView.Normal"
+                android:text="登录密码"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/passwordTextView"
+                android:layout_marginTop="4dp"
+                android:text="建议您定期更改密码以保护账户安全" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/ic_dot_right"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mobileRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/mobileTextView"
+                style="@style/TextView.Normal"
+                android:text="手机验证"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/mobileTextView"
+                android:layout_marginTop="4dp"
+                android:text="若您的手机已丢失或停用，请立即修改更换" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/mobileArrowTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableEnd="@mipmap/ic_dot_right"
+                android:drawablePadding="8dp"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:drawableRight="@mipmap/ic_dot_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/payPassRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/payPassTextView"
+                style="@style/TextView.Normal"
+                android:text="支付密码"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/payPassTextView"
+                android:layout_marginTop="4dp"
+                android:text="建议您设置复杂的支付密码保护账户金额安全" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/payPassArrowTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableEnd="@mipmap/ic_dot_right"
+                android:drawablePadding="8dp"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:drawableRight="@mipmap/ic_dot_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/realRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/realTextView"
+                style="@style/TextView.Normal"
+                android:text="实名认证"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/realTextView"
+                android:layout_marginTop="4dp"
+                android:text="用于开通店铺，提现及账户安全" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/realArrowTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableEnd="@mipmap/ic_dot_right"
+                android:drawablePadding="8dp"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:drawableRight="@mipmap/ic_dot_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/licenseRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/licenseTextView"
+                style="@style/TextView.Normal"
+                android:text="营业执照"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/licenseTextView"
+                android:layout_marginTop="4dp"
+                android:text="实体商家专属认证通道" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/licenseArrowTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableEnd="@mipmap/ic_dot_right"
+                android:drawablePadding="8dp"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:drawableRight="@mipmap/ic_dot_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/hhrtqRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/hhrtqTextView"
+                style="@style/TextView.Normal"
+                android:text="合伙人特权"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/hhrtqTextView"
+                android:layout_marginTop="4dp"
+                android:text="合伙人特权开关与认证通道" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/hhrtqArrowTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableEnd="@mipmap/ic_dot_right"
+                android:drawablePadding="8dp"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:drawableRight="@mipmap/ic_dot_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bankRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/bankTextView"
+                style="@style/TextView.Normal"
+                android:text="我的银行卡"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/bankTextView"
+                android:layout_marginTop="4dp"
+                android:text="用于提现及账户安全" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/bankArrowTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableEnd="@mipmap/ic_dot_right"
+                android:drawablePadding="8dp"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:drawableRight="@mipmap/ic_dot_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/feedbackRelativeLayout"
+            style="@style/Layout.Tool"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/feedbackTextView"
+                style="@style/TextView.Normal"
+                android:text="用户反馈"
+                android:textColor="@color/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Small"
+                android:layout_below="@+id/feedbackTextView"
+                android:layout_marginTop="4dp"
+                android:text="您在使用中遇到的问题与建议可向我们反馈" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/feedbackArrowTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableEnd="@mipmap/ic_dot_right"
+                android:drawablePadding="8dp"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:drawableRight="@mipmap/ic_dot_right" />
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/logoutTextView"
+            style="@style/TextView.Button"
+            android:text="注销登录" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/gradeTextView"
+        style="@style/Layout.Main"
+        android:background="@color/backgroundName"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/gradeImageView"
+        style="@style/Layout.Main"
+        android:scaleType="center"
+        android:src="@mipmap/bg_hhrtq_open"
+        android:visibility="gone" />
+</RelativeLayout>

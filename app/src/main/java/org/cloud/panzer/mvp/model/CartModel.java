@@ -8,17 +8,17 @@ import io.reactivex.Observable;
 
 public class CartModel extends BaseModel implements CartContract.Model {
     @Override
-    public Observable<String> getCartListData(String key) {
-        return RetrofitUtils.getRawHttpService().getCartListData(key);
+    public Observable<String> getCartListData() {
+        return RetrofitUtils.getRawHttpService().getCartListData();
     }
 
     @Override
-    public Observable<String> cartEditQuantity(String key, String cartId, String quantity) {
-        return RetrofitUtils.getRawHttpService().cartEditQuantity(key, cartId, quantity);
+    public Observable<String> cartEditQuantity(String cartId, String quantity) {
+        return RetrofitUtils.getRawHttpService().cartEditQuantity(cartId, quantity);
     }
 
     @Override
-    public Observable<String> cartDelete(String key, String cartId) {
-        return RetrofitUtils.getRawHttpService().cartDelete(key, cartId);
+    public Observable<String> cartDelete(String cartId) {
+        return RetrofitUtils.getRawHttpService().cartDelete(cartId);
     }
 }

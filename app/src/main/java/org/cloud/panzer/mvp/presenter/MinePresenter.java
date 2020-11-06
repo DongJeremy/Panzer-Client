@@ -5,6 +5,7 @@ import android.util.Log;
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
+import org.cloud.core.utils.JsonUtils;
 import org.cloud.panzer.mvp.contract.MineContract;
 import org.cloud.panzer.mvp.model.MineModel;
 
@@ -14,13 +15,23 @@ public class MinePresenter extends BasePresenter<MineContract.Model, MineContrac
         return new MineModel();
     }
 
-    public void requestGridData() {
-        getModel().getHomeInfoData()
+    public void requestMemberIndexData() {
+        getModel().getMemberIndex()
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()){
                     @Override
                     public void onSuccess(String result) {
-                        getView().showHomeInfoData(result);
+                        getView().showMemberIndex(JsonUtils.parseJsonData(result));
+                    }
+
+                    @Override
+                    public boolean isSuccessFul(String result) {
+                        return JsonUtils.checkJsonCodeSuccess(result);
+                    }
+
+                    @Override
+                    public void onLogicError() {
+
                     }
 
                     @Override

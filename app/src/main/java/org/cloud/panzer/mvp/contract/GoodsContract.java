@@ -16,6 +16,6 @@ public interface GoodsContract {
     interface Model extends IModel {
         Observable<String> getGoodsDetailData(String id);
         Observable<String> getGoodsImagesData(String id);
-        Observable<String> cartAddGoods(String key, String goodsId, String quantity);
+        Observable<String> cartAddGoods(String goodsId, String quantity);
     }
 }

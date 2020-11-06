@@ -6,22 +6,22 @@ import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
 import org.cloud.core.utils.JsonUtils;
-import org.cloud.panzer.mvp.contract.SearchContract;
-import org.cloud.panzer.mvp.model.SearchModel;
+import org.cloud.panzer.mvp.contract.LoginContract;
+import org.cloud.panzer.mvp.model.LoginModel;
 
-public class SearchPresenter extends BasePresenter<SearchContract.Model, SearchContract.View> {
+public class LoginPresenter extends BasePresenter<LoginContract.Model, LoginContract.View> {
     @Override
-    protected SearchContract.Model createModel() {
-        return new SearchModel();
+    protected LoginContract.Model createModel() {
+        return new LoginModel();
     }
 
-    public void requestGridData() {
-        getModel().getHomeInfoData()
+    public void requestLogin(String username, String password) {
+        getModel().postLogin(username, password, "wap")
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
-                .subscribe(new BaseObserver<String>(getView()){
+                .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showHomeInfoData(JsonUtils.parseJsonData(result));
+                        getView().showLoginSuccess(JsonUtils.parseJsonData(result));
                     }
 
                     @Override

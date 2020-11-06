@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.webkit.WebView;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.AppCompatEditText;
@@ -31,16 +30,14 @@ import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
 
 import org.cloud.core.base.BaseAnimClient;
-import org.cloud.core.base.BaseApplication;
-import org.cloud.core.base.BaseBusClient;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.utils.StatusBarUtils;
-import org.cloud.core.utils.ToastUtils;
 import org.cloud.core.widget.FlowLayoutManager;
+import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.EvaluateGoodsSimpleListAdapter;
 import org.cloud.panzer.adapter.GoodsCommendListAdapter;
@@ -50,7 +47,6 @@ import org.cloud.panzer.adapter.VoucherGoodsListAdapter;
 import org.cloud.panzer.bean.EvaluateGoodsBean;
 import org.cloud.panzer.bean.GoodsCommendBean;
 import org.cloud.panzer.bean.VoucherGoodsBean;
-import org.cloud.panzer.event.GoodsIdEvent;
 import org.cloud.panzer.mvp.contract.GoodsContract;
 import org.cloud.panzer.mvp.presenter.GoodsPresenter;
 import org.cloud.panzer.view.CenterTextView;
@@ -63,8 +59,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 
@@ -296,14 +290,12 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         StatusBarUtils.setImageNoStatusBar(this, true);
 
         //headerRelativeLayout配置
-        LinearLayoutCompat.LayoutParams layoutParams =
-                (LinearLayoutCompat.LayoutParams) this.headerRelativeLayout.getLayoutParams();
-        layoutParams.height = BaseApplication.getInstance().getWidth();
+        LinearLayoutCompat.LayoutParams layoutParams = (LinearLayoutCompat.LayoutParams) this.headerRelativeLayout.getLayoutParams();
+        layoutParams.height = App.getInstance().getWidth();
         headerRelativeLayout.setLayoutParams(layoutParams);
         // toolbar虚拟高度配置增加StatusBarHeight
-        LinearLayoutCompat.LayoutParams layoutParams2 =
-                (LinearLayoutCompat.LayoutParams) this.toolbarView.getLayoutParams();
-        layoutParams2.height = BaseApplication.getInstance().getStatusBarHeight();
+        LinearLayoutCompat.LayoutParams layoutParams2 = (LinearLayoutCompat.LayoutParams) this.toolbarView.getLayoutParams();
+        layoutParams2.height = App.getInstance().getStatusBarHeight();
         toolbarView.setLayoutParams(layoutParams2);
         setToolbar(this.mainToolbar, "商品详情");
         // toolbar初始状态透明
@@ -314,11 +306,11 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         //BaseApplication.getInstance().setWebView(this, mainWebView);
         // 配置详情图片页面
         goodsDetailListAdapter = new GoodsDetailListAdapter(goodsImagesList);
-        BaseApplication.getInstance().setRecyclerView(getActivity(), detailsImagesView, goodsDetailListAdapter);
+        App.getInstance().setRecyclerView(getActivity(), detailsImagesView, goodsDetailListAdapter);
         detailsImagesView.setLayoutManager(new LinearLayoutManager(this));
 
         RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.shareImageView.getLayoutParams();
-        layoutParams3.height = BaseApplication.getInstance().getWidth() - BaseApplication.getInstance().dipToPx(112);
+        layoutParams3.height = App.getInstance().getWidth() - App.getInstance().dipToPx(112);
         this.shareImageView.setLayoutParams(layoutParams3);
 
         // 配置Banner
@@ -331,17 +323,17 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         // 评价
         evaluateGoodsArrayList = new ArrayList<>();
         evaluateGoodsAdapter = new EvaluateGoodsSimpleListAdapter(evaluateGoodsArrayList);
-        BaseApplication.getInstance().setRecyclerView(getActivity(), evaluateRecyclerView, evaluateGoodsAdapter);
+        App.getInstance().setRecyclerView(getActivity(), evaluateRecyclerView, evaluateGoodsAdapter);
         // 推荐
         commendArrayList = new ArrayList<>();
         commendAdapter = new GoodsCommendListAdapter(commendArrayList);
-        BaseApplication.getInstance().setRecyclerView(getActivity(), commendRecyclerView, commendAdapter);
+        App.getInstance().setRecyclerView(getActivity(), commendRecyclerView, commendAdapter);
         commendRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
         // 代币券
         voucherArrayList = new ArrayList<>();
         voucherAdapter = new VoucherGoodsListAdapter(voucherArrayList);
-        BaseApplication.getInstance().setRecyclerView(getActivity(), voucherRecyclerView, voucherAdapter);
+        App.getInstance().setRecyclerView(getActivity(), voucherRecyclerView, voucherAdapter);
 
         chooseValueRecyclerView = new RecyclerView[5];
         chooseValueRecyclerView[0] = chooseValueOneRecyclerView;
@@ -361,7 +353,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         goodsIdString = getIntent().getStringExtra(BaseConstant.DATA_ID);
         if (TextUtils.isEmpty(goodsIdString)) {
             BaseToast.getInstance().showDataError();
-            BaseApplication.getInstance().finish(getActivity());
+            App.getInstance().finish(getActivity());
         }
         isShowBoolean = false;
 
@@ -395,16 +387,13 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 setToolbar(this.mainToolbar, "商品详情");
             } else if (i == 1) {
                 setToolbar(this.mainToolbar, "商品介绍");
-                // mainWebView
-//                String imagesUrlString = BaseConstant.URL_GOODS_BODY + goodsIdString;
-//                mainWebView.loadUrl(imagesUrlString);
             }
         });
         mainScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY,
                                                                                             oldScrollX, oldScrollY) -> {
             float scrollYY = (float) v.getScrollY();
             float width =
-                    (float) (BaseApplication.getInstance().getWidth() - BaseApplication.getInstance().dipToPx(48));
+                    (float) (App.getInstance().getWidth() - App.getInstance().dipToPx(48));
             int i5 = Float.compare(scrollYY, 0.0f);
             if (i5 == 0) {
                 this.mainToolbar.setAlpha(0.0f);
@@ -513,8 +502,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         }
         if (this.chooseRelativeLayout.getVisibility() == View.GONE) {
             this.chooseRelativeLayout.setVisibility(View.VISIBLE);
-            BaseAnimClient.objectAnimator(this.chooseRelativeLayout, BaseAnimClient.TRABSLATION_Y,
-                    (float) BaseApplication.getInstance().getHeight(), 0.0f);
+            BaseAnimClient.objectAnimator(this.chooseRelativeLayout, BaseAnimClient.TRABSLATION_Y, (float) App.getInstance().getHeight(), 0.0f);
         }
     }
 
@@ -527,15 +515,14 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         if (chooseRelativeLayout.getVisibility() == View.VISIBLE) {
             chooseRelativeLayout.setVisibility(View.GONE);
             BaseAnimClient.objectAnimator(this.chooseRelativeLayout, BaseAnimClient.TRABSLATION_Y,
-                    () -> this.chooseRelativeLayout.setVisibility(View.GONE),
-                    0.0f, (float) BaseApplication.getInstance().getHeight());
+                    () -> this.chooseRelativeLayout.setVisibility(View.GONE), 0.0f, (float) App.getInstance().getHeight());
         }
 
     }
 
     private void addCart() {
-        if (!BaseApplication.getInstance().isLogin()) {
-            //BaseApplication.getInstance().startLogin(getActivity());
+        if (!App.getInstance().isLogin()) {
+            App.getInstance().startLogin(getActivity());
         } else {
             mPresenter.requestCartAdd(this.goodsId, ((Editable) Objects.requireNonNull(this.chooseNumberEditText.getText())).toString());
         }
@@ -557,21 +544,16 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     // 解析json数据
     private void handlerData(String homeInfoData) {
         String temp = "";
-        JsonElement datasFromJson = JsonUtils.parseJsonBody(homeInfoData);
-        if (datasFromJson instanceof JsonNull) {
-            return;
-        }
-        JsonObject mainJsonObject = datasFromJson.getAsJsonObject();
+        JsonObject mainJsonObject = new JsonParser().parse(homeInfoData).getAsJsonObject();
         JsonObject goodsInfoJSONObject = mainJsonObject.getAsJsonObject("goods_info");
         String[] goodsImages = mainJsonObject.get("goods_image").getAsString().split(",");
         goodsId = goodsInfoJSONObject.get("goods_id").getAsString();
         shareUrl = BaseConstant.URL_GOODS_DETAILED + goodsId;
         // 是否是视频文件
-        JsonElement videoInfo = mainJsonObject.get("video_path");
-        if (videoInfo instanceof JsonNull) {
+        if(!mainJsonObject.has("video_path")) {
             mainVideoPlayer.setVisibility(View.GONE);
         } else {
-            mainVideoPlayer.setUrl(videoInfo.getAsString());
+            mainVideoPlayer.setUrl(mainJsonObject.get("video_path").getAsString());
             StandardVideoController controller = new StandardVideoController(this);
             mainVideoPlayer.setVideoController(controller);
             mainVideoPlayer.start();
@@ -636,12 +618,11 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         saleTextView.append(goodsInfoJSONObject.get("goods_salenum").getAsString());
 
         //满送
-        JsonElement mansongInfo = mainJsonObject.get("mansong_info");
-        if (mansongInfo instanceof JsonNull) {
+        if(!mainJsonObject.has("mansong_info")) {
             manSongLinearLayout.setVisibility(View.GONE);
         } else {
             manSongLinearLayout.setVisibility(View.VISIBLE);
-            JsonArray jsonArray = mansongInfo.getAsJsonObject().getAsJsonArray("rules");
+            JsonArray jsonArray = mainJsonObject.get("mansong_info").getAsJsonObject().getAsJsonArray("rules");
             JsonObject manSongJsonObject = jsonArray.get(0).getAsJsonObject();
             temp = "单笔订单满￥" + manSongJsonObject.get("price").getAsString() + "，立减￥" + manSongJsonObject.get("discount").getAsString() + "，送礼品";
             manSongDescTextView.setText(temp);
@@ -660,10 +641,9 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             voucherTextView.setVisibility(View.GONE);
         }
         //SpecName
-        JsonElement specName = goodsInfoJSONObject.get("spec_name");
-        if (!(specName instanceof JsonNull)) {
+        if(goodsInfoJSONObject.has("spec_name")) {
             specNameArrayList = new ArrayList<>();
-            JsonObject jsonObject = specName.getAsJsonObject();
+            JsonObject jsonObject = goodsInfoJSONObject.get("spec_name").getAsJsonObject();
             for (Map.Entry<String, JsonElement> elementEntry : jsonObject.entrySet()) {
                 HashMap<String, String> hashMap1 = new HashMap<>();
                 String key = elementEntry.getKey();
@@ -683,10 +663,9 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             specTextView[0].setVisibility(View.VISIBLE);
         }
         //specValue
-        JsonElement specValue = goodsInfoJSONObject.get("spec_value");
-        if (!(specValue instanceof JsonNull)) {
+        if(goodsInfoJSONObject.has("spec_value")) {
             specValueArrayList = new ArrayList<>();
-            JsonObject jsonObject = specValue.getAsJsonObject();
+            JsonObject jsonObject = goodsInfoJSONObject.get("spec_value").getAsJsonObject();
             if (specNameArrayList.size() != 0) {
                 for (int i = 0; i < specNameArrayList.size(); i++) {
                     String id = specNameArrayList.get(i).get("id");
@@ -706,10 +685,9 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         }
 
         //goodsSpec
-        JsonElement goodsSpec = goodsInfoJSONObject.get("goods_spec");
-        if (!(goodsSpec instanceof JsonNull)) {
+        if(goodsInfoJSONObject.has("goods_spec")) {
             goodsSpecArrayList = new ArrayList<>();
-            JsonObject jsonObject = goodsSpec.getAsJsonObject();
+            JsonObject jsonObject = goodsInfoJSONObject.get("goods_spec").getAsJsonObject();
             for (Map.Entry<String, JsonElement> elementEntry : jsonObject.entrySet()) {
                 HashMap<String, String> hashMap1 = new HashMap<>();
                 String key = elementEntry.getKey();
@@ -808,7 +786,8 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         storeServiceTextView.setText(servicecredit.get("credit").getAsString());
         JsonObject deliverycredit = storeCredit.getAsJsonObject("store_deliverycredit");
         storeDeliveryTextView.setText(deliverycredit.get("credit").getAsString());
-        if (!(storeDesccredit.get("percent_text") instanceof JsonNull)) {
+
+        if(storeDesccredit.has("percent_text")) {
             String percent_text = storeDesccredit.get("percent_text").getAsString();
             storeDescPercentTextView.setText(isOwnShop.equals("1") ? "平" : percent_text);
             storeServicePercentTextView.setText(isOwnShop.equals("1") ? "平" : percent_text);
@@ -834,13 +813,12 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         evaluateNumberTextView.setText("(");
         evaluateNumberTextView.append(goodsEvaluateInfo.get("all").getAsString() + "人评价)");
 
-        JsonElement goodsEvalList = mainJsonObject.get("goods_eval_list");
-        if ((goodsEvalList instanceof JsonNull)) {
+        if(!mainJsonObject.has("goods_eval_list")) {
             evaluateRecyclerView.setVisibility(View.GONE);
         } else {
             evaluateRecyclerView.setVisibility(View.VISIBLE);
             evaluateGoodsArrayList.clear();
-            evaluateGoodsArrayList.addAll(JsonUtils.jsonToList(goodsEvalList.getAsJsonArray(),
+            evaluateGoodsArrayList.addAll(JsonUtils.jsonToList(mainJsonObject.get("goods_eval_list").getAsJsonArray(),
                     EvaluateGoodsBean.class));
             evaluateGoodsAdapter.notifyDataSetChanged();
         }

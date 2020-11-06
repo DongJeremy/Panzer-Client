@@ -14,16 +14,16 @@ import androidx.appcompat.widget.Toolbar;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.cloud.core.R;
-import org.cloud.core.utils.LoadingViewUtils;
 import org.cloud.core.utils.StatusBarUtils;
+import org.cloud.core.widget.MMLoading;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * @author xuhao
- * @date 2018/6/9 17:12
+ * @author ddw
+ * @date 2020/11/6 17:12
  * @desc 基类 BaseMvpActivity
  */
 public abstract class BaseActivity extends RxAppCompatActivity {
@@ -31,6 +31,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     private Activity activity;
 
     private Unbinder unBinder;
+
+    private MMLoading mmLoading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,13 +49,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         initData();
         initListener();
     }
-
-    /**
-     * 是否使用eventBus
-     *
-     * @return
-     */
-    protected abstract boolean useEventBus();
 
     /**
      * 供子类添加功能
@@ -76,57 +71,45 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     }
 
-    /**
-     * 通过Class跳转界面
-     **/
-    public void startActivity(Class<?> cls) {
-        startActivity(cls, null);
-    }
-
-    /**
-     * 通过Class跳转界面
-     **/
-    public void startActivityForResult(Class<?> cls, int requestCode) {
-        startActivityForResult(cls, null, requestCode);
-    }
-
-    /**
-     * 含有Bundle通过Class跳转界面
-     **/
-    public void startActivityForResult(Class<?> cls, Bundle bundle, int requestCode) {
-        Intent intent = new Intent();
-        intent.setClass(this, cls);
-        if (bundle != null) {
-            intent.putExtras(bundle);
-        }
-        startActivityForResult(intent, requestCode);
-    }
-
-    /**
-     * 含有Bundle通过Class跳转界面
-     **/
-    public void startActivity(Class<?> cls, Bundle bundle) {
-        Intent intent = new Intent();
-        intent.setClass(this, cls);
-        if (bundle != null) {
-            intent.putExtras(bundle);
-        }
-        startActivity(intent);
+    public Activity getActivity() {
+        return activity;
     }
 
     /**
      * 显示进度框
      */
     protected void showLoadingDialog() {
-        LoadingViewUtils.showLoading(this, true);
+        showLoadingDialog("加载中...");
+    }
+
+    /**
+     * 显示自定义文字的进度框
+     * @param msg  进度框显示的文字
+     */
+    protected void showLoadingDialog(String msg) {
+        if (mmLoading == null) {
+            MMLoading.Builder builder = new MMLoading.Builder(this)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setCancelOutside(true);
+            mmLoading = builder.create();
+        }else {
+            mmLoading.dismiss();
+            MMLoading.Builder builder = new MMLoading.Builder(this)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setCancelOutside(false);
+            mmLoading = builder.create();
+        }
+        mmLoading.show();
     }
 
     /**
      * 隐藏进度框
      */
     protected void hideLoadingDialog() {
-        if (LoadingViewUtils.isLoading(this)) {
-            LoadingViewUtils.hideLoading(this);
+        if (mmLoading != null && mmLoading.isShowing()) {
+            mmLoading.dismiss();
         }
     }
 
@@ -149,51 +132,54 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
     /**
+     * 是否使用eventBus
+     */
+    protected abstract boolean useEventBus();
+    /**
      * 获取布局 Id
-     *
-     * @return
      */
     protected abstract @LayoutRes int getLayoutId();
-
     /**
      * 初始化View的代码写在这个方法中
      */
     protected abstract void initView();
-
     /**
      * 初始化监听器的代码写在这个方法中
      */
     protected abstract void initListener();
-
     /**
      * 初始数据的代码写在这个方法中，用于从服务器获取数据
      */
     protected abstract void initData();
 
-    public Activity getActivity() {
-        return activity;
-    }
-
     public void onReturn() {
         finish();
     }
 
-    public void setToolbar(Toolbar toolbar) {
+    /**
+     * 配置工具栏
+     * @param toolbar 工具栏
+     */
+    protected void setToolbar(Toolbar toolbar) {
+        setToolbar(toolbar, null);
+    }
+
+    /**
+     * 配置工具栏
+     * @param toolbar 工具栏
+     * @param title   标题栏文字
+     */
+    protected void setToolbar(Toolbar toolbar, String title) {
         toolbar.setTitle("");
         toolbar.setContentInsetStartWithNavigation(0);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        if (title!=null) {
+            AppCompatTextView titleTextView = findViewById(R.id.titleTextView);
+            titleTextView.setGravity(Gravity.CENTER);
+            titleTextView.setText(title);
+        }
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(view -> onReturn());
     }
 
-    public void setToolbar(Toolbar toolbar, String title) {
-        toolbar.setTitle("");
-        toolbar.setContentInsetStartWithNavigation(0);
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
-        AppCompatTextView viewById = findViewById(R.id.titleTextView);
-        viewById.setGravity(Gravity.CENTER);
-        viewById.setText(title);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(view -> onReturn());
-    }
 }

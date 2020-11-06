@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * @date 2018/6/9 17:13
  * @desc 懒加载 Fragment 基类
  */
-public abstract class BaseLazyMVPFragment<T extends BasePresenter> extends BaseMVPFragment<T> {
+public abstract class BaseLazyMVPFragment<T extends BasePresenter> extends BaseMvpFragment<T> {
 
     /**
      * rootView是否初始化标志，防止回调函数在rootView为空的时候触发

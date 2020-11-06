@@ -10,9 +10,9 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseApplication;
 import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.GoodsCommendBean;
 
@@ -46,7 +46,7 @@ public class GoodsCommendListAdapter extends RecyclerView.Adapter<GoodsCommendLi
         holder.moneyTextView.setText("￥");
         holder.moneyTextView.append(bean.getGoodsSalePrice());
         ViewGroup.LayoutParams layoutParams = holder.mainImageView.getLayoutParams();
-        layoutParams.height = BaseApplication.getInstance().getWidth() / 4 - BaseApplication.getInstance().dipToPx(16);
+        layoutParams.height = App.getInstance().getWidth() / 4 - App.getInstance().dipToPx(16);
 
         holder.mainImageView.setLayoutParams(layoutParams);
 

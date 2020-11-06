@@ -3,19 +3,20 @@ package org.cloud.core.utils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-
-import com.github.ybq.android.spinkit.style.FadingCircle;
 
 import org.cloud.core.R;
 import org.cloud.core.base.BaseActivity;
+import org.cloud.core.widget.MMLoading;
 
 public class LoadingViewUtils {
+
+    private static MMLoading mmLoading;
     /**
      * 显示加载圈
      * @param activity
      * @param isCover 是否需要遮罩 防止点击
      */
+
     public static void showLoading(BaseActivity activity , boolean isCover){
         if (isLoading(activity)){
             return;

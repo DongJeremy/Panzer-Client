@@ -15,11 +15,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,7 +36,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import org.cloud.core.R;
@@ -51,6 +49,10 @@ import java.util.List;
 public class BaseApplication extends Application {
 
     private static BaseApplication mInstance;
+
+    public static BaseApplication getInstance() {
+        return mInstance;
+    }
 
     //是否允许图片下载
     private boolean isImage;
@@ -69,17 +71,11 @@ public class BaseApplication extends Application {
 
     private RefWatcher mRefWatcher;
 
-    public static BaseApplication getInstance() {
-        return mInstance;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
-        mInstance = this;
         CacheManager.init(this);
-        //检测内存泄漏
-        initLeakCanary();
+        mInstance = this;
         //注册监听每个activity的生命周期,便于堆栈式管理
         registerActivityLifecycleCallbacks(mCallbacks);
         BaseShared.getInstance().init(getSharedPreferences(BaseConstant.SHARED_NAME, MODE_PRIVATE));
@@ -87,14 +83,6 @@ public class BaseApplication extends Application {
         BaseImageLoader.getInstance().init(this);
 
         isImage = BaseShared.getInstance().getBoolean(BaseConstant.SHARED_SETTING_IMAGE, true);
-        BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, BaseConstant.SHARED_KEY_TEMP);
-    }
-
-    private void initLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        mRefWatcher = LeakCanary.install(this);
     }
 
     public static RefWatcher getRefWatcher(Context context) {
@@ -355,49 +343,62 @@ public class BaseApplication extends Application {
         Intent intent = null;
     }
 
-    //Activity跳转
-    public void startHome(Activity activity) {
+    /**
+     * 含有Bundle通过Class跳转界面
+     * @param cls       跳转到activity或者service
+     * @param bundle    用于传递数据
+     */
+    public void start(Activity activity, Class<?> cls, Bundle bundle) {
         Intent intent = new Intent();
-        intent.setAction("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.HOME");
-        start(activity, intent);
-    }
-
-    public void startLocation(Activity activity) {
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        start(activity, intent);
-    }
-
-    public void start(Activity activity, Class cls) {
-        Intent intent = new Intent(activity, cls);
+        intent.setClass(this, cls);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
         activity.startActivity(intent);
+    }
+
+    /**
+     * 通过Class跳转界面
+     * @param cls   跳转到activity或者service
+     */
+    public void start(Activity activity, Class<?> cls) {
+        start(activity, cls, null);
     }
 
     public void start(Activity activity, Intent intent) {
         activity.startActivity(intent);
     }
 
-    public void start(Activity activity, Class cls, int code) {
-        Intent intent = new Intent(activity, cls);
+    public void startForResult(Activity activity, Intent intent, int code) {
         activity.startActivityForResult(intent, code);
     }
 
-    public void start(Activity activity, Intent intent, int code) {
-        activity.startActivityForResult(intent, code);
+    /**
+     * 通过Class跳转界面
+     * @param cls           跳转到activity或者service
+     * @param requestCode   要返回的依据
+     */
+    public void startForResult(Activity activity, Class<?> cls, int requestCode) {
+        startForResult(activity, cls, null, requestCode);
     }
 
-    public void startCall(Activity activity, String mobile) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
-            start(activity, intent);
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * 含有Bundle通过Class跳转界面
+     * @param cls           跳转到activity或者service
+     * @param bundle        用于传递数据
+     * @param requestCode   要返回的依据
+     */
+    public void startForResult(Activity activity, Class<?> cls, Bundle bundle, int requestCode) {
+        Intent intent = new Intent();
+        intent.setClass(this, cls);
+        if (bundle != null) {
+            intent.putExtras(bundle);
         }
+        activity.startActivityForResult(intent, requestCode);
     }
 
     //Activity销毁
     public void finish(Activity activity) {
         activity.finish();
     }
-
 }

@@ -2,12 +2,11 @@ package org.cloud.panzer.mvp.presenter;
 
 import android.util.Log;
 
-import org.cloud.core.base.BaseConstant;
-import org.cloud.core.base.BaseShared;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
+import org.cloud.core.utils.JsonUtils;
 import org.cloud.panzer.mvp.contract.CartContract;
 import org.cloud.panzer.mvp.model.CartModel;
 
@@ -18,13 +17,22 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
     }
 
     public void requestCartListData() {
-        String key = BaseShared.getInstance().getString(BaseConstant.SHARED_KEY);
-        getModel().getCartListData(key)
+        getModel().getCartListData()
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showCartListData(result);
+                        getView().showCartListData(JsonUtils.parseJsonData(result));
+                    }
+
+                    @Override
+                    public boolean isSuccessFul(String result) {
+                        return JsonUtils.checkJsonCodeSuccess(result);
+                    }
+
+                    @Override
+                    public void onLogicError() {
+
                     }
 
                     @Override
@@ -37,13 +45,22 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
     }
 
     public void requestCartEditQuantity(String cartId, String quantity) {
-        String key = BaseShared.getInstance().getString(BaseConstant.SHARED_KEY);
-        getModel().cartEditQuantity(key, cartId, quantity)
+        getModel().cartEditQuantity(cartId, quantity)
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showCartEditQuantity(result);
+                        getView().showCartEditQuantity(JsonUtils.parseJsonData(result));
+                    }
+
+                    @Override
+                    public boolean isSuccessFul(String result) {
+                        return JsonUtils.checkJsonCodeSuccess(result);
+                    }
+
+                    @Override
+                    public void onLogicError() {
+
                     }
 
                     @Override
@@ -55,13 +72,22 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
     }
 
     public void requestCartDelete(String cartId, final int position, final int positionGoods) {
-        String key = BaseShared.getInstance().getString(BaseConstant.SHARED_KEY);
-        getModel().cartDelete(key, cartId)
+        getModel().cartDelete(cartId)
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showCartDeleteData(position, positionGoods, result);
+                        getView().showCartDeleteData(position, positionGoods, JsonUtils.parseJsonData(result));
+                    }
+
+                    @Override
+                    public boolean isSuccessFul(String result) {
+                        return JsonUtils.checkJsonCodeSuccess(result);
+                    }
+
+                    @Override
+                    public void onLogicError() {
+
                     }
 
                     @Override

@@ -1,11 +1,16 @@
 package org.cloud.core.net;
 
 import android.os.Build;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.cloud.core.base.BaseConstant;
+import org.cloud.core.base.BaseShared;
 import org.cloud.core.net.converter.StringConverterFactory;
+import org.cloud.core.net.interceptor.ParameterInterceptor;
 import org.cloud.core.utils.cache.CacheManager;
 
 import java.security.SecureRandom;
@@ -37,8 +42,8 @@ public class BaseRetrofit {
      */
     public static HashMap<String, Object> getRequestHeader() {
         HashMap<String, Object> parameters = new HashMap<>();
-        // 为接口统一添加access_token参数
-        parameters.put("token", CacheManager.getString("token"));
+        // 为接口统一添加 key 参数
+        parameters.put("token", "");
         return parameters;
     }
 
@@ -67,6 +72,7 @@ public class BaseRetrofit {
                             .Builder()
 //                          .cookieJar(new CookieJarImpl(new PersistentCookieStore(App.getContext()))); //cookie 相关
                             .addInterceptor(httpLoggingInterceptor) //日志,所有的请求响应
+                            .addInterceptor(new ParameterInterceptor(getRequestHeader())) // token过滤
                             //不加以下两行代码,https请求不到自签名的服务器
                             //.sslSocketFactory(createSSLSocketFactory())//创建一个证书对象
                             .hostnameVerifier(new TrustAllHostnameVerifier())//校验名称,这个对象就是信任所有的主机,也就是信任所有https的请求
@@ -108,6 +114,7 @@ public class BaseRetrofit {
                     OkHttpClient.Builder builder = new OkHttpClient
                             .Builder()
                             .addInterceptor(httpLoggingInterceptor) //日志,所有的请求响应
+                            .addInterceptor(new ParameterInterceptor(getRequestHeader())) // token过滤
                             //不加以下两行代码,https请求不到自签名的服务器
                             //.sslSocketFactory(createSSLSocketFactory())//创建一个证书对象
                             .hostnameVerifier(new TrustAllHostnameVerifier())//校验名称,这个对象就是信任所有的主机,也就是信任所有https的请求

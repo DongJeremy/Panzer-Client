@@ -1,15 +1,13 @@
 package org.cloud.panzer.ui.common;
 
-import android.content.Intent;
 import android.widget.Button;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.cloud.core.base.BaseActivity;
 import org.cloud.core.utils.StatusBarUtils;
-import org.cloud.panzer.PanzerApplication;
+import org.cloud.panzer.App;
 import org.cloud.panzer.R;
-import org.cloud.panzer.ui.main.MainActivity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
@@ -39,7 +37,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        PanzerApplication.getInstance().setFullScreen(getActivity());
+        App.getInstance().setFullScreen(getActivity());
     }
 
     @Override
@@ -78,8 +76,7 @@ public class SplashActivity extends BaseActivity {
         if (!mIsSkip) {
             mIsSkip = true;
             finish();
-            //start(activity, intent);
-            startActivity(new Intent(getActivity(), MainActivity.class));
+            App.getInstance().startMain(getActivity());
             overridePendingTransition(R.anim.hold, R.anim.zoom_in_exit);
         }
     }

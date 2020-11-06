@@ -1,6 +1,5 @@
 package org.cloud.panzer.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatEditText;
@@ -15,25 +14,22 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.cloud.core.base.BaseApplication;
-import org.cloud.core.base.BaseMVPFragment;
+import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.core.utils.JsonUtils;
-import org.cloud.panzer.PanzerApplication;
+import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.HomeListAdapter;
 import org.cloud.panzer.bean.ArticleBean;
 import org.cloud.panzer.bean.HomeBean;
 import org.cloud.panzer.mvp.contract.HomeContract;
 import org.cloud.panzer.mvp.presenter.HomePresenter;
-import org.cloud.panzer.ui.home.ChatListActivity;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import io.github.xudaojie.qrcodelib.CaptureActivity;
 
 @SuppressWarnings("rawtypes")
-public class HomeFragment extends BaseMVPFragment<HomePresenter> implements HomeContract.View {
+public class HomeFragment extends BaseMvpFragment<HomePresenter> implements HomeContract.View {
 
     public ArrayList<ArticleBean> articleArrayList;
     public HomeListAdapter mainAdapter;
@@ -76,16 +72,14 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
         this.mainArrayList = new ArrayList<>();
         this.articleArrayList = new ArrayList<>();
         this.mainAdapter = new HomeListAdapter(getActivity(), this.mainArrayList);
-        BaseApplication.getInstance().setRecyclerView(getActivity(), mainRecyclerView, mainAdapter);
-        BaseApplication.getInstance().setSwipeRefreshLayout(mainSwipeRefreshLayout);
+        App.getInstance().setRecyclerView(getActivity(), mainRecyclerView, mainAdapter);
+        App.getInstance().setSwipeRefreshLayout(mainSwipeRefreshLayout);
     }
 
     @Override
     protected void initListener() {
-        scanImageView.setOnClickListener(v ->
-                startActivityForResult(new Intent(getActivity(), CaptureActivity.class), 1003));
-        messageImageView.setOnClickListener(view ->
-                ((PanzerApplication) BaseApplication.getInstance()).startCheckLogin(getActivity(), ChatListActivity.class));
+        scanImageView.setOnClickListener(v -> App.getInstance().startCapture(getActivity()));
+        messageImageView.setOnClickListener(view -> App.getInstance().startChatList(getActivity()));
     }
 
     @Override
@@ -106,11 +100,7 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
 
     @Override
     public void showHomeInfoData(String homeInfoData) {
-        JsonElement datasFromJson = JsonUtils.parseJsonBody(homeInfoData);
-        if (datasFromJson instanceof JsonNull) {
-            return;
-        }
-        JsonArray jsonArrays = datasFromJson.getAsJsonArray();
+        JsonArray jsonArrays = new JsonParser().parse(homeInfoData).getAsJsonArray();
         for (int i = 0; i < jsonArrays.size(); i++) {
             JsonObject jsonObject = jsonArrays.get(i).getAsJsonObject();
             HomeBean homeBean = new HomeBean();
@@ -140,11 +130,7 @@ public class HomeFragment extends BaseMVPFragment<HomePresenter> implements Home
 
     @Override
     public void showArticleListData(String articleListData) {
-        JsonElement datasFromJson = JsonUtils.parseJsonBody(articleListData);
-        if (datasFromJson instanceof JsonNull) {
-            return;
-        }
-        JsonArray jsonArrays = datasFromJson.getAsJsonObject().getAsJsonArray("article_list");
+        JsonArray jsonArrays = new JsonParser().parse(articleListData).getAsJsonObject().getAsJsonArray("article_list");
         this.articleArrayList.addAll(JsonUtils.jsonToList(jsonArrays, ArticleBean.class));
         if (articleArrayList.size() != 0) {
             HomeBean homeBean = new HomeBean();
