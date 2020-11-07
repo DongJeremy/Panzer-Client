@@ -892,16 +892,17 @@
         <View style="@style/View.Horizontal" />
 
         <org.cloud.panzer.view.CenterTextView
-            android:id="@+id/storeTextView"
+            android:id="@+id/cartTextView"
             style="@style/TextView.Normal"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@drawable/selector_color_white"
-            android:drawableStart="@drawable/ic_goods_store"
+            android:drawableStart="@drawable/ic_navigation_cart"
             android:drawablePadding="8dp"
-            android:text="进店"
+            android:text="购物车"
             android:textColor="@color/textThird"
-            android:drawableLeft="@drawable/ic_goods_store" />
+            tools:ignore="HardcodedText"
+            android:drawableLeft="@drawable/ic_navigation_cart" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/addCartTextView"

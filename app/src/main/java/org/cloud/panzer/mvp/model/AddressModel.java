@@ -14,7 +14,7 @@ public class AddressModel extends BaseModel implements AddressContract.Model {
 
     @Override
     public Observable<String> doAddressAdd(String trueName, String mobPhone, String cityId, String areaId, String address, String areaInfo,
-                                            String isDefault) {
+                                           String isDefault) {
         return RetrofitUtils.getRawHttpService().memberAddressAdd(trueName, mobPhone, cityId, areaId, address, areaInfo, isDefault);
     }
 

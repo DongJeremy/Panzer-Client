@@ -116,6 +116,7 @@ public class AddressActivity extends BaseMvpActivity<AddressPresenter> implement
         Log.e("address_list", addressList.size()+"");
         this.mainArrayList.addAll(Objects.requireNonNull(addressList));
         this.mainAdapter.notifyDataSetChanged();
+        this.mainPullRefreshView.setComplete();
     }
 
     @Override
@@ -124,21 +125,16 @@ public class AddressActivity extends BaseMvpActivity<AddressPresenter> implement
     }
 
     @Override
-    public void showAddressAdd(String address) {
-
-    }
+    public void showAddressAdd(String address) {}
 
     @Override
-    public void showAddressEdit(String address) {
-
-    }
+    public void showAddressEdit(String address) {}
 
     // 自定义数据和方法
 
     public void getAddress() {
         this.mainPullRefreshView.setLoading();
         mPresenter.requestAddressList();
-        this.mainPullRefreshView.setComplete();
     }
 
     private void deleteAddress(String str) {

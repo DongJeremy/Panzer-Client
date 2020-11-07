@@ -166,6 +166,4 @@ public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements Lo
         loginTextView.setText("登录中...");
         mPresenter.requestLogin(username, password);
     }
-
-
 }

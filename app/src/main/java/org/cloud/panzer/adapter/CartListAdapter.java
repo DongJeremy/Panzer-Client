@@ -40,22 +40,22 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final int positionInt = position;
-        final CartBean cartBean = this.arrayList.get(position);
+        final CartBean bean = this.arrayList.get(position);
         final GoodsCartListAdapter goodsCartListAdapter;
 
-        holder.storeNameTextView.setText(cartBean.getStoreName());
-        holder.mainCheckBox.setChecked(cartBean.isCheck());
-        goodsCartListAdapter = new GoodsCartListAdapter(cartBean.getGoods());
+        holder.storeNameTextView.setText(bean.getStoreName());
+        holder.mainCheckBox.setChecked(bean.isCheck());
+        goodsCartListAdapter = new GoodsCartListAdapter(bean.getGoods());
         App.getInstance().setRecyclerView(App.getInstance(), holder.mainRecyclerView, goodsCartListAdapter);
 
-        if (cartBean.getMansong() == null || cartBean.getMansong().size() == 0) {
+        if (bean.getMansong() == null || bean.getMansong().size() == 0) {
             holder.mansongLineView.setVisibility(View.GONE);
             holder.manSongLinearLayout.setVisibility(View.GONE);
         } else {
             holder.mansongLineView.setVisibility(View.VISIBLE);
             holder.manSongLinearLayout.setVisibility(View.VISIBLE);
-            holder.manSongDescTextView.setText(cartBean.getMansong().get(0).getDesc());
-            BaseImageLoader.getInstance().display(cartBean.getMansong().get(0).getUrl(), holder.manSongGoodsImageView);
+            holder.manSongDescTextView.setText(bean.getMansong().get(0).getDesc());
+            BaseImageLoader.getInstance().display(bean.getMansong().get(0).getUrl(), holder.manSongGoodsImageView);
         }
 
         goodsCartListAdapter.setOnItemClickListener(new GoodsCartListAdapter.OnItemClickListener() {
@@ -97,19 +97,19 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
 
         holder.mainCheckBox.setOnClickListener(view -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onCheck(positionInt, holder.mainCheckBox.isChecked(), cartBean);
+                onItemClickListener.onCheck(positionInt, holder.mainCheckBox.isChecked(), bean);
             }
         });
 
         holder.storeLinearLayout.setOnClickListener(view -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onStore(positionInt, cartBean);
+                onItemClickListener.onStore(positionInt, bean);
             }
         });
 
         holder.mainLinearLayout.setOnClickListener(view -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onClick(positionInt, cartBean);
+                onItemClickListener.onClick(positionInt, bean);
             }
         });
     }

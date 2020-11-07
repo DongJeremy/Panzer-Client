@@ -39,12 +39,10 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
     AppCompatTextView footprintTextView;
     @BindView(R.id.storeTextView)
     AppCompatTextView storeTextView;
-
     @BindView(R.id.avatarImageView)
     AppCompatImageView avatarImageView;
     @BindView(R.id.mineLinearLayout)
     LinearLayoutCompat mineLinearLayout;
-
     @BindView(R.id.waitEvaluateDotTextView)
     AppCompatTextView waitEvaluateDotTextView;
     @BindView(R.id.waitEvaluateRelativeLayout)
@@ -65,10 +63,8 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
     AppCompatTextView waitTakesDotTextView;
     @BindView(R.id.waitTakesRelativeLayout)
     RelativeLayout waitTakesRelativeLayout;
-
     @BindView(R.id.redPacketDotTextView)
     AppCompatTextView redPacketDotTextView;
-
     // 收货地址
     @BindView(R.id.addressTextView)
     AppCompatTextView addressTextView;
@@ -91,8 +87,13 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
 
     @Override
     protected void initListener() {
-        mineLinearLayout.setOnClickListener(view -> App.getInstance().startCheckLogin((Activity) getActivity(), CenterActivity.class));
-        addressTextView.setOnClickListener(view -> App.getInstance().startCheckLogin((Activity) getActivity(), AddressActivity.class));
+        mineLinearLayout.setOnClickListener(view -> App.getInstance().startCheckLogin(getActivity(), CenterActivity.class));
+        addressTextView.setOnClickListener(view -> App.getInstance().startCheckLogin(getActivity(), AddressActivity.class));
+
+        waitPaymentRelativeLayout.setOnClickListener(view -> App.getInstance().startOrder(getActivity(), 1));
+        waitReceiptRelativeLayout.setOnClickListener(view -> App.getInstance().startOrder(getActivity(), 2));
+        waitTakesRelativeLayout.setOnClickListener(view -> App.getInstance().startOrder(getActivity(), 3));
+        waitEvaluateRelativeLayout.setOnClickListener(view -> App.getInstance().startOrder(getActivity(), 4));
     }
 
     @Override

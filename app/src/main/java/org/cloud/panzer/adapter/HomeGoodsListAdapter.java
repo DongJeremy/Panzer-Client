@@ -60,7 +60,6 @@ public class HomeGoodsListAdapter extends RecyclerView.Adapter<HomeGoodsListAdap
     }
 
     static class ViewHolder extends BaseViewHolder {
-
         @BindView(R.id.mainRelativeLayout)
         RelativeLayout mainRelativeLayout;
         @BindView(R.id.mainImageView)

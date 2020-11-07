@@ -17,10 +17,13 @@ import org.cloud.panzer.bean.GoodsSearchData;
 import org.cloud.panzer.ui.common.FindPassActivity;
 import org.cloud.panzer.ui.common.LoginActivity;
 import org.cloud.panzer.ui.common.RegisterActivity;
+import org.cloud.panzer.ui.goods.BuyActivity;
 import org.cloud.panzer.ui.goods.GoodsActivity;
 import org.cloud.panzer.ui.goods.ListActivity;
 import org.cloud.panzer.ui.home.ChatListActivity;
 import org.cloud.panzer.ui.main.MainActivity;
+import org.cloud.panzer.ui.order.OrderActivity;
+import org.cloud.panzer.ui.order.PayActivity;
 import org.cloud.panzer.ui.store.StoreActivity;
 
 import io.github.xudaojie.qrcodelib.CaptureActivity;
@@ -111,6 +114,13 @@ public class App extends BaseApplication {
         start(activity, intent);
     }
 
+    public void startGoodsBuy(Activity activity, String str, String str2) {
+        Intent intent = new Intent(activity, BuyActivity.class);
+        intent.putExtra(BaseConstant.DATA_ID, str);
+        intent.putExtra(BaseConstant.DATA_IFCART, str2);
+        startCheckLogin(activity, intent);
+    }
+
     public void startLogin(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
         start(activity, intent);
@@ -122,6 +132,26 @@ public class App extends BaseApplication {
         } else {
             start(activity, LoginActivity.class);
         }
+    }
+
+    public void startCheckLogin(Activity activity, Intent intent) {
+        if (isLogin()) {
+            start(activity, intent);
+        } else {
+            start(activity, LoginActivity.class);
+        }
+    }
+
+    public void startOrder(Activity activity, int position) {
+        Intent intent = new Intent(activity, OrderActivity.class);
+        intent.putExtra(BaseConstant.DATA_POSITION, position);
+        startCheckLogin(activity, intent);
+    }
+
+    public void startOrderPay(Activity activity, String paySn) {
+        Intent intent = new Intent(activity, PayActivity.class);
+        intent.putExtra(BaseConstant.DATA_ID, paySn);
+        start(activity, intent);
     }
 
     public void startImagePicker(Activity activity, int selectLimit, int code, boolean crop) {

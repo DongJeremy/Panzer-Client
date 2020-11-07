@@ -33,11 +33,13 @@ public class SearchKeyListAdapter extends RecyclerView.Adapter<SearchKeyListAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        final int positionInt = position;
         final String str = this.arrayList.get(position);
+
         holder.nameTextView.setText(str);
         holder.mainLinearLayout.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onClick(position, str);
+                onItemClickListener.onClick(positionInt, str);
             }
         });
     }

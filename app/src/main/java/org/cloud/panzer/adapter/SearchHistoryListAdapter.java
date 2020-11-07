@@ -33,11 +33,13 @@ public class SearchHistoryListAdapter extends RecyclerView.Adapter<SearchHistory
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String str = this.arrayList.get(position);
-        holder.nameTextView.setText(str);
+        final int positionInt = position;
+        final String bean = arrayList.get(position);
+
+        holder.nameTextView.setText(bean);
         holder.mainLinearLayout.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onClick(position, str);
+                onItemClickListener.onClick(positionInt, bean);
             }
         });
     }

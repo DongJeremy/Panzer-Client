@@ -18,6 +18,7 @@ import com.google.gson.JsonParser;
 
 import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.core.base.BaseToast;
+import org.cloud.core.rx.RxBus;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.widget.PullRefreshView;
 import org.cloud.panzer.App;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import io.github.xudaojie.qrcodelib.CaptureActivity;
+
+import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
 
 public class CartFragment extends BaseMvpFragment<CartPresenter> implements CartContract.View {
 
@@ -109,6 +112,7 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
     protected void initListener() {
         scanImageView.setOnClickListener(v -> App.getInstance().startCapture(getActivity()));
         messageImageView.setOnClickListener(view -> App.getInstance().startCheckLogin(getActivity(), ChatListActivity.class));
+        searchEditText.setOnClickListener(v-> RxBus.getInstance().send(RX_BUS_CODE_MAIN_SEARCH_SHOW));
         tipsRelativeLayout.setOnClickListener(v -> {
             if (!App.getInstance().isLogin()) {
                 App.getInstance().startLogin(getActivity());
@@ -126,7 +130,7 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
             mainAdapter.notifyDataSetChanged();
             calc();
         });
-        mainAdapter.setOnItemClickListener(new CartListAdapter.OnItemClickListener() {
+        this.mainAdapter.setOnItemClickListener(new CartListAdapter.OnItemClickListener() {
             @Override
             public void onCheck(int position, boolean isCheck, CartBean cartBean) {
                 mainArrayList.get(position).setCheck(isCheck);
@@ -190,6 +194,7 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
                 App.getInstance().startStore(getActivity(), cartBean.getStoreId());
             }
         });
+        this.balanceTextView.setOnClickListener(view -> App.getInstance().startGoodsBuy(getActivity(), this.cartIdString, "1"));
     }
 
     @Override
@@ -207,7 +212,7 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
         mainArrayList.clear();
         JsonObject mainJsonObject = new JsonParser().parse(cartListData).getAsJsonObject();
         JsonArray cartList = mainJsonObject.getAsJsonArray("cart_list");
-        moneyFloat = mainJsonObject.get("sum").getAsFloat();
+        this.moneyFloat = mainJsonObject.get("sum").getAsFloat();
         countInt = mainJsonObject.get("cart_count").getAsInt();
         mainArrayList.addAll(JsonUtils.jsonToList(cartList, CartBean.class));
         for (int i = 0; i < mainArrayList.size(); i++) {
@@ -286,8 +291,8 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
 
     private void calc() {
         countInt = 0;
-        moneyFloat = 0.0f;
-        cartIdString = "";
+        this.moneyFloat = 0.0f;
+        this.cartIdString = "";
         for (int i = 0; i < mainArrayList.size(); i++) {
             for (int j = 0; j < mainArrayList.get(i).getGoods().size(); j++) {
                 if (mainArrayList.get(i).getGoods().get(j).isCheck()) {
@@ -295,19 +300,19 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
                     int count = Integer.parseInt(mainArrayList.get(i).getGoods().get(j).getGoodsNum());
                     float money = Float.parseFloat(mainArrayList.get(i).getGoods().get(j).getGoodsPrice()) * count;
                     countInt += count;
-                    moneyFloat += money;
-                    cartIdString += cartId + "|" + count + ",";
+                    this.moneyFloat += money;
+                    this.cartIdString += cartId + "|" + count + ",";
                 }
             }
         }
-        if (!TextUtils.isEmpty(cartIdString)) {
+        if (!TextUtils.isEmpty(this.cartIdString)) {
             balanceTextView.setEnabled(true);
-            cartIdString = cartIdString.substring(0, cartIdString.length() - 1);
+            this.cartIdString = this.cartIdString.substring(0, this.cartIdString.length() - 1);
         } else {
             balanceTextView.setEnabled(false);
         }
 
-        String temp = "共 <font color='#FF0000'>" + countInt + "</font> 件，" + "总计：" + "<font color='#FF0000'>￥" + moneyFloat + " 元</font>";
+        String temp = "共 <font color='#FF0000'>" + countInt + "</font> 件，" + "总计：" + "<font color='#FF0000'>￥" + this.moneyFloat + " 元</font>";
         moneyTextView.setText(Html.fromHtml(temp));
     }
 }

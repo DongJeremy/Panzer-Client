@@ -38,17 +38,14 @@ public class GoodsDetailListAdapter extends RecyclerView.Adapter<GoodsDetailList
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final String bean = arrayList.get(position);
         BaseImageLoader.getInstance().displayFitXY(bean, holder.detailsImageView);
-        holder.detailsImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Intent intent = new Intent(v.getContext(), ImageFullScreenActivity.class);
-                    intent.putExtra("img", bean);
-                    v.getContext().startActivity(
-                            intent,
-                            ActivityOptions.makeSceneTransitionAnimation((Activity) v.getContext(), v, "sharedView").toBundle()
-                    );
-                }
+        holder.detailsImageView.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Intent intent = new Intent(v.getContext(), ImageFullScreenActivity.class);
+                intent.putExtra("img", bean);
+                v.getContext().startActivity(
+                        intent,
+                        ActivityOptions.makeSceneTransitionAnimation((Activity) v.getContext(), v, "sharedView").toBundle()
+                );
             }
         });
     }
@@ -61,7 +58,6 @@ public class GoodsDetailListAdapter extends RecyclerView.Adapter<GoodsDetailList
     }
 
     static class ViewHolder extends BaseViewHolder {
-
         @BindView(R.id.detailsImageView)
         AppCompatImageView detailsImageView;
 

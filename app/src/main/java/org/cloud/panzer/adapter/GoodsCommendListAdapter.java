@@ -37,7 +37,6 @@ public class GoodsCommendListAdapter extends RecyclerView.Adapter<GoodsCommendLi
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-
         final int positionInt = position;
         final GoodsCommendBean bean = arrayList.get(position);
 

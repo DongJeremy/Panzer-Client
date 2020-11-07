@@ -40,6 +40,7 @@ class GoodsCartListAdapter extends RecyclerView.Adapter<GoodsCartListAdapter.Vie
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final int positionInt = position;
         final CartBean.GoodsBean bean = arrayList.get(position);
+
         holder.mainCheckBox.setChecked(bean.isCheck());
         BaseImageLoader.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
         holder.nameTextView.setText(bean.getGoodsName());

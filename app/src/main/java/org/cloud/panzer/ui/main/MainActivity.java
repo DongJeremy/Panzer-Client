@@ -17,6 +17,7 @@ import org.cloud.panzer.R;
 
 import butterknife.BindView;
 
+import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_CART_SHOW;
 import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
 
 public class MainActivity extends BaseActivity {
@@ -160,7 +161,14 @@ public class MainActivity extends BaseActivity {
     }
 
     @Subscribe(code = RX_BUS_CODE_MAIN_SEARCH_SHOW)
-    public void rxBusEvent() {
+    public void rxBusEventSearch() {
         switchFragment(2);
+        mBottomNavigationView.setSelectedItemId(mBottomNavigationView.getMenu().getItem(2).getItemId());
+    }
+
+    @Subscribe(code = RX_BUS_CODE_MAIN_CART_SHOW)
+    public void rxBusEventCart() {
+        switchFragment(3);
+        mBottomNavigationView.setSelectedItemId(mBottomNavigationView.getMenu().getItem(3).getItemId());
     }
 }

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.cloud.core.widget.PullRefreshView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainPullRefreshView"
+    style="@style/Layout.Main" />

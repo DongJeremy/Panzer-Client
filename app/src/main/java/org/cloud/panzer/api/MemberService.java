@@ -1,7 +1,10 @@
 package org.cloud.panzer.api;
 
+import java.util.Map;
+
 import io.reactivex.Observable;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
@@ -33,4 +36,12 @@ public interface MemberService {
                                          @Field("mob_phone") String mobPhone, @Field("city_id") String cityId,
                                          @Field("area_id") String areaId, @Field("address") String address,
                                          @Field("area_info") String areaInfo, @Field("is_default") String isDefault);
+
+    @FormUrlEncoded
+    @POST("index.php?act=member_buy&op=buy_step1")
+    Observable<String> memberBuyStep1(@Field("cart_id") String cartId, @Field("ifcart") String ifcart, @Field("address_id") String addressId);
+
+    @FormUrlEncoded
+    @POST("index.php?act=member_buy&op=buy_step2")
+    Observable<String> memberBuyStep2(@FieldMap Map<String, String> maps);
 }

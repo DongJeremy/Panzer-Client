@@ -34,6 +34,7 @@ import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
+import org.cloud.core.rx.RxBus;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.core.widget.FlowLayoutManager;
@@ -62,6 +63,8 @@ import java.util.Objects;
 
 import butterknife.BindView;
 
+import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_CART_SHOW;
+import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
 import static org.cloud.core.utils.StringUtils.getUrlFromString;
 
 public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements GoodsContract.View {
@@ -84,7 +87,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     View toolbarView;
     @BindView(R.id.toolbarLineView)
     View toolbarLineView;
-
     @BindView(R.id.favoritesImageView)
     AppCompatImageView favoritesImageView;
     @BindView(R.id.shareImageView)
@@ -135,7 +137,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     AppCompatTextView specOneTextView;
     @BindView(R.id.specTwoTextView)
     AppCompatTextView specTwoTextView;
-    private AppCompatTextView[] specTextView;
     @BindView(R.id.serviceDescTextView)
     AppCompatTextView serviceDescTextView;
     @BindView(R.id.serviceSevDayTextView)
@@ -176,8 +177,8 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     RecyclerView commendRecyclerView;
     @BindView(R.id.customerTextView)
     CenterTextView customerTextView;
-    @BindView(R.id.storeTextView)
-    CenterTextView storeTextView;
+    @BindView(R.id.cartTextView)
+    CenterTextView cartTextView;
     @BindView(R.id.addCartTextView)
     AppCompatTextView addCartTextView;
     @BindView(R.id.buyTextView)
@@ -210,9 +211,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     RecyclerView chooseValueFouRecyclerView;
     @BindView(R.id.chooseValueFivRecyclerView)
     RecyclerView chooseValueFivRecyclerView;
-    private View[] chooseLineView;
-    private AppCompatTextView[] chooseValueTextView;
-    private RecyclerView[] chooseValueRecyclerView;
     @BindView(R.id.chooseAddTextView)
     AppCompatTextView chooseAddTextView;
     @BindView(R.id.chooseNumberEditText)
@@ -221,7 +219,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     AppCompatTextView chooseSubTextView;
     @BindView(R.id.voucherLinearLayout)
     LinearLayoutCompat voucherLinearLayout;
-
     @BindView(R.id.detailsImagesView)
     RecyclerView detailsImagesView;
 
@@ -232,14 +229,17 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     @BindView(R.id.nightTextView)
     AppCompatTextView nightTextView;
 
-    private EvaluateGoodsSimpleListAdapter evaluateGoodsAdapter;
+    private View[] chooseLineView;
+    private AppCompatTextView[] chooseValueTextView;
+    private RecyclerView[] chooseValueRecyclerView;
+    private AppCompatTextView[] specTextView;
+
     private ArrayList<EvaluateGoodsBean> evaluateGoodsArrayList;
-
-    private GoodsCommendListAdapter commendAdapter;
+    private EvaluateGoodsSimpleListAdapter evaluateGoodsAdapter;
     private ArrayList<GoodsCommendBean> commendArrayList;
-
-    private VoucherGoodsListAdapter voucherAdapter;
+    private GoodsCommendListAdapter commendAdapter;
     private ArrayList<VoucherGoodsBean> voucherArrayList;
+    private VoucherGoodsListAdapter voucherAdapter;
 
     private final ArrayList<String> goodsImageArrayList = new ArrayList<>();
 
@@ -418,6 +418,11 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         // 点击加入购物车
         chooseRelativeLayout.setOnClickListener(view -> {
             //仅仅只是为了防止点到暗色标签
+        });
+        cartTextView.setOnClickListener(view -> {
+            Log.e("TAG", "cart show: ");
+            App.getInstance().finish(getActivity());
+            RxBus.getInstance().send(RX_BUS_CODE_MAIN_CART_SHOW);
         });
 
         addCartTextView.setOnClickListener(view -> {

@@ -1,17 +1,8 @@
 package org.cloud.core.net;
 
 import android.os.Build;
-import android.text.TextUtils;
-import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.cloud.core.base.BaseConstant;
-import org.cloud.core.base.BaseShared;
-import org.cloud.core.net.converter.StringConverterFactory;
 import org.cloud.core.net.interceptor.ParameterInterceptor;
-import org.cloud.core.utils.cache.CacheManager;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -92,8 +83,7 @@ public class BaseRetrofit {
                             .Builder()
                             .baseUrl(urlString)
                             .client(client)
-                            .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
-                            .addConverterFactory(ScalarsConverterFactory.create())
+                            .addConverterFactory(GsonConverterFactory.create())
                             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                             .build();
                 }

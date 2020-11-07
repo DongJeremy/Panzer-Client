@@ -37,6 +37,7 @@ public class EvaluateGoodsSimpleListAdapter extends RecyclerView.Adapter<Evaluat
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final int positionInt = position;
         final EvaluateGoodsBean bean = arrayList.get(position);
+
         holder.mainRatingBar.setRating(Float.parseFloat(bean.getGevalScores()));
         holder.contentTextView.setText(bean.getGevalFrommembername());
         holder.contentTextView.append("：");

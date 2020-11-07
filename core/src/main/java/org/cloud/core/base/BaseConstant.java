@@ -11,6 +11,7 @@ public class BaseConstant {
     public static final String SHARED_SETTING_PUSH = "shared_settingd_push";
     public static final String SHARED_SETTING_IMAGE = "shared_setting_image";
 
+    public static final int CODE_ADDRESS = 2002;
     public static final int CODE_LOGIN = 2000;
 
     public static final int TIME_EXIT = 1000;
@@ -22,6 +23,8 @@ public class BaseConstant {
     public static final String DATA_URL = "url";
     public static final String DATA_KEY = "key";
     public static final String DATA_KEYWORD = "keyword";
+    public static final String DATA_IFCART = "ifcart";
+    public static final String DATA_POSITION = "position";
 
     public static final String URL = "https://www.wpccw.com/";
     public static final String URL_API = URL + "api/mobile/index.php";

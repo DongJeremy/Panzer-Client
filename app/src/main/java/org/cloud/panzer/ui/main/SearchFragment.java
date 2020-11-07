@@ -1,9 +1,5 @@
 package org.cloud.panzer.ui.main;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.text.Editable;
-
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;

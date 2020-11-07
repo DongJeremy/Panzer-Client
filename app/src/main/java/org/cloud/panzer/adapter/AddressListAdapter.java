@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.cloud.core.base.BaseViewHolder;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.AddressBean;
+import org.cloud.panzer.bean.StoreBuyBean;
 
 import java.util.ArrayList;
 
@@ -34,25 +35,27 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final AddressBean addressBean = this.arrayList.get(position);
-        holder.nameTextView.setText(addressBean.getTrueName());
-        holder.mobileTextView.setText(addressBean.getMobPhone());
-        holder.areaTextView.setText(addressBean.getAreaInfo());
-        holder.areaTextView.setText(String.format(" %s", addressBean.getAddress()));
-        holder.defaultTextView.setVisibility(addressBean.getIsDefault().equals("1") ? View.VISIBLE : View.GONE);
+        final int positionInt = position;
+        final AddressBean bean = this.arrayList.get(position);
+
+        holder.nameTextView.setText(bean.getTrueName());
+        holder.mobileTextView.setText(bean.getMobPhone());
+        holder.areaTextView.setText(bean.getAreaInfo());
+        holder.areaTextView.setText(String.format(" %s", bean.getAddress()));
+        holder.defaultTextView.setVisibility(bean.getIsDefault().equals("1") ? View.VISIBLE : View.GONE);
         holder.editTextView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onEdit(position, addressBean);
+                onItemClickListener.onEdit(positionInt, bean);
             }
         });
         holder.deleteTextView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onDelete(position, addressBean);
+                onItemClickListener.onDelete(positionInt, bean);
             }
         });
         holder.mainRelativeLayout.setOnClickListener(v -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onClick(position, addressBean);
+                onItemClickListener.onClick(positionInt, bean);
             }
         });
     }

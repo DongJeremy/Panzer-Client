@@ -36,6 +36,7 @@ public class VoucherGoodsListAdapter extends RecyclerView.Adapter<VoucherGoodsLi
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final int positionInt = position;
         final VoucherGoodsBean bean = arrayList.get(position);
+
         holder.titleTextView.setText("面额￥");
         holder.titleTextView.append(bean.getVoucherTPrice());
         holder.titleTextView.append("元");

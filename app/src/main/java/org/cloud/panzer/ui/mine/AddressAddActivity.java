@@ -123,20 +123,20 @@ public class AddressAddActivity extends BaseMvpActivity<AddressPresenter> implem
 
     private void addAddress() {
         App.getInstance().hideKeyboard(getActivity());
-        String obj = Objects.requireNonNull(this.nameEditText.getText()).toString();
-        String obj2 = Objects.requireNonNull(this.mobileEditText.getText()).toString();
-        String obj3 = Objects.requireNonNull(this.addressEditText.getText()).toString();
+        String trueName = Objects.requireNonNull(this.nameEditText.getText()).toString();
+        String mobPhone = Objects.requireNonNull(this.mobileEditText.getText()).toString();
+        String address = Objects.requireNonNull(this.addressEditText.getText()).toString();
         String str = this.defaultSwitch.isChecked() ? "1" : "0";
-        if (TextUtils.isEmpty(obj) || TextUtils.isEmpty(obj2) || TextUtils.isEmpty(obj3)) {
+        if (TextUtils.isEmpty(trueName) || TextUtils.isEmpty(mobPhone) || TextUtils.isEmpty(address)) {
             BaseToast.getInstance().show("请输入完整的信息！");
-        } else if (!StringUtils.isMobile(obj2)) {
+        } else if (!StringUtils.isMobile(mobPhone)) {
             BaseToast.getInstance().show("手机号码格式不正确！");
         } else if (TextUtils.isEmpty(this.cityId)) {
             BaseToast.getInstance().show("请选择区域！");
         } else {
             this.saveTextView.setEnabled(false);
             this.saveTextView.setText("添加中...");
-            mPresenter.requestAddressAdd(obj, obj2, this.cityId, this.areaId, obj3, this.areaInfo, str);
+            mPresenter.requestAddressAdd(trueName, mobPhone, this.cityId, this.areaId, address, this.areaInfo, str);
         }
     }
 }
