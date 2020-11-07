@@ -72,15 +72,6 @@ public class SplashActivity extends BaseActivity {
                 }));
     }
 
-    private void skip() {
-        if (!mIsSkip) {
-            mIsSkip = true;
-            finish();
-            App.getInstance().startMain(getActivity());
-            overridePendingTransition(R.anim.hold, R.anim.zoom_in_exit);
-        }
-    }
-
     @Override
     protected boolean useEventBus() {
         return false;
@@ -90,5 +81,14 @@ public class SplashActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.clear();
+    }
+
+    private void skip() {
+        if (!mIsSkip) {
+            mIsSkip = true;
+            finish();
+            App.getInstance().startMain(getActivity());
+            overridePendingTransition(R.anim.hold, R.anim.zoom_in_exit);
+        }
     }
 }

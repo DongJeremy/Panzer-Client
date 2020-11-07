@@ -9,11 +9,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 import org.cloud.core.base.BaseActivity;
+import org.cloud.core.base.BaseFragment;
+import org.cloud.core.rx.Subscribe;
 import org.cloud.core.utils.LogUtils;
 import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.panzer.R;
 
 import butterknife.BindView;
+
+import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
 
 public class MainActivity extends BaseActivity {
 
@@ -46,7 +50,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected boolean useEventBus() {
-        return false;
+        return true;
     }
 
     @Override
@@ -76,6 +80,12 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void initData() {
+    }
+
+    // 自定义数据和方法
+
     private void hideFragments(FragmentTransaction transaction) {
         if (null != mHomeFragment) {
             transaction.hide(mHomeFragment);
@@ -94,16 +104,16 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void switchFragment(int position) {
+    public void switchFragment(int position) {
         // Fragment事务管理器
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         hideFragments(transaction);
-        LogUtils.d("current position tab" + position);
+        //LogUtils.d("current position tab" + position);
         switch (position) {
             //首页
             case 0: //视频
                 if (mHomeFragment == null) {
-                    mHomeFragment = HomeFragment.newInstance();
+                    mHomeFragment = BaseFragment.newInstance(HomeFragment.class, new Bundle());
                     transaction.add(R.id.fl_content, mHomeFragment, "home");
                 } else {
                     transaction.show(mHomeFragment);
@@ -112,7 +122,7 @@ public class MainActivity extends BaseActivity {
 
             case 1: //更多
                 if (mCateFragment == null) {
-                    mCateFragment = CateFragment.newInstance();
+                    mCateFragment = BaseFragment.newInstance(CateFragment.class, new Bundle());
                     transaction.add(R.id.fl_content, mCateFragment, "cate");
                 } else {
                     transaction.show(mCateFragment);
@@ -121,7 +131,7 @@ public class MainActivity extends BaseActivity {
 
             case 2: //更多
                 if (mSearchFragment == null) {
-                    mSearchFragment = SearchFragment.newInstance();
+                    mSearchFragment = BaseFragment.newInstance(SearchFragment.class, new Bundle());
                     transaction.add(R.id.fl_content, mSearchFragment, "search");
                 } else {
                     transaction.show(mSearchFragment);
@@ -130,7 +140,7 @@ public class MainActivity extends BaseActivity {
 
             case 3: //更多
                 if (mCartFragment == null) {
-                    mCartFragment = CartFragment.newInstance();
+                    mCartFragment = BaseFragment.newInstance(CartFragment.class, new Bundle());
                     transaction.add(R.id.fl_content, mCartFragment, "cart");
                 } else {
                     transaction.show(mCartFragment);
@@ -139,7 +149,7 @@ public class MainActivity extends BaseActivity {
 
             default:
                 if (mMineFragment == null) {
-                    mMineFragment = MineFragment.newInstance();
+                    mMineFragment = BaseFragment.newInstance(MineFragment.class, new Bundle());
                     transaction.add(R.id.fl_content, mMineFragment, "mine");
                 } else {
                     transaction.show(mMineFragment);
@@ -149,8 +159,8 @@ public class MainActivity extends BaseActivity {
         transaction.commitAllowingStateLoss();
     }
 
-    @Override
-    protected void initData() {
-
+    @Subscribe(code = RX_BUS_CODE_MAIN_SEARCH_SHOW)
+    public void rxBusEvent() {
+        switchFragment(2);
     }
 }

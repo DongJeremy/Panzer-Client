@@ -483,4 +483,8 @@ public class StringUtils {
         return list;
     }
 
+    public static boolean isMobile(String str) {
+        return Pattern.compile("^((13[0-9])|(15[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\\d{8}$").matcher(str).matches();
+    }
+
 }

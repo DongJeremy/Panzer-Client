@@ -8,7 +8,7 @@ import io.reactivex.Observable;
 
 public class SearchModel extends BaseModel implements SearchContract.Model {
     @Override
-    public Observable<String> getHomeInfoData() {
-        return RetrofitUtils.getRawHttpService().getHomeInfoData();
+    public Observable<String> getSearchKeyList() {
+        return RetrofitUtils.getRawHttpService().getSearchKeyList();
     }
 }

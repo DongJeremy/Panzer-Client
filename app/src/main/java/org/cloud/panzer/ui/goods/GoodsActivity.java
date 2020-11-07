@@ -447,25 +447,85 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             chooseNumberEditText.setText(number);
             changeNumber();
         });
-
     }
 
-    private void changeNumber() {
+    @Override
+    public void showGoodsDetailData(String homeInfoData) {
+        handlerData(homeInfoData);
+    }
 
+    @Override
+    public void showGoodsImagesData(String goodsInfoData) {
+        List<String> list = getUrlFromString(goodsInfoData);
+        goodsImagesList.clear();
+        goodsImagesList.addAll(list);
+        goodsDetailListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showSuccessAddGoods(String goodsInfoData) {
+        BaseToast.getInstance().showSuccess();
+        GoodsActivity.this.goneChooseLayout();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mainBanner.start();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mainBanner.stop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mainVideoPlayer.pause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainVideoPlayer.resume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!this.mainVideoPlayer.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onReturn() {
+        if (!this.mainVideoPlayer.isFullScreen()) {
+            if (this.nightTextView.getVisibility() == View.VISIBLE) {
+                goneChooseLayout();
+//                goneVoucher();
+//                goneShare();
+                return;
+            }
+            super.onReturn();
+        }
+    }
+
+    // 自定义数据和方法
+
+    private void changeNumber() {
         if (TextUtils.isEmpty(Objects.requireNonNull(chooseNumberEditText.getText()).toString())) {
             BaseToast.getInstance().show("数量不能为空！");
             chooseNumberEditText.setText("1");
             chooseNumberEditText.setSelection(1);
             return;
         }
-
         int number = Integer.parseInt(chooseNumberEditText.getText().toString());
-
         if (number <= 0) {
             BaseToast.getInstance().show("最低要买 1 件");
             number = 1;
         }
-
         if (!TextUtils.isEmpty(upperLimitString)) {
             int upper = Integer.parseInt(upperLimitString);
             if (number > upper) {
@@ -473,7 +533,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 BaseToast.getInstance().show("每人最高限购：" + number + " 件");
             }
         }
-
         if (!TextUtils.isEmpty(lowerLimitString)) {
             int lower = Integer.parseInt(lowerLimitString);
             if (number < lower) {
@@ -481,18 +540,14 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 BaseToast.getInstance().show("最低要购买：" + number + " 件");
             }
         }
-
         int storage = Integer.parseInt(goodsStorageString);
-
         if (number > storage) {
             number = storage;
             BaseToast.getInstance().show("库存不足！");
         }
-
         String temp = number + "";
         chooseNumberEditText.setText(temp);
         chooseNumberEditText.setSelection(temp.length());
-
     }
 
     private void showChooseLayout() {
@@ -525,19 +580,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             App.getInstance().startLogin(getActivity());
         } else {
             mPresenter.requestCartAdd(this.goodsId, ((Editable) Objects.requireNonNull(this.chooseNumberEditText.getText())).toString());
-        }
-    }
-
-    @Override
-    public void onReturn() {
-        if (!this.mainVideoPlayer.isFullScreen()) {
-            if (this.nightTextView.getVisibility() == View.VISIBLE) {
-                goneChooseLayout();
-//                goneVoucher();
-//                goneShare();
-                return;
-            }
-            super.onReturn();
         }
     }
 
@@ -860,63 +902,4 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         mPresenter.requestGoodsDetailData(goodsId);
         mPresenter.requestGoodsImagesData(goodsId);
     }
-
-    @Override
-    public void showGoodsDetailData(String homeInfoData) {
-        handlerData(homeInfoData);
-    }
-
-    @Override
-    public void showGoodsImagesData(String goodsInfoData) {
-        List<String> list = getUrlFromString(goodsInfoData);
-        goodsImagesList.clear();
-        goodsImagesList.addAll(list);
-        goodsDetailListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void showSuccessAddGoods(String goodsInfoData) {
-        BaseToast.getInstance().showSuccess();
-        GoodsActivity.this.goneChooseLayout();
-    }
-
-    @Override
-    public void showError(String msg) {
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mainBanner.start();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mainBanner.stop();
-    }
-
-    public void onPause() {
-        super.onPause();
-        this.mainVideoPlayer.pause();
-    }
-
-    public void onResume() {
-        super.onResume();
-        this.mainVideoPlayer.resume();
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        //this.mainVideoPlayer.release();
-    }
-
-    public void onBackPressed() {
-        if (!this.mainVideoPlayer.onBackPressed()) {
-            super.onBackPressed();
-        }
-    }
-
-
 }

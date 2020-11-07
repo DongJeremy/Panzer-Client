@@ -1,7 +1,5 @@
 package org.cloud.panzer.ui.main;
 
-import android.os.Bundle;
-
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -9,12 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpFragment;
+import org.cloud.core.rx.RxBus;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
@@ -23,17 +21,15 @@ import org.cloud.panzer.bean.ArticleBean;
 import org.cloud.panzer.bean.HomeBean;
 import org.cloud.panzer.mvp.contract.HomeContract;
 import org.cloud.panzer.mvp.presenter.HomePresenter;
+import org.cloud.panzer.ui.home.ChatListActivity;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
-@SuppressWarnings("rawtypes")
-public class HomeFragment extends BaseMvpFragment<HomePresenter> implements HomeContract.View {
+import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
 
-    public ArrayList<ArticleBean> articleArrayList;
-    public HomeListAdapter mainAdapter;
-    public ArrayList<HomeBean> mainArrayList;
+public class HomeFragment extends BaseMvpFragment<HomePresenter> implements HomeContract.View {
 
     @BindView(R.id.mainRecyclerView)
     RecyclerView mainRecyclerView;
@@ -50,12 +46,9 @@ public class HomeFragment extends BaseMvpFragment<HomePresenter> implements Home
     @BindView(R.id.searchEditText)
     AppCompatEditText searchEditText;
 
-    public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public ArrayList<ArticleBean> articleArrayList;
+    public HomeListAdapter mainAdapter;
+    public ArrayList<HomeBean> mainArrayList;
 
     @Override
     protected int getLayoutId() {
@@ -79,7 +72,9 @@ public class HomeFragment extends BaseMvpFragment<HomePresenter> implements Home
     @Override
     protected void initListener() {
         scanImageView.setOnClickListener(v -> App.getInstance().startCapture(getActivity()));
-        messageImageView.setOnClickListener(view -> App.getInstance().startChatList(getActivity()));
+        messageImageView.setOnClickListener(view -> App.getInstance().startCheckLogin(getActivity(), ChatListActivity.class));
+        searchEditText.setOnClickListener(v-> RxBus.getInstance().send(RX_BUS_CODE_MAIN_SEARCH_SHOW));
+        photoImageView.setOnClickListener(v-> App.getInstance().startImagePicker(getActivity(), 1, BaseConstant.CODE_ALBUM, true));
     }
 
     @Override
@@ -91,11 +86,6 @@ public class HomeFragment extends BaseMvpFragment<HomePresenter> implements Home
     @Override
     protected boolean useEventBus() {
         return false;
-    }
-
-    @Override
-    public void showError(String msg) {
-
     }
 
     @Override

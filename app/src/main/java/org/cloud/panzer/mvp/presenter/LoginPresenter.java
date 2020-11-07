@@ -21,7 +21,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.Model, LoginCont
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showLoginSuccess(JsonUtils.parseJsonData(result));
+                        getView().showLoginSuccess(result);
                     }
 
                     @Override

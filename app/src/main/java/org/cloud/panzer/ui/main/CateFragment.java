@@ -1,55 +1,54 @@
 package org.cloud.panzer.ui.main;
 
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.panzer.R;
+import org.cloud.panzer.mvp.contract.CartContract;
+import org.cloud.panzer.mvp.presenter.CartPresenter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CateFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class CateFragment extends Fragment {
+public class CateFragment extends BaseMvpFragment<CartPresenter> implements CartContract.View {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public CateFragment() {
-        // Required empty public constructor
-    }
-
-    public static CateFragment newInstance() {
-        CateFragment fragment = new CateFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_main_cate;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    protected void initView() {
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_cate, container, false);
+    protected void initListener() {
+
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected boolean useEventBus() {
+        return false;
+    }
+
+    @Override
+    protected CartPresenter createPresenter() {
+        return null;
+    }
+
+    @Override
+    public void showCartListData(String cartListData) {
+
+    }
+
+    @Override
+    public void showCartEditQuantity(String cartEditData) {
+
+    }
+
+    @Override
+    public void showCartDeleteData(int position, int positionGoods, String cartListData) {
+
     }
 }

@@ -8,10 +8,10 @@ import io.reactivex.Observable;
 public interface SearchContract {
 
     interface View extends IView {
-        void showHomeInfoData(String homeInfoData);
+        void showSearchKeyList(String searchKeyList);
     }
 
     interface Model extends IModel {
-        Observable<String> getHomeInfoData();
+        Observable<String> getSearchKeyList();
     }
 }

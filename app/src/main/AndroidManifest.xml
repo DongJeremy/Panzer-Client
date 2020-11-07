@@ -19,7 +19,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Main">
-        <activity android:name=".ui.mine.CenterActivity"></activity>
+        <activity android:name=".ui.choose.AreaActivity"></activity>
+        <activity android:name=".ui.mine.AddressEditActivity" />
+        <activity android:name=".ui.mine.AddressAddActivity" />
+        <activity android:name=".ui.goods.ListActivity" />
+        <activity android:name=".ui.mine.AddressActivity" />
+        <activity android:name=".ui.mine.CenterActivity" />
         <activity android:name=".ui.store.StoreActivity" />
         <activity android:name=".ui.common.FindPassActivity" />
         <activity android:name=".ui.common.RegisterActivity" />

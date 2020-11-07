@@ -89,21 +89,21 @@ public abstract class ProgressCallBack<T> {
      * 订阅加载的进度条
      */
     public void subscribeLoadProgress() {
-        mSubscription = RxBus.getDefault().toObservable(DownLoadStateBean.class)
-                .subscribe(new Consumer<DownLoadStateBean>() {
-                    @Override
-                    public void accept(final DownLoadStateBean downLoadStateBean) {
-                        // 回调到主线程更新UI
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress(downLoadStateBean.getBytesLoaded(), downLoadStateBean.getTotal());
-                            }
-                        });
-                    }
-                });
-        //将订阅者加入管理站
-        addDispose(mSubscription);
+//        mSubscription = RxBus.getDefault().toObservable(DownLoadStateBean.class)
+//                .subscribe(new Consumer<DownLoadStateBean>() {
+//                    @Override
+//                    public void accept(final DownLoadStateBean downLoadStateBean) {
+//                        // 回调到主线程更新UI
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                progress(downLoadStateBean.getBytesLoaded(), downLoadStateBean.getTotal());
+//                            }
+//                        });
+//                    }
+//                });
+//        //将订阅者加入管理站
+//        addDispose(mSubscription);
     }
 
     /**

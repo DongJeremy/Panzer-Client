@@ -10,14 +10,14 @@ public class RetrofitUtils extends BaseRetrofit {
      */
     public static ApiService getHttpService() {
         if (httpService == null) {
-            httpService = getRetrofit(ApiService.BASE_URL).create(ApiService.class);
+            httpService = getRetrofit(Constant.BASE_URL).create(ApiService.class);
         }
         return httpService;
     }
 
     public static ApiService getRawHttpService() {
         if (httpService == null) {
-            httpService = getRawRetrofit(ApiService.BASE_URL).create(ApiService.class);
+            httpService = getRawRetrofit(Constant.BASE_URL).create(ApiService.class);
         }
         return httpService;
     }

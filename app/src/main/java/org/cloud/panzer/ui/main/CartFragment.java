@@ -1,7 +1,6 @@
 package org.cloud.panzer.ui.main;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,8 +13,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -29,6 +26,7 @@ import org.cloud.panzer.adapter.CartListAdapter;
 import org.cloud.panzer.bean.CartBean;
 import org.cloud.panzer.mvp.contract.CartContract;
 import org.cloud.panzer.mvp.presenter.CartPresenter;
+import org.cloud.panzer.ui.home.ChatListActivity;
 
 import java.util.ArrayList;
 
@@ -62,13 +60,26 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
     @BindView(R.id.tipsRelativeLayout)
     RelativeLayout tipsRelativeLayout;
     @BindView(R.id.tipsTextView)
-    public AppCompatTextView tipsTextView;
+    AppCompatTextView tipsTextView;
 
     private String cartIdString;
     public int countInt;
     public float moneyFloat;
     public CartListAdapter mainAdapter;
     public ArrayList<CartBean> mainArrayList;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (App.getInstance().isLogin()) {
+            getCart();
+        }
+    }
+
+    @Override
+    protected boolean useEventBus() {
+        return false;
+    }
 
     @Override
     protected int getLayoutId() {
@@ -96,7 +107,8 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
 
     @Override
     protected void initListener() {
-        scanImageView.setOnClickListener(v -> startActivityForResult(new Intent(getActivity(), CaptureActivity.class), 1003));
+        scanImageView.setOnClickListener(v -> App.getInstance().startCapture(getActivity()));
+        messageImageView.setOnClickListener(view -> App.getInstance().startCheckLogin(getActivity(), ChatListActivity.class));
         tipsRelativeLayout.setOnClickListener(v -> {
             if (!App.getInstance().isLogin()) {
                 App.getInstance().startLogin(getActivity());
@@ -180,25 +192,9 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
         });
     }
 
-    private void getCart() {
-        mPresenter.requestCartListData();
-    }
-
     @Override
     protected void initData() {
         getCart();
-    }
-
-    public static CartFragment newInstance() {
-        CartFragment fragment = new CartFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    protected boolean useEventBus() {
-        return false;
     }
 
     @Override
@@ -254,12 +250,10 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
         calc();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (App.getInstance().isLogin()) {
-            getCart();
-        }
+    // 自定义数据和方法
+
+    private void getCart() {
+        mPresenter.requestCartListData();
     }
 
     private void tipsEmpty() {

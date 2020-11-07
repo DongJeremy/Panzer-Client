@@ -58,7 +58,7 @@ public class ProgressResponseBody extends ResponseBody {
                 long bytesRead = super.read(sink, byteCount);
                 bytesReaded += bytesRead == -1 ? 0 : bytesRead;
                 //使用RxBus的方式，实时发送当前已读取(上传/下载)的字节数据
-                RxBus.getDefault().post(new DownLoadStateBean(contentLength(), bytesReaded, tag));
+                //RxBus.getDefault().post(new DownLoadStateBean(contentLength(), bytesReaded, tag));
                 return bytesRead;
             }
         };

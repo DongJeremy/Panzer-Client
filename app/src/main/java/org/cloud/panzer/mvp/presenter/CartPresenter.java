@@ -24,24 +24,19 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
                     public void onSuccess(String result) {
                         getView().showCartListData(JsonUtils.parseJsonData(result));
                     }
-
                     @Override
                     public boolean isSuccessFul(String result) {
                         return JsonUtils.checkJsonCodeSuccess(result);
                     }
-
                     @Override
                     public void onLogicError() {
-
                     }
-
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
                         Log.e("ERROR", errMsg);
                         getView().showError(errMsg);
                     }
                 });
-
     }
 
     public void requestCartEditQuantity(String cartId, String quantity) {
@@ -52,17 +47,13 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
                     public void onSuccess(String result) {
                         getView().showCartEditQuantity(JsonUtils.parseJsonData(result));
                     }
-
                     @Override
                     public boolean isSuccessFul(String result) {
                         return JsonUtils.checkJsonCodeSuccess(result);
                     }
-
                     @Override
                     public void onLogicError() {
-
                     }
-
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
                         getView().showError(errMsg);
@@ -79,17 +70,13 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
                     public void onSuccess(String result) {
                         getView().showCartDeleteData(position, positionGoods, JsonUtils.parseJsonData(result));
                     }
-
                     @Override
                     public boolean isSuccessFul(String result) {
                         return JsonUtils.checkJsonCodeSuccess(result);
                     }
-
                     @Override
                     public void onLogicError() {
-
                     }
-
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
                         getView().showError(errMsg);

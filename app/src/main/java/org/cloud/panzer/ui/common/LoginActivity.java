@@ -96,6 +96,35 @@ public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements Lo
 
     }
 
+    @Override
+    protected LoginPresenter createPresenter() {
+        return new LoginPresenter();
+    }
+
+    @Override
+    public void showLoginSuccess(String loginData) {
+        JsonObject rootJsonObject = new JsonParser().parse(loginData).getAsJsonObject();
+        int code = rootJsonObject.get("code").getAsInt();
+        if (code != 200) {
+            loginTextView.setEnabled(true);
+            loginTextView.setText("登 录");
+            BaseToast.getInstance().show("用户名或密码错误");
+            return;
+        }
+        JsonObject jsonObject = rootJsonObject.getAsJsonObject("datas");
+        String key = jsonObject.get("key").getAsString();
+        BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, key);
+        App.getInstance().startMain(getActivity());
+        App.getInstance().finish(getActivity());
+    }
+
+    @Override
+    public void showError(String reason) {
+        loginTextView.setEnabled(true);
+        loginTextView.setText("登 录");
+        BaseToast.getInstance().show(reason);
+    }
+
 //    @Override
 //    public void onReturn() {
 //
@@ -138,32 +167,5 @@ public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements Lo
         mPresenter.requestLogin(username, password);
     }
 
-    @Override
-    protected LoginPresenter createPresenter() {
-        return new LoginPresenter();
-    }
 
-    @Override
-    public void showLoginSuccess(String loginData) {
-        JsonObject rootJsonObject = new JsonParser().parse(loginData).getAsJsonObject();
-        int code = rootJsonObject.get("code").getAsInt();
-        if (code != 200) {
-            loginTextView.setEnabled(true);
-            loginTextView.setText("登 录");
-            BaseToast.getInstance().show("用户名或密码错误");
-            return;
-        }
-        JsonObject jsonObject = rootJsonObject.getAsJsonObject("datas");
-        String key = jsonObject.get("key").getAsString();
-        BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, key);
-        App.getInstance().startMain(getActivity());
-        App.getInstance().finish(getActivity());
-    }
-
-    @Override
-    public void showError(String reason) {
-        loginTextView.setEnabled(true);
-        loginTextView.setText("登 录");
-        BaseToast.getInstance().show(reason);
-    }
 }

@@ -1,7 +1,5 @@
 package org.cloud.panzer.ui.mine;
 
-import android.view.View;
-
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -56,10 +54,7 @@ public class CenterActivity extends BaseMvpActivity<CenterPresenter> implements 
 
     }
 
-    @Override
-    public void showError(String msg) {
-
-    }
+    // 自定义数据和方法
 
     private void logout() {
         BaseToast.getInstance().show("注销成功！");

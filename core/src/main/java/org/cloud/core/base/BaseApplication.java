@@ -18,7 +18,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -355,6 +354,15 @@ public class BaseApplication extends Application {
             intent.putExtras(bundle);
         }
         activity.startActivity(intent);
+    }
+
+    public void start(Activity activity, Class cls, int code) {
+        Intent intent = new Intent(activity, cls);
+        activity.startActivityForResult(intent, code);
+    }
+
+    public void start(Activity activity, Intent intent, int code) {
+        activity.startActivityForResult(intent, code);
     }
 
     /**

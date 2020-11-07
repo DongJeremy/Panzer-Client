@@ -1,18 +1,13 @@
 package org.cloud.panzer.ui.main;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -25,6 +20,7 @@ import org.cloud.panzer.R;
 import org.cloud.panzer.bean.MemberBean;
 import org.cloud.panzer.mvp.contract.MineContract;
 import org.cloud.panzer.mvp.presenter.MinePresenter;
+import org.cloud.panzer.ui.mine.AddressActivity;
 import org.cloud.panzer.ui.mine.CenterActivity;
 
 import butterknife.BindView;
@@ -42,7 +38,7 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
     @BindView(R.id.footprintTextView)
     AppCompatTextView footprintTextView;
     @BindView(R.id.storeTextView)
-    public AppCompatTextView storeTextView;
+    AppCompatTextView storeTextView;
 
     @BindView(R.id.avatarImageView)
     AppCompatImageView avatarImageView;
@@ -73,6 +69,9 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
     @BindView(R.id.redPacketDotTextView)
     AppCompatTextView redPacketDotTextView;
 
+    // 收货地址
+    @BindView(R.id.addressTextView)
+    AppCompatTextView addressTextView;
 
     @Override
     protected int getLayoutId() {
@@ -92,12 +91,8 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
 
     @Override
     protected void initListener() {
-        mineLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                App.getInstance().startCheckLogin((Activity) getActivity(), CenterActivity.class);
-            }
-        });
+        mineLinearLayout.setOnClickListener(view -> App.getInstance().startCheckLogin((Activity) getActivity(), CenterActivity.class));
+        addressTextView.setOnClickListener(view -> App.getInstance().startCheckLogin((Activity) getActivity(), AddressActivity.class));
     }
 
     @Override
@@ -108,25 +103,9 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
         }
     }
 
-    public static MineFragment newInstance() {
-        MineFragment fragment = new MineFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     protected boolean useEventBus() {
         return false;
-    }
-
-    @Override
-    public void showError(String msg) {
-
-    }
-
-    private void getData() {
-        mPresenter.requestMemberIndexData();
     }
 
     @Override
@@ -157,6 +136,11 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
             levelTextView.setVisibility(View.VISIBLE);
         }
         //getMobileInfo();
+    }
 
+    // 自定义数据和方法
+
+    private void getData() {
+        mPresenter.requestMemberIndexData();
     }
 }

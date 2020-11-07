@@ -1,18 +1,15 @@
 package org.cloud.core.base;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
-
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.mvp.IView;
 
 /**
- * @author xuhao
- * @date 2018/6/9 17:12
+ * @author ddw
+ * @date 2020/11/1 17:12
  * @desc 基类 BaseMvpActivity
  */
 public abstract class BaseMvpActivity<T extends BasePresenter> extends BaseActivity implements IView {
@@ -49,6 +46,11 @@ public abstract class BaseMvpActivity<T extends BasePresenter> extends BaseActiv
         if (mPresenter != null) {
             mPresenter.detachView();
         }
+    }
+
+    @Override
+    public void showError(String msg) {
+        BaseToast.getInstance().show(msg);
     }
 
 }

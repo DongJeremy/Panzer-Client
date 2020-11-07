@@ -1,7 +1,6 @@
 package org.cloud.core.base;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -14,9 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.cloud.core.R;
+import org.cloud.core.rx.RxBus;
 import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.core.widget.MMLoading;
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -41,7 +40,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         setContentView(getLayoutId());
         unBinder = ButterKnife.bind(this);
         if (useEventBus()) {
-            EventBus.getDefault().register(this);//注册eventBus
+            RxBus.getInstance().register(this);
         }
         StatusBarUtils.setStatusBarMode(this, true, R.color.white);
         initPreparedData();
@@ -65,9 +64,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             unBinder.unbind();
         }
         if (useEventBus()) {
-            if (EventBus.getDefault().isRegistered(this)) {
-                EventBus.getDefault().unregister(this);//注销eventBus
-            }
+            RxBus.getInstance().unRegister(this);
         }
     }
 

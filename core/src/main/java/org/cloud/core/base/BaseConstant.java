@@ -14,8 +14,14 @@ public class BaseConstant {
     public static final int CODE_LOGIN = 2000;
 
     public static final int TIME_EXIT = 1000;
+    public static final int CODE_ALBUM = 1001;
+    public static final int CODE_CAMERA = 1002;
+    public static final int CODE_QRCODE = 1003;
+
+    public static final String DATA_BEAN = "bean";
     public static final String DATA_URL = "url";
     public static final String DATA_KEY = "key";
+    public static final String DATA_KEYWORD = "keyword";
 
     public static final String URL = "https://www.wpccw.com/";
     public static final String URL_API = URL + "api/mobile/index.php";

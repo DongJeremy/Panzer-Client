@@ -15,13 +15,13 @@ public class SearchPresenter extends BasePresenter<SearchContract.Model, SearchC
         return new SearchModel();
     }
 
-    public void requestGridData() {
-        getModel().getHomeInfoData()
+    public void requestSearchKeyList() {
+        getModel().getSearchKeyList()
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()){
                     @Override
                     public void onSuccess(String result) {
-                        getView().showHomeInfoData(JsonUtils.parseJsonData(result));
+                        getView().showSearchKeyList(JsonUtils.parseJsonData(result));
                     }
 
                     @Override
@@ -40,6 +40,5 @@ public class SearchPresenter extends BasePresenter<SearchContract.Model, SearchC
                         getView().showError(errMsg);
                     }
                 });
-
     }
 }

@@ -1,7 +1,6 @@
 package org.cloud.core.base;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import androidx.annotation.Nullable;
 import com.squareup.leakcanary.RefWatcher;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
-import org.greenrobot.eventbus.EventBus;
+import org.cloud.core.rx.RxBus;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.ButterKnife;
@@ -44,7 +43,7 @@ public abstract class BaseFragment extends RxFragment {
             mRootView = inflater.inflate(getLayoutId(), null);
             unBinder = ButterKnife.bind(this, mRootView);
             if (useEventBus()) {
-                EventBus.getDefault().register(this);//注册eventBus
+                RxBus.getInstance().register(this);
             }
         }
         ViewGroup parent = (ViewGroup) mRootView.getParent();
@@ -92,11 +91,22 @@ public abstract class BaseFragment extends RxFragment {
             unBinder.unbind();
         }
         if (useEventBus()) {
-            if (EventBus.getDefault().isRegistered(this)) {
-                EventBus.getDefault().unregister(this);//注销eventBus
-            }
+            RxBus.getInstance().unRegister(this);
         }
         initLeakCanary();
+    }
+
+    public static <T extends BaseFragment> T newInstance(Class<T> mClass, Bundle args) {
+        try {
+            T instance = mClass.newInstance();
+            instance.setArguments(args);
+            return instance;
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (java.lang.IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
