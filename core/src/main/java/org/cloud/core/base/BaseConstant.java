@@ -38,4 +38,6 @@ public class BaseConstant {
     public static final String SHARED_C_LEVEL_HHR = "shared_c_level_hhr";
     public static final String SHARED_C_LEVEL_TYD = "shared_c_level_tyd";
 
+    public static final long TIME_COUNT = 2000;
+    public static final long TIME_TICK = 1000;
 }

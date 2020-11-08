@@ -16,6 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.rx.RxBus;
@@ -208,9 +209,9 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
     }
 
     @Override
-    public void showCartListData(String cartListData) {
+    public void showCartListData(BaseBean baseBean) {
         mainArrayList.clear();
-        JsonObject mainJsonObject = new JsonParser().parse(cartListData).getAsJsonObject();
+        JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         JsonArray cartList = mainJsonObject.getAsJsonArray("cart_list");
         this.moneyFloat = mainJsonObject.get("sum").getAsFloat();
         countInt = mainJsonObject.get("cart_count").getAsInt();
@@ -234,12 +235,12 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
     }
 
     @Override
-    public void showCartEditQuantity(String cartEditData) {
+    public void showCartEditQuantity(BaseBean baseBean) {
         getCart();
     }
 
     @Override
-    public void showCartDeleteData(int position, int positionGoods, String cartListData) {
+    public void showCartDeleteData(int position, int positionGoods, BaseBean baseBean) {
         mainArrayList.get(position).getGoods().remove(positionGoods);
         if (mainArrayList.get(position).getGoods().size() == 0) {
             mainArrayList.remove(position);

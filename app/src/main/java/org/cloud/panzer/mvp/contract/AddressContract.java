@@ -1,5 +1,6 @@
 package org.cloud.panzer.mvp.contract;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.mvp.IModel;
 import org.cloud.core.mvp.IView;
 
@@ -8,10 +9,10 @@ import io.reactivex.Observable;
 public interface AddressContract {
 
     interface View extends IView {
-        void showAddressList(String address);
-        void showAddressAdd(String address);
-        void showAddressDelete(String address);
-        void showAddressEdit(String address);
+        void showAddressList(BaseBean baseBean);
+        void showAddressAdd(BaseBean baseBean);
+        void showAddressDelete(BaseBean baseBean);
+        void showAddressEdit(BaseBean baseBean);
     }
 
     interface Model extends IModel {

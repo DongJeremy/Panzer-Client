@@ -40,8 +40,7 @@ public class CenterActivity extends BaseMvpActivity<CenterPresenter> implements 
 
     @Override
     protected void initView() {
-        setToolbar(mainToolbar, "个人设置");
-        StatusBarUtils.setStatusBarMode(this, true, R.color.whiteSub);
+        setToolbar(mainToolbar, "个人设置", R.color.whiteSub);
     }
 
     @Override

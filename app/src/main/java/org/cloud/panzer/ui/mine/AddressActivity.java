@@ -7,11 +7,12 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.core.widget.PullRefreshView;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
@@ -61,7 +62,7 @@ public class AddressActivity extends BaseMvpActivity<AddressPresenter> implement
 
     @Override
     protected void initView() {
-        setToolbar(this.mainToolbar, "地址管理");
+        setToolbar(this.mainToolbar, "地址管理", R.color.whiteSub);
         this.toolbarImageView.setImageResource(R.drawable.ic_action_add);
         this.mainArrayList = new ArrayList<>();
         this.mainAdapter = new AddressListAdapter(this.mainArrayList);
@@ -109,9 +110,9 @@ public class AddressActivity extends BaseMvpActivity<AddressPresenter> implement
     }
 
     @Override
-    public void showAddressList(String address) {
+    public void showAddressList(BaseBean baseBean) {
         this.mainArrayList.clear();
-        JsonObject mainJsonObject = new JsonParser().parse(address).getAsJsonObject();
+        JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         List<AddressBean> addressList = JsonUtils.jsonToList(mainJsonObject.getAsJsonArray("address_list"), AddressBean.class);
         Log.e("address_list", addressList.size()+"");
         this.mainArrayList.addAll(Objects.requireNonNull(addressList));
@@ -120,15 +121,15 @@ public class AddressActivity extends BaseMvpActivity<AddressPresenter> implement
     }
 
     @Override
-    public void showAddressDelete(String address) {
+    public void showAddressDelete(BaseBean baseBean) {
         getAddress();
     }
 
     @Override
-    public void showAddressAdd(String address) {}
+    public void showAddressAdd(BaseBean baseBean) {}
 
     @Override
-    public void showAddressEdit(String address) {}
+    public void showAddressEdit(BaseBean baseBean) {}
 
     // 自定义数据和方法
 

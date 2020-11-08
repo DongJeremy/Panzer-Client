@@ -1,7 +1,5 @@
 package org.cloud.panzer.mvp.presenter;
 
-import android.util.Log;
-
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
@@ -21,21 +19,11 @@ public class AddressPresenter extends BasePresenter<AddressContract.Model, Addre
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showAddressList(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
+                        getView().showAddressList(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
                         getView().showError(errMsg);
                     }
                 });
@@ -48,21 +36,11 @@ public class AddressPresenter extends BasePresenter<AddressContract.Model, Addre
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showAddressAdd(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
+                        getView().showAddressAdd(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
                         getView().showError(errMsg);
                     }
                 });
@@ -76,21 +54,11 @@ public class AddressPresenter extends BasePresenter<AddressContract.Model, Addre
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showAddressEdit(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
+                        getView().showAddressEdit(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
                         getView().showError(errMsg);
                     }
                 });
@@ -102,21 +70,11 @@ public class AddressPresenter extends BasePresenter<AddressContract.Model, Addre
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showAddressDelete(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
+                        getView().showAddressDelete(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
                         getView().showError(errMsg);
                     }
                 });

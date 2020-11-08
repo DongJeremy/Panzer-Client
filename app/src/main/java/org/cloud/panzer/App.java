@@ -1,13 +1,11 @@
 package org.cloud.panzer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
-import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import org.cloud.core.base.BaseApplication;
@@ -46,21 +44,7 @@ public class App extends BaseApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        //检测内存泄漏
-        initLeakCanary();
         this.isNormalMember = true;
-    }
-
-    private void initLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        mRefWatcher = LeakCanary.install(this);
-    }
-
-    public static RefWatcher getRefWatcher(Context context) {
-        App application = (App) context.getApplicationContext();
-        return application.mRefWatcher;
     }
 
     public boolean isNormalMember() {

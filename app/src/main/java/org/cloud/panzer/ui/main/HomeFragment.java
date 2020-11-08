@@ -8,8 +8,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.core.rx.RxBus;
@@ -89,8 +89,8 @@ public class HomeFragment extends BaseMvpFragment<HomePresenter> implements Home
     }
 
     @Override
-    public void showHomeInfoData(String homeInfoData) {
-        JsonArray jsonArrays = new JsonParser().parse(homeInfoData).getAsJsonArray();
+    public void showHomeInfoData(BaseBean baseBean) {
+        JsonArray jsonArrays = JsonUtils.parseJsonToJsonArray(baseBean.getDatas());
         for (int i = 0; i < jsonArrays.size(); i++) {
             JsonObject jsonObject = jsonArrays.get(i).getAsJsonObject();
             HomeBean homeBean = new HomeBean();
@@ -119,8 +119,9 @@ public class HomeFragment extends BaseMvpFragment<HomePresenter> implements Home
     }
 
     @Override
-    public void showArticleListData(String articleListData) {
-        JsonArray jsonArrays = new JsonParser().parse(articleListData).getAsJsonObject().getAsJsonArray("article_list");
+    public void showArticleListData(BaseBean baseBean) {
+        JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
+        JsonArray jsonArrays = mainJsonObject.getAsJsonArray("article_list");
         this.articleArrayList.addAll(JsonUtils.jsonToList(jsonArrays, ArticleBean.class));
         if (articleArrayList.size() != 0) {
             HomeBean homeBean = new HomeBean();

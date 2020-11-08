@@ -46,6 +46,10 @@ public interface MemberService {
     Observable<String> memberBuyStep2(@FieldMap Map<String, String> maps);
 
     @FormUrlEncoded
+    @POST("index.php?act=member_buy&op=pay")
+    Observable<String> memberPay(@Field("pay_sn") String paySn);
+
+    @FormUrlEncoded
     @POST("index.php?act=member_order&op=order_list")
     Observable<String> memberOrderList(@Field("state_type") String stateType, @Field("order_key") String orderKey, @Field("page") String page,
                                        @Field("curpage") String curpage);

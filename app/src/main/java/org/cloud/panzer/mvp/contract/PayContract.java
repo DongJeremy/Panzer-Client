@@ -6,14 +6,14 @@ import org.cloud.core.mvp.IView;
 
 import io.reactivex.Observable;
 
-public interface MineContract {
+public interface PayContract {
 
     interface View extends IView {
-        void showMemberIndexSuccess(BaseBean baseBean);
-        void showMemberIndexFail(String msg);
+        void showPaySuccess(BaseBean baseBean);
+        void showPayFail(String reason);
     }
 
     interface Model extends IModel {
-        Observable<String> getMemberIndex();
+        Observable<String> postPay(String paySn);
     }
 }

@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpFragment;
+import org.cloud.core.utils.JsonUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.SearchHistoryListAdapter;
@@ -143,8 +144,8 @@ public class SearchFragment extends BaseMvpFragment<SearchPresenter> implements 
     }
 
     @Override
-    public void showSearchKeyList(String searchKeyList) {
-        JsonObject mainJsonObject = new JsonParser().parse(searchKeyList).getAsJsonObject();
+    public void showSearchKeyListSuccess(BaseBean baseBean) {
+        JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         JsonArray searchList = mainJsonObject.getAsJsonArray("list");
         for (int i = 0; i < searchList.size(); i++) {
             this.keyArrayList.add(searchList.get(i).getAsString());
@@ -157,6 +158,11 @@ public class SearchFragment extends BaseMvpFragment<SearchPresenter> implements 
             this.historyArrayList.add(searchHistoryList.get(i).getAsString());
         }
         this.historyAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showSearchKeyListFail(String string) {
+
     }
 
     @Override

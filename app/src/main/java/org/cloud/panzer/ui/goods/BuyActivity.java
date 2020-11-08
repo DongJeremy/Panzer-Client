@@ -1,7 +1,6 @@
 package org.cloud.panzer.ui.goods;
 
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -10,18 +9,18 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.scrollablelayout.ScrollableLayout;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseDialog;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.StoreBuyListAdapter;
@@ -90,7 +89,7 @@ public class BuyActivity extends BaseMvpActivity<GoodsBuyPresenter> implements G
         goodsBuyBean.setCartId(getIntent().getStringExtra(BaseConstant.DATA_ID));
         goodsBuyBean.setIfCart(getIntent().getStringExtra(BaseConstant.DATA_IFCART));
         goodsBuyBean.setPayName("online");
-        setToolbar(mainToolbar, "确认订单信息");
+        setToolbar(mainToolbar, "确认订单信息", R.color.whiteSub);
 
         mainArrayList = new ArrayList<>();
         mainAdapter = new StoreBuyListAdapter(mainArrayList);
@@ -138,25 +137,20 @@ public class BuyActivity extends BaseMvpActivity<GoodsBuyPresenter> implements G
     }
 
     @Override
-    public void showError(String msg) {
-        super.showError(msg);
-        BaseToast.getInstance().show(msg);
-        App.getInstance().finish(getActivity());
-    }
-
-    private void getData() {
-        mPresenter.requestGoodsBuyStep1(goodsBuyBean.getCartId(), goodsBuyBean.getIfCart(), goodsBuyBean.getAddressId());
-    }
-
-    @Override
-    public void showGoodsBuyStep1Success(String goodsInfoData) {
-        String jsonString = goodsInfoData.replace("[]", "null");
+    public void showGoodsBuyStep1Success(BaseBean baseBean) {
+        String jsonString = baseBean.getDatas().replace("[]", "null");
         handlerData(jsonString);
     }
 
     @Override
-    public void showGoodsBuyStep2Success(String goodsInfoData) {
-        JsonObject jsonObject = new JsonParser().parse(goodsInfoData).getAsJsonObject();
+    public void showGoodsBuyStep1Fail(String msg) {
+        BaseToast.getInstance().show(msg);
+        App.getInstance().finish(getActivity());
+    }
+
+    @Override
+    public void showGoodsBuyStep2Success(BaseBean baseBean) {
+        JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         if (jsonObject.get("payment_code").getAsString().equals("online")) {
             App.getInstance().startOrderPay(getActivity(), jsonObject.get("pay_sn").getAsString());
         } else {
@@ -166,19 +160,28 @@ public class BuyActivity extends BaseMvpActivity<GoodsBuyPresenter> implements G
     }
 
     @Override
-    public void showGoodsBuyStep2Error() {
+    public void showGoodsBuyStep2Fail(String msg) {
         balanceTextView.setEnabled(true);
         balanceTextView.setText("提交订单");
     }
 
+    @Override
+    public void showError(String msg) {
+        super.showError(msg);
+
+    }
+
+    private void getData() {
+        mPresenter.requestGoodsBuyStep1(goodsBuyBean.getCartId(), goodsBuyBean.getIfCart(), goodsBuyBean.getAddressId());
+    }
+
     private void handlerData(String jsonString) {
-        JsonObject mainJsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
+        JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(jsonString);
         mainArrayList.clear();
         //店铺列表
         JsonObject jsonObject = mainJsonObject.getAsJsonObject("store_cart_list");
         Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
         for (Map.Entry<String, JsonElement> map : entries) {
-            Log.e("TAG", new Gson().toJson(map.getValue()));
             StoreBuyBean storeBuyBean = JsonUtils.jsonToBean(map.getValue(), StoreBuyBean.class);
             storeBuyBean.setKey(map.getKey());
             mainArrayList.add(storeBuyBean);
@@ -282,4 +285,5 @@ public class BuyActivity extends BaseMvpActivity<GoodsBuyPresenter> implements G
         balanceTextView.setText("提交中...");
         mPresenter.requestGoodsBuyStep2(JsonUtils.jsonToMaps(JsonUtils.objectToJson(goodsBuyBean)));
     }
+
 }

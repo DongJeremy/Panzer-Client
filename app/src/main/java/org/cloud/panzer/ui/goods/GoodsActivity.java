@@ -30,6 +30,7 @@ import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
 
 import org.cloud.core.base.BaseAnimClient;
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseMvpActivity;
@@ -258,7 +259,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     private String shareImageUrl = "";
     private String goodsId = "";
     // 是否有存货
-    private boolean haveGoods;
+    private boolean isHaveGoods;
     private String storeId = "";
     private String memberId = "";
     private boolean isBackBoolean;
@@ -357,7 +358,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         }
         isShowBoolean = false;
 
-        haveGoods = true;
+        this.isHaveGoods = true;
         // 获取数据
         getData(goodsIdString);
 
@@ -426,7 +427,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         });
 
         addCartTextView.setOnClickListener(view -> {
-            if (!haveGoods) {
+            if (!isHaveGoods) {
                 BaseToast.getInstance().show("没货啦！");
                 return;
             }
@@ -436,6 +437,16 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 addCart();
             }
         });
+        buyTextView.setOnClickListener(view -> {
+            if (!this.isHaveGoods) {
+                BaseToast.getInstance().show("没货啦");
+            } else if (this.chooseRelativeLayout.getVisibility() == View.GONE) {
+                showChooseLayout();
+            } else {
+                buy();
+            }
+        });
+
         chooseAddTextView.setOnClickListener(view -> {
             String number = (Integer.parseInt(Objects.requireNonNull(chooseNumberEditText.getText()).toString()) + 1) + "";
             chooseNumberEditText.setText(number);
@@ -455,8 +466,8 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     }
 
     @Override
-    public void showGoodsDetailData(String homeInfoData) {
-        handlerData(homeInfoData);
+    public void showGoodsDetailSuccess(BaseBean baseBean) {
+        handlerData(baseBean);
     }
 
     @Override
@@ -468,7 +479,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     }
 
     @Override
-    public void showSuccessAddGoods(String goodsInfoData) {
+    public void showAddGoodsSuccess(BaseBean baseBean) {
         BaseToast.getInstance().showSuccess();
         GoodsActivity.this.goneChooseLayout();
     }
@@ -518,6 +529,11 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     }
 
     // 自定义数据和方法
+
+    private void buy() {
+        App.getInstance().startGoodsBuy(getActivity(), this.goodsId + "|" + ((Editable) Objects.requireNonNull(this.chooseNumberEditText.getText())).toString(), "");
+        goneChooseLayout();
+    }
 
     private void changeNumber() {
         if (TextUtils.isEmpty(Objects.requireNonNull(chooseNumberEditText.getText()).toString())) {
@@ -589,9 +605,9 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     }
 
     // 解析json数据
-    private void handlerData(String homeInfoData) {
+    private void handlerData(BaseBean baseBean) {
         String temp = "";
-        JsonObject mainJsonObject = new JsonParser().parse(homeInfoData).getAsJsonObject();
+        JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         JsonObject goodsInfoJSONObject = mainJsonObject.getAsJsonObject("goods_info");
         String[] goodsImages = mainJsonObject.get("goods_image").getAsString().split(",");
         goodsId = goodsInfoJSONObject.get("goods_id").getAsString();

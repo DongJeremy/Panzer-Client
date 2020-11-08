@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
@@ -61,7 +62,7 @@ public class AddressEditActivity extends BaseMvpActivity<AddressPresenter> imple
 
     @Override
     protected void initView() {
-        setToolbar(this.mainToolbar, "编辑地址");
+        setToolbar(this.mainToolbar, "编辑地址", R.color.whiteSub);
         this.addressBean = (AddressBean) getIntent().getSerializableExtra(BaseConstant.DATA_BEAN);
         if (this.addressBean == null) {
             BaseToast.getInstance().showDataError();
@@ -106,22 +107,22 @@ public class AddressEditActivity extends BaseMvpActivity<AddressPresenter> imple
     }
 
     @Override
-    public void showAddressList(String address) {
+    public void showAddressList(BaseBean baseBean) {
 
     }
 
     @Override
-    public void showAddressAdd(String address) {
+    public void showAddressAdd(BaseBean baseBean) {
 
     }
 
     @Override
-    public void showAddressDelete(String address) {
+    public void showAddressDelete(BaseBean baseBean) {
 
     }
 
     @Override
-    public void showAddressEdit(String address) {
+    public void showAddressEdit(BaseBean baseBean) {
         this.saveTextView.setEnabled(true);
         this.saveTextView.setText("保存地址");
         BaseToast.getInstance().showSuccess();

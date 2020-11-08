@@ -2,10 +2,10 @@ package org.cloud.panzer.ui.main;
 
 import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.panzer.R;
-import org.cloud.panzer.mvp.contract.CartContract;
-import org.cloud.panzer.mvp.presenter.CartPresenter;
+import org.cloud.panzer.mvp.contract.CateContract;
+import org.cloud.panzer.mvp.presenter.CatePresenter;
 
-public class CateFragment extends BaseMvpFragment<CartPresenter> implements CartContract.View {
+public class CateFragment extends BaseMvpFragment<CatePresenter> implements CateContract.View {
 
     @Override
     protected int getLayoutId() {
@@ -32,23 +32,9 @@ public class CateFragment extends BaseMvpFragment<CartPresenter> implements Cart
         return false;
     }
 
-    @Override
-    protected CartPresenter createPresenter() {
-        return null;
-    }
 
     @Override
-    public void showCartListData(String cartListData) {
-
-    }
-
-    @Override
-    public void showCartEditQuantity(String cartEditData) {
-
-    }
-
-    @Override
-    public void showCartDeleteData(int position, int positionGoods, String cartListData) {
-
+    protected CatePresenter createPresenter() {
+        return new CatePresenter();
     }
 }

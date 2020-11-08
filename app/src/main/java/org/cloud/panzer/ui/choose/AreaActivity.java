@@ -9,12 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import org.cloud.core.base.BaseConstant;
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseMvpActivity;
-import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.AreaListAdapter;
@@ -69,7 +68,7 @@ public class AreaActivity extends BaseMvpActivity<AreaPresenter> implements Area
 
     @Override
     protected void initView() {
-        setToolbar(mainToolbar, "选择地区");
+        setToolbar(mainToolbar, "选择地区", R.color.whiteSub);
         this.areaIdString = "0";
         this.cityIdString = "0";
         this.provinceIdString = "0";
@@ -160,8 +159,8 @@ public class AreaActivity extends BaseMvpActivity<AreaPresenter> implements Area
     }
 
     @Override
-    public void showAreaList(String areaData, String type) {
-        JsonObject mainJsonObject = new JsonParser().parse(areaData).getAsJsonObject();
+    public void showAreaList(BaseBean baseBean, String type) {
+        JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         JsonArray cartList = mainJsonObject.getAsJsonArray("area_list");
 
         switch(type) {

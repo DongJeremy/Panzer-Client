@@ -1,9 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.order.PayActivity">
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLinearLayout"
+    style="@style/Layout.Main">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/mainToolbar"
+        style="@style/Toolbar.Main">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titleTextView"
+            style="@style/TextView.Title" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <View style="@style/View.Line" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat style="@style/Layout.Main">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/moneyTextView"
+            style="@style/TextView.Money"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingTop="24dp"
+            android:textColor="@color/blackSub"
+            android:textSize="24sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/snTextView"
+            style="@style/TextView.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="24dp" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ownLinearLayout"
+            style="@style/Layout.Wrap"
+            android:paddingTop="16dp"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Tool"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="站内支付" />
+
+            <RelativeLayout
+                android:id="@+id/preDepositRelativeLayout"
+                style="@style/Layout.Tool"
+                android:layout_marginTop="1px"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/preDepositTextView"
+                    style="@style/TextView.ToolTitle"
+                    android:text="预存款" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/preDepositRadioButton"
+                    style="@style/TextView.ToolValue"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rechargeCardRelativeLayout"
+                style="@style/Layout.Tool"
+                android:layout_marginTop="1px"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/rechargeCardTextView"
+                    style="@style/TextView.ToolTitle"
+                    android:text="充值卡" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rechargeCardRadioButton"
+                    style="@style/TextView.ToolValue"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/passwordRelativeLayout"
+                style="@style/Layout.Tool"
+                android:layout_marginTop="1px"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/passwordTextView"
+                    style="@style/TextView.ToolTitle"
+                    android:text="支付密码" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/passwordEditText"
+                    style="@style/EditText.Password"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_toEndOf="@+id/passwordTextView"
+                    android:background="@color/transparent"
+                    android:hint="请输入支付密码"
+                    android:layout_toRightOf="@+id/passwordTextView" />
+            </RelativeLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/thrLinearLayout"
+            style="@style/Layout.Wrap"
+            android:paddingTop="16dp"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextView.Tool"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="第三方支付" />
+
+            <RelativeLayout
+                android:id="@+id/aliPayRelativeLayout"
+                style="@style/Layout.Tool"
+                android:layout_marginTop="1px"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextView.ToolTitle"
+                    android:drawableStart="@mipmap/ic_classic_alipay"
+                    android:text="支付宝"
+                    android:drawableLeft="@mipmap/ic_classic_alipay" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/aliPayRadioButton"
+                    style="@style/TextView.ToolValue"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/wxPayRelativeLayout"
+                style="@style/Layout.Tool"
+                android:layout_marginTop="1px"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextView.ToolTitle"
+                    android:drawableStart="@mipmap/ic_classic_wechat"
+                    android:text="微信支付" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/wxPayRadioButton"
+                    style="@style/TextView.ToolValue"
+                    android:focusable="false" />
+            </RelativeLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/payTextView"
+            style="@style/TextView.Button" />
+
+        <WebView
+            android:id="@+id/mainWebView"
+            style="@style/Layout.Main"
+            android:visibility="gone" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

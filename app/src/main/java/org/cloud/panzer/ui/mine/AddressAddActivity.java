@@ -8,12 +8,12 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
+import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.core.utils.StringUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
@@ -58,7 +58,7 @@ public class AddressAddActivity extends BaseMvpActivity<AddressPresenter> implem
 
     @Override
     protected void initView() {
-        setToolbar(this.mainToolbar, "添加地址");
+        setToolbar(this.mainToolbar, "添加地址", R.color.whiteSub);
         this.cityId = "";
         this.areaId = "";
         this.areaInfo = "";
@@ -84,12 +84,23 @@ public class AddressAddActivity extends BaseMvpActivity<AddressPresenter> implem
     }
 
     @Override
-    public void showAddressList(String address) {
+    public void showAddressList(BaseBean baseBean) {
 
     }
 
     @Override
-    public void showAddressAdd(String address) {
+    public void onActivityResult(int i, int i2, Intent intent) {
+        super.onActivityResult(i, i2, intent);
+        if (i2 == -1 && i == 1000) {
+            this.cityId = intent.getStringExtra("city_id");
+            this.areaId = intent.getStringExtra("area_id");
+            this.areaInfo = intent.getStringExtra("area_info");
+            this.areaEditText.setText(this.areaInfo);
+        }
+    }
+
+    @Override
+    public void showAddressAdd(BaseBean baseBean) {
 //        if (!BaseApplication.get().isAddAddress()) {
 //            this.saveTextView.setEnabled(true);
 //            this.saveTextView.setText("保存地址");
@@ -99,18 +110,18 @@ public class AddressAddActivity extends BaseMvpActivity<AddressPresenter> implem
 //        }
         //BaseApplication.get().setAddAddress(false);
         Intent intent = new Intent();
-        String addressId = new JsonParser().parse(address).getAsJsonObject().get("address_id").getAsString();
+        String addressId = JsonUtils.parseJsonToJsonObject(baseBean.getDatas()).get("address_id").getAsString();
         intent.putExtra(BaseConstant.DATA_ID, addressId);
         App.getInstance().finishOk(AddressAddActivity.this.getActivity(), intent);
     }
 
     @Override
-    public void showAddressDelete(String address) {
+    public void showAddressDelete(BaseBean baseBean) {
 
     }
 
     @Override
-    public void showAddressEdit(String address) {
+    public void showAddressEdit(BaseBean baseBean) {
 
     }
 

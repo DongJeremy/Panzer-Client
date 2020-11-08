@@ -1,7 +1,5 @@
 package org.cloud.panzer.mvp.presenter;
 
-import android.util.Log;
-
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
@@ -22,17 +20,7 @@ public class GoodsPresenter extends BasePresenter<GoodsContract.Model, GoodsCont
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showGoodsDetailData(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
-
+                        getView().showGoodsDetailSuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
@@ -52,16 +40,6 @@ public class GoodsPresenter extends BasePresenter<GoodsContract.Model, GoodsCont
                     }
 
                     @Override
-                    public boolean isSuccessFul(String result) {
-                        return true;
-                    }
-
-                    @Override
-                    public void onLogicError() {
-
-                    }
-
-                    @Override
                     public void onFailure(String errMsg, boolean isNetError) {
                         getView().showError(errMsg);
                     }
@@ -74,17 +52,7 @@ public class GoodsPresenter extends BasePresenter<GoodsContract.Model, GoodsCont
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showSuccessAddGoods(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
-
+                        getView().showAddGoodsSuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override

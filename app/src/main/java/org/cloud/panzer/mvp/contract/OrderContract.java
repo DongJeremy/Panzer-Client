@@ -1,5 +1,6 @@
 package org.cloud.panzer.mvp.contract;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.mvp.IModel;
 import org.cloud.core.mvp.IView;
 
@@ -8,16 +9,16 @@ import io.reactivex.Observable;
 public interface OrderContract {
 
     interface View extends IView {
-        void showOrderListSuccess(String jsonData);
+        void showOrderListSuccess(BaseBean baseBean);
         void showOrderListFail(String jsonData);
 
-        void showOrderDeleteSuccess(String jsonData);
+        void showOrderDeleteSuccess(BaseBean baseBean);
         void showOrderDeleteFail(String jsonData);
 
-        void showOrderCancelSuccess(String jsonData);
+        void showOrderCancelSuccess(BaseBean baseBean);
         void showOrderCancelFail(String jsonData);
 
-        void showOrderReceiveSuccess(String jsonData);
+        void showOrderReceiveSuccess(BaseBean baseBean);
         void showOrderReceiveFail(String jsonData);
     }
 

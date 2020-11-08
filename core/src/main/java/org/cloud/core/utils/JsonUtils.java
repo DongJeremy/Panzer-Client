@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 
 import java.util.ArrayList;
@@ -156,13 +157,28 @@ public class JsonUtils {
         return map;
     }
 
-    public static boolean checkJsonCodeSuccess(String jsonString) {
+    /**
+     * json to BaseBean
+     * @param jsonString json string
+     * @return BaseBean
+     */
+    public static BaseBean parseJsonToBaseBean(String jsonString) {
         JsonObject rootJsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        return rootJsonObject.get("code").getAsInt() == 200;
+        BaseBean baseBean = new BaseBean(rootJsonObject.get("code").getAsInt(), objectToJson(rootJsonObject.get("datas")));
+        if(rootJsonObject.has("hasmore")) {
+            baseBean.setHasmore(rootJsonObject.get("hasmore").getAsBoolean());
+        }
+        if(rootJsonObject.has("page_total")) {
+            baseBean.setPageTotal(rootJsonObject.get("page_total").getAsInt());
+        }
+        return baseBean;
     }
 
-    public static String parseJsonData(String jsonString) {
-        JsonObject rootJsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        return objectToJson(rootJsonObject.get("datas"));
+    public static JsonObject parseJsonToJsonObject(String jsonString) {
+        return new JsonParser().parse(jsonString).getAsJsonObject();
+    }
+
+    public static JsonArray parseJsonToJsonArray(String jsonString) {
+        return new JsonParser().parse(jsonString).getAsJsonArray();
     }
 }

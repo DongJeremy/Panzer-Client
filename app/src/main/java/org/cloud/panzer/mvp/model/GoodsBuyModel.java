@@ -1,10 +1,7 @@
 package org.cloud.panzer.mvp.model;
 
-import com.google.gson.JsonObject;
-
 import org.cloud.core.mvp.BaseModel;
 import org.cloud.panzer.api.RetrofitUtils;
-import org.cloud.panzer.bean.GoodsBuyBean;
 import org.cloud.panzer.mvp.contract.GoodsBuyContract;
 
 import java.util.Map;

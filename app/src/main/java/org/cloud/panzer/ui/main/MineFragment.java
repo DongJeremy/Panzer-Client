@@ -11,6 +11,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.core.utils.JsonUtils;
@@ -110,8 +111,8 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
     }
 
     @Override
-    public void showMemberIndex(String memberData) {
-        JsonObject mainJsonObject = new JsonParser().parse(memberData).getAsJsonObject();
+    public void showMemberIndexSuccess(BaseBean baseBean) {
+        JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         MemberBean memberInfo = JsonUtils.jsonToBean(mainJsonObject.getAsJsonObject("member_info"), MemberBean.class);
         BaseImageLoader.getInstance().displayRadius(memberInfo.getAvatar() + "?id=" + TimeUtils.getStampAll(), avatarImageView, App.getInstance().dipToPx(8));
 
@@ -137,6 +138,11 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
             levelTextView.setVisibility(View.VISIBLE);
         }
         //getMobileInfo();
+    }
+
+    @Override
+    public void showMemberIndexFail(String msg) {
+
     }
 
     // 自定义数据和方法

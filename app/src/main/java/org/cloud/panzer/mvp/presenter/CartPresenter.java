@@ -22,14 +22,7 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showCartListData(JsonUtils.parseJsonData(result));
-                    }
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-                    @Override
-                    public void onLogicError() {
+                        getView().showCartListData(JsonUtils.parseJsonToBaseBean(result));
                     }
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
@@ -45,14 +38,7 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showCartEditQuantity(JsonUtils.parseJsonData(result));
-                    }
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-                    @Override
-                    public void onLogicError() {
+                        getView().showCartEditQuantity(JsonUtils.parseJsonToBaseBean(result));
                     }
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
@@ -68,14 +54,7 @@ public class CartPresenter extends BasePresenter<CartContract.Model, CartContrac
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showCartDeleteData(position, positionGoods, JsonUtils.parseJsonData(result));
-                    }
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-                    @Override
-                    public void onLogicError() {
+                        getView().showCartDeleteData(position, positionGoods, JsonUtils.parseJsonToBaseBean(result));
                     }
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {

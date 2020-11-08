@@ -43,11 +43,7 @@ public abstract class BaseObserver<T> implements Observer<T> {
     @Override
     public void onNext(T result) {
         hideLoadingDialog();
-        if(isSuccessFul(result)) {
-            onSuccess(result);
-        } else {
-            onLogicError();
-        }
+        onSuccess(result);
     }
 
     @Override
@@ -78,14 +74,6 @@ public abstract class BaseObserver<T> implements Observer<T> {
      * @param result 服务器返回数据
      */
     public abstract void onSuccess(T result);
-
-    /**
-     * 请求成功返回
-     *
-     */
-    public abstract boolean isSuccessFul(T result);
-
-    public abstract void onLogicError();
 
     /**
      * 请求失败返回

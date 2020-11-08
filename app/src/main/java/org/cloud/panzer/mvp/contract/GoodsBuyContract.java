@@ -1,5 +1,6 @@
 package org.cloud.panzer.mvp.contract;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.mvp.IModel;
 import org.cloud.core.mvp.IView;
 
@@ -10,10 +11,11 @@ import io.reactivex.Observable;
 public interface GoodsBuyContract {
 
     interface View extends IView {
-        void showGoodsBuyStep1Success(String goodsInfoData);
+        void showGoodsBuyStep1Success(BaseBean baseBean);
+        void showGoodsBuyStep1Fail(String msg);
 
-        void showGoodsBuyStep2Success(String goodsInfoData);
-        void showGoodsBuyStep2Error();
+        void showGoodsBuyStep2Success(BaseBean baseBean);
+        void showGoodsBuyStep2Fail(String msg);
     }
 
     interface Model extends IModel {

@@ -1,7 +1,5 @@
 package org.cloud.panzer.mvp.presenter;
 
-import android.util.Log;
-
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
@@ -18,25 +16,14 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
     public void requestHomeInfoData() {
         getModel().getHomeInfoData()
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
-                .subscribe(new BaseObserver<String>(getView()){
+                .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showHomeInfoData(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
-
+                        getView().showHomeInfoData(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
                         getView().showError(errMsg);
                     }
                 });
@@ -46,25 +33,14 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
     public void requestArticleListData() {
         getModel().getArticleListData()
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
-                .subscribe(new BaseObserver<String>(getView()){
+                .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showArticleListData(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
-
+                        getView().showArticleListData(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
                         getView().showError(errMsg);
                     }
                 });

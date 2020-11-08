@@ -7,11 +7,9 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseShared;
@@ -64,8 +62,7 @@ public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements Lo
     @Override
     protected void initView() {
         exitTimeLong = 0L;
-        setToolbar(mainToolbar, "登录");
-        StatusBarUtils.setStatusBarMode(this, true, R.color.whiteSub);
+        setToolbar(mainToolbar, "登录", R.color.whiteSub);
     }
 
     @Override
@@ -102,16 +99,14 @@ public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements Lo
     }
 
     @Override
-    public void showLoginSuccess(String loginData) {
-        JsonObject rootJsonObject = new JsonParser().parse(loginData).getAsJsonObject();
-        int code = rootJsonObject.get("code").getAsInt();
-        if (code != 200) {
+    public void showLoginSuccess(BaseBean baseBean) {
+        if (baseBean.getCode() != 200) {
             loginTextView.setEnabled(true);
             loginTextView.setText("登 录");
             BaseToast.getInstance().show("用户名或密码错误");
             return;
         }
-        JsonObject jsonObject = rootJsonObject.getAsJsonObject("datas");
+        JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         String key = jsonObject.get("key").getAsString();
         BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, key);
         App.getInstance().startMain(getActivity());

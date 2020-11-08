@@ -35,6 +35,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import org.cloud.core.R;
@@ -76,12 +77,20 @@ public class BaseApplication extends Application {
         CacheManager.init(this);
         mInstance = this;
         //注册监听每个activity的生命周期,便于堆栈式管理
+        initLeakCanary();
         registerActivityLifecycleCallbacks(mCallbacks);
         BaseShared.getInstance().init(getSharedPreferences(BaseConstant.SHARED_NAME, MODE_PRIVATE));
         BaseToast.getInstance().init(this);
         BaseImageLoader.getInstance().init(this);
 
         isImage = BaseShared.getInstance().getBoolean(BaseConstant.SHARED_SETTING_IMAGE, true);
+    }
+
+    private void initLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        mRefWatcher = LeakCanary.install(this);
     }
 
     public static RefWatcher getRefWatcher(Context context) {

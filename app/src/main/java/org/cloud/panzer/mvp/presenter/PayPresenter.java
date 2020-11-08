@@ -4,27 +4,27 @@ import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
 import org.cloud.core.utils.JsonUtils;
-import org.cloud.panzer.mvp.contract.MineContract;
-import org.cloud.panzer.mvp.model.MineModel;
+import org.cloud.panzer.mvp.contract.PayContract;
+import org.cloud.panzer.mvp.model.PayModel;
 
-public class MinePresenter extends BasePresenter<MineContract.Model, MineContract.View> {
+public class PayPresenter extends BasePresenter<PayContract.Model, PayContract.View> {
     @Override
-    protected MineContract.Model createModel() {
-        return new MineModel();
+    protected PayContract.Model createModel() {
+        return new PayModel();
     }
 
-    public void requestMemberIndexData() {
-        getModel().getMemberIndex()
+    public void requestPay(String paySn) {
+        getModel().postPay(paySn)
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
-                .subscribe(new BaseObserver<String>(getView()){
+                .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showMemberIndexSuccess(JsonUtils.parseJsonToBaseBean(result));
+                        getView().showPaySuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        getView().showMemberIndexFail(errMsg);
+                        getView().showPayFail(errMsg);
                     }
                 });
 

@@ -1,11 +1,6 @@
 package org.cloud.core.base;
 
-import android.os.Bundle;
-
-import androidx.appcompat.app.ActionBarDrawerToggle;
-
 import org.cloud.core.mvp.BasePresenter;
-import org.cloud.core.mvp.IModel;
 import org.cloud.core.mvp.IView;
 
 /**

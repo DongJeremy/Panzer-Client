@@ -1,7 +1,5 @@
 package org.cloud.panzer.mvp.presenter;
 
-import android.util.Log;
-
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
@@ -21,23 +19,12 @@ public class SearchPresenter extends BasePresenter<SearchContract.Model, SearchC
                 .subscribe(new BaseObserver<String>(getView()){
                     @Override
                     public void onSuccess(String result) {
-                        getView().showSearchKeyList(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
-
+                        getView().showSearchKeyListSuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
-                        getView().showError(errMsg);
+                        getView().showSearchKeyListFail(errMsg);
                     }
                 });
     }

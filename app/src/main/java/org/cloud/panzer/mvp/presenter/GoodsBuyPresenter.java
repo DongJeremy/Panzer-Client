@@ -21,22 +21,12 @@ public class GoodsBuyPresenter extends BasePresenter<GoodsBuyContract.Model, Goo
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showGoodsBuyStep1Success(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
-
+                        getView().showGoodsBuyStep1Success(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        getView().showError(errMsg);
+                        getView().showGoodsBuyStep1Fail(errMsg);
                     }
                 });
     }
@@ -47,22 +37,12 @@ public class GoodsBuyPresenter extends BasePresenter<GoodsBuyContract.Model, Goo
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showGoodsBuyStep2Success(JsonUtils.parseJsonData(result));
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
-                        getView().showGoodsBuyStep2Error();
+                        getView().showGoodsBuyStep2Success(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        getView().showError(errMsg);
+                        getView().showGoodsBuyStep2Fail(errMsg);
                     }
                 });
     }

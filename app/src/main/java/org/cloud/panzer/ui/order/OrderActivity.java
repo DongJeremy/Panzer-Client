@@ -8,10 +8,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.JsonObject;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpActivity;
+import org.cloud.core.base.BaseToast;
 import org.cloud.core.base.BaseViewPagerAdapter;
+import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.widget.PullRefreshView;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
@@ -63,7 +67,7 @@ public class OrderActivity extends BaseMvpActivity<OrderPresenter> implements Or
     protected void initView() {
         positionInt = getIntent().getIntExtra(BaseConstant.DATA_POSITION, 0);
 
-        setToolbar(mainToolbar);
+        setToolbar(mainToolbar, null, R.color.whiteSub);
         toolbarImageView.setImageResource(R.drawable.ic_action_search);
 
         stateTypeString = new String[5];
@@ -270,7 +274,7 @@ public class OrderActivity extends BaseMvpActivity<OrderPresenter> implements Or
 
     @Override
     protected void initData() {
-
+        getOrder();
     }
 
     @Override
@@ -289,132 +293,108 @@ public class OrderActivity extends BaseMvpActivity<OrderPresenter> implements Or
     }
 
     @Override
-    public void showAreaList(String areaData, String type) {
+    public void showOrderListSuccess(BaseBean baseBean) {
+        if (pageInt[positionInt] == 1) {
+            mainArrayList[positionInt].clear();
+        }
+        if (pageInt[positionInt] <= baseBean.getPageTotal()) {
+            JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
+            List<OrderBean> orderBeans = JsonUtils.jsonToList(mainJsonObject.getAsJsonArray("order_group_list"), OrderBean.class);
+            mainArrayList[positionInt].addAll(Objects.requireNonNull(orderBeans));
+            pageInt[positionInt]++;
+        }
+        mainPullRefreshView[positionInt].setComplete();
+    }
 
+    @Override
+    public void showOrderListFail(String jsonData) {
+        mainPullRefreshView[positionInt].setFailure();
+    }
+
+    @Override
+    public void showOrderDeleteSuccess(BaseBean baseBean) {
+        pageInt[positionInt] = 1;
+        getOrder();
+    }
+
+    @Override
+    public void showOrderDeleteFail(String jsonData) {
+        BaseToast.getInstance().show(jsonData);
+    }
+
+    @Override
+    public void showOrderCancelSuccess(BaseBean baseBean) {
+        pageInt[positionInt] = 1;
+        getOrder();
+    }
+
+    @Override
+    public void showOrderCancelFail(String jsonData) {
+        BaseToast.getInstance().show(jsonData);
+    }
+
+    @Override
+    public void showOrderReceiveSuccess(BaseBean baseBean) {
+        pageInt[positionInt] = 1;
+        getOrder();
+    }
+
+    @Override
+    public void showOrderReceiveFail(String reason) {
+        BaseToast.getInstance().show(reason);
     }
 
     //自定义方法
 
     private void getOrder() {
-
         mainPullRefreshView[positionInt].setLoading();
-
-        MemberOrderModel.get().orderList(stateTypeString[positionInt], keyword, pageInt[positionInt] + "", new BaseHttpListener() {
-            @Override
-            public void onSuccess(BaseBean baseBean) {
-                if (pageInt[positionInt] == 1) {
-                    mainArrayList[positionInt].clear();
-                }
-                if (pageInt[positionInt] <= baseBean.getPageTotal()) {
-                    String data = JsonUtil.getDatasString(baseBean.getDatas(), "order_group_list");
-                    mainArrayList[positionInt].addAll(Objects.requireNonNull(JsonUtil.json2ArrayList(data, OrderBean.class)));
-                    pageInt[positionInt]++;
-                }
-                mainPullRefreshView[positionInt].setComplete();
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                mainPullRefreshView[positionInt].setFailure();
-            }
-        });
-
+        mPresenter.requestOrderList(stateTypeString[positionInt], keyword, pageInt[positionInt] + "");
     }
 
     private void orderDelete(String orderId) {
-        mPresenter.
-
-        MemberOrderModel.get().orderDelete(orderId, new BaseHttpListener() {
-            @Override
-            public void onSuccess(BaseBean baseBean) {
-                pageInt[positionInt] = 1;
-                getOrder();
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                BaseToast.get().show(reason);
-            }
-        });
-
+        mPresenter.requestOrderDelete(orderId);
     }
 
     private void orderCancel(String orderId) {
-
-        MemberOrderModel.get().orderCancel(orderId, new BaseHttpListener() {
-            @Override
-            public void onSuccess(BaseBean baseBean) {
-                pageInt[positionInt] = 1;
-                getOrder();
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                BaseToast.get().show(reason);
-            }
-        });
-
+        mPresenter.requestOrderCancel(orderId);
     }
 
     private void orderReceive(String orderId) {
-
-        MemberOrderModel.get().orderReceive(orderId, new BaseHttpListener() {
-            @Override
-            public void onSuccess(BaseBean baseBean) {
-                pageInt[positionInt] = 1;
-                getOrder();
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                BaseToast.get().show(reason);
-            }
-        });
-
+        mPresenter.requestOrderReceive(orderId);
     }
 
     private void orderLogistics(String number) {
-
-        Intent intent = new Intent(getActivity(), LogisticsActivity.class);
-        intent.putExtra(BaseConstant.DATA_ID, number);
-        BaseApplication.get().start(getActivity(), intent);
-
+//        Intent intent = new Intent(getActivity(), LogisticsActivity.class);
+//        intent.putExtra(BaseConstant.DATA_ID, number);
+//        App.getInstance().start(getActivity(), intent);
     }
 
     private void orderRefund(String orderId) {
-
-        Intent intent = new Intent(getActivity(), RefundApplyActivity.class);
-        intent.putExtra(BaseConstant.DATA_ID, orderId);
-        intent.putExtra(BaseConstant.DATA_GOODSID, "");
-        BaseApplication.get().start(getActivity(), intent);
-        refreshBoolean = true;
-
+//        Intent intent = new Intent(getActivity(), RefundApplyActivity.class);
+//        intent.putExtra(BaseConstant.DATA_ID, orderId);
+//        intent.putExtra(BaseConstant.DATA_GOODSID, "");
+//        App.getInstance().start(getActivity(), intent);
+//        refreshBoolean = true;
     }
 
     private void orderDetailed(String orderId) {
-
-        Intent intent = new Intent(getActivity(), DetailedActivity.class);
-        intent.putExtra(BaseConstant.DATA_ID, orderId);
-        BaseApplication.get().start(getActivity(), intent);
-        refreshBoolean = true;
-
+//        Intent intent = new Intent(getActivity(), DetailedActivity.class);
+//        intent.putExtra(BaseConstant.DATA_ID, orderId);
+//        App.getInstance().start(getActivity(), intent);
+//        refreshBoolean = true;
     }
 
     private void orderEvaluate(String orderId) {
-
-        Intent intent = new Intent(getActivity(), EvaluateActivity.class);
-        intent.putExtra(BaseConstant.DATA_ID, orderId);
-        BaseApplication.get().start(getActivity(), intent);
-        refreshBoolean = true;
-
+//        Intent intent = new Intent(getActivity(), EvaluateActivity.class);
+//        intent.putExtra(BaseConstant.DATA_ID, orderId);
+//        App.getInstance().start(getActivity(), intent);
+//        refreshBoolean = true;
     }
 
     private void orderEvaluateAgain(String orderId) {
-
-        Intent intent = new Intent(getActivity(), EvaluateAgainActivity.class);
-        intent.putExtra(BaseConstant.DATA_ID, orderId);
-        BaseApplication.get().start(getActivity(), intent);
-        refreshBoolean = true;
-
+//        Intent intent = new Intent(getActivity(), EvaluateAgainActivity.class);
+//        intent.putExtra(BaseConstant.DATA_ID, orderId);
+//        App.getInstance().start(getActivity(), intent);
+//        refreshBoolean = true;
     }
 }

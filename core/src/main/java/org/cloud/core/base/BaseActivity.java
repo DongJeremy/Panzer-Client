@@ -179,4 +179,14 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         toolbar.setNavigationOnClickListener(view -> onReturn());
     }
 
+    /**
+     * 配置工具栏
+     * @param toolbar 工具栏
+     * @param title   标题栏文字
+     */
+    protected void setToolbar(Toolbar toolbar, String title, int colorId) {
+        setToolbar(toolbar, title);
+        StatusBarUtils.setStatusBarMode(this, true, colorId);
+    }
+
 }

@@ -1,7 +1,5 @@
 package org.cloud.panzer.mvp.presenter;
 
-import android.util.Log;
-
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
@@ -21,22 +19,11 @@ public class LoginPresenter extends BasePresenter<LoginContract.Model, LoginCont
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showLoginSuccess(result);
-                    }
-
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-
-                    @Override
-                    public void onLogicError() {
-
+                        getView().showLoginSuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
 
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
                         getView().showError(errMsg);
                     }
                 });

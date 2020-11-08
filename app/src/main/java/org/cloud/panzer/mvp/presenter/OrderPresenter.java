@@ -1,7 +1,5 @@
 package org.cloud.panzer.mvp.presenter;
 
-import android.util.Log;
-
 import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.net.BaseObserver;
 import org.cloud.core.rx.RxSchedulers;
@@ -15,25 +13,18 @@ public class OrderPresenter extends BasePresenter<OrderContract.Model, OrderCont
         return new OrderModel();
     }
 
-    public void requestOrderList(String stateType, String orderKey, String page, String curpage) {
-        getModel().postMemberOrderList(stateType, orderKey, page, curpage)
+    public void requestOrderList(String stateType, String orderKey, String curpage) {
+        getModel().postMemberOrderList(stateType, orderKey, "20", curpage)
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showOrderListSuccess(JsonUtils.parseJsonData(result));
+                        getView().showOrderListSuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-                    @Override
-                    public void onLogicError() {
-                    }
+
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
-                        getView().showError(errMsg);
+                        getView().showOrderListFail(errMsg);
                     }
                 });
     }
@@ -44,19 +35,12 @@ public class OrderPresenter extends BasePresenter<OrderContract.Model, OrderCont
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showAreaList(JsonUtils.parseJsonData(result), type);
+                        getView().showOrderDeleteSuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-                    @Override
-                    public void onLogicError() {
-                    }
+
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
-                        getView().showError(errMsg);
+                        getView().showOrderDeleteFail(errMsg);
                     }
                 });
     }
@@ -67,19 +51,12 @@ public class OrderPresenter extends BasePresenter<OrderContract.Model, OrderCont
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showAreaList(JsonUtils.parseJsonData(result), type);
+                        getView().showOrderCancelSuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-                    @Override
-                    public void onLogicError() {
-                    }
+
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
-                        getView().showError(errMsg);
+                        getView().showOrderCancelFail(errMsg);
                     }
                 });
     }
@@ -90,19 +67,12 @@ public class OrderPresenter extends BasePresenter<OrderContract.Model, OrderCont
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override
                     public void onSuccess(String result) {
-                        getView().showAreaList(JsonUtils.parseJsonData(result), type);
+                        getView().showOrderReceiveSuccess(JsonUtils.parseJsonToBaseBean(result));
                     }
-                    @Override
-                    public boolean isSuccessFul(String result) {
-                        return JsonUtils.checkJsonCodeSuccess(result);
-                    }
-                    @Override
-                    public void onLogicError() {
-                    }
+
                     @Override
                     public void onFailure(String errMsg, boolean isNetError) {
-                        Log.e("ERROR", errMsg);
-                        getView().showError(errMsg);
+                        getView().showOrderReceiveFail(errMsg);
                     }
                 });
     }

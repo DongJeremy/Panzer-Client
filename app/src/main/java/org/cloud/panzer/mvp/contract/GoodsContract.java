@@ -1,5 +1,6 @@
 package org.cloud.panzer.mvp.contract;
 
+import org.cloud.core.base.BaseBean;
 import org.cloud.core.mvp.IModel;
 import org.cloud.core.mvp.IView;
 
@@ -8,9 +9,9 @@ import io.reactivex.Observable;
 public interface GoodsContract {
 
     interface View extends IView {
-        void showGoodsDetailData(String goodsInfoData);
+        void showGoodsDetailSuccess(BaseBean baseBean);
         void showGoodsImagesData(String goodsInfoData);
-        void showSuccessAddGoods(String goodsInfoData);
+        void showAddGoodsSuccess(BaseBean baseBean);
     }
 
     interface Model extends IModel {
