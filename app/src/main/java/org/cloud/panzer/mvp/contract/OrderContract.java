@@ -8,10 +8,23 @@ import io.reactivex.Observable;
 public interface OrderContract {
 
     interface View extends IView {
-        void showAreaList(String areaData, String type);
+        void showOrderListSuccess(String jsonData);
+        void showOrderListFail(String jsonData);
+
+        void showOrderDeleteSuccess(String jsonData);
+        void showOrderDeleteFail(String jsonData);
+
+        void showOrderCancelSuccess(String jsonData);
+        void showOrderCancelFail(String jsonData);
+
+        void showOrderReceiveSuccess(String jsonData);
+        void showOrderReceiveFail(String jsonData);
     }
 
     interface Model extends IModel {
-        Observable<String> getAreaListById(String id);
+        Observable<String> postMemberOrderList(String stateType, String orderKey, String page, String curpage);
+        Observable<String> postMemberOrderDelete(String orderId);
+        Observable<String> postMemberOrderCancel(String orderId);
+        Observable<String> postMemberOrderReceive(String orderId);
     }
 }

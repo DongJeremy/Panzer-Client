@@ -44,4 +44,21 @@ public interface MemberService {
     @FormUrlEncoded
     @POST("index.php?act=member_buy&op=buy_step2")
     Observable<String> memberBuyStep2(@FieldMap Map<String, String> maps);
+
+    @FormUrlEncoded
+    @POST("index.php?act=member_order&op=order_list")
+    Observable<String> memberOrderList(@Field("state_type") String stateType, @Field("order_key") String orderKey, @Field("page") String page,
+                                       @Field("curpage") String curpage);
+
+    @FormUrlEncoded
+    @POST("index.php?act=member_order&op=order_delete")
+    Observable<String> memberOrderDelete(@Field("order_id") String orderId);
+
+    @FormUrlEncoded
+    @POST("index.php?act=member_order&op=order_cancel")
+    Observable<String> memberOrderCancel(@Field("order_id") String orderId);
+
+    @FormUrlEncoded
+    @POST("index.php?act=member_order&op=order_receive")
+    Observable<String> memberOrderReceive(@Field("order_id") String orderId);
 }

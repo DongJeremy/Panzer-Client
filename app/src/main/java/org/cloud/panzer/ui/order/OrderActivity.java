@@ -322,6 +322,7 @@ public class OrderActivity extends BaseMvpActivity<OrderPresenter> implements Or
     }
 
     private void orderDelete(String orderId) {
+        mPresenter.
 
         MemberOrderModel.get().orderDelete(orderId, new BaseHttpListener() {
             @Override
