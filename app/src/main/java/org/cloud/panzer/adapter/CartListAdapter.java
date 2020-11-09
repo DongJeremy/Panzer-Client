@@ -21,6 +21,12 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 
+/**
+* FileName: CartListAdapter
+* Author: Admin
+* Date: 2020/11/9 9:01
+* Description: 购物车适配器
+*/
 public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHolder> {
 
     private final ArrayList<CartBean> arrayList;

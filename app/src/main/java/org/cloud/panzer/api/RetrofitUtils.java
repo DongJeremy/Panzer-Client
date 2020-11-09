@@ -1,6 +1,7 @@
 package org.cloud.panzer.api;
 
 import org.cloud.core.net.BaseRetrofit;
+import org.cloud.panzer.app.Constant;
 
 public class RetrofitUtils extends BaseRetrofit {
     private static ApiService httpJsonService;

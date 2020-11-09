@@ -149,7 +149,8 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/TextView.ToolTitle"
                     android:drawableStart="@mipmap/ic_classic_wechat"
-                    android:text="微信支付" />
+                    android:text="微信支付"
+                    android:drawableLeft="@mipmap/ic_classic_wechat" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/wxPayRadioButton"

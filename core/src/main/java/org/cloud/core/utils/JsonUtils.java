@@ -174,11 +174,27 @@ public class JsonUtils {
         return baseBean;
     }
 
+    public static String parseJsonToError(String jsonString) {
+        return new JsonParser().parse(jsonString).getAsJsonObject().get("error").getAsString();
+    }
+
     public static JsonObject parseJsonToJsonObject(String jsonString) {
         return new JsonParser().parse(jsonString).getAsJsonObject();
     }
 
     public static JsonArray parseJsonToJsonArray(String jsonString) {
         return new JsonParser().parse(jsonString).getAsJsonArray();
+    }
+
+    public static String getJsonString(JsonObject jsonObject, String str) {
+        return jsonObject.get(str).getAsString();
+    }
+
+    public static JsonObject getJsonObject(JsonObject jsonObject, String str) {
+        return jsonObject.getAsJsonObject(str);
+    }
+
+    public static JsonArray getJsonArray(JsonObject jsonObject, String str) {
+        return jsonObject.getAsJsonArray(str);
     }
 }

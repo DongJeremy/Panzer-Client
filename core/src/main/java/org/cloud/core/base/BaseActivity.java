@@ -21,10 +21,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * @author ddw
- * @date 2020/11/6 17:12
- * @desc 基类 BaseMvpActivity
- */
+* FileName: BaseActivity
+* Author: Admin
+* Date: 2020/11/9 8:56
+* Description:
+*/
 public abstract class BaseActivity extends RxAppCompatActivity {
 
     private Activity activity;
@@ -188,5 +189,4 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         setToolbar(toolbar, title);
         StatusBarUtils.setStatusBarMode(this, true, colorId);
     }
-
 }

@@ -37,6 +37,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.cloud.core.R;
 import org.cloud.core.app.AppManager;
@@ -49,6 +51,10 @@ import java.util.List;
 public class BaseApplication extends Application {
 
     private static BaseApplication mInstance;
+
+    public IWXAPI iwxapi;
+    private boolean isWxPay;
+    private boolean isWxPaySuccess;
 
     public static BaseApplication getInstance() {
         return mInstance;
@@ -83,7 +89,37 @@ public class BaseApplication extends Application {
         BaseToast.getInstance().init(this);
         BaseImageLoader.getInstance().init(this);
 
+        //微信支付
+        this.isWxPay = false;
+        this.isWxPaySuccess = false;
+        iwxapi = WXAPIFactory.createWXAPI(this, null);
+        iwxapi.registerApp(BaseConstant.WX_APP_ID);
+
         isImage = BaseShared.getInstance().getBoolean(BaseConstant.SHARED_SETTING_IMAGE, true);
+    }
+
+    public IWXAPI getIwxapi() {
+        return iwxapi;
+    }
+
+    public void setIwxapi(IWXAPI iwxapi) {
+        this.iwxapi = iwxapi;
+    }
+
+    public boolean isWxPay() {
+        return isWxPay;
+    }
+
+    public void setWxPay(boolean wxPay) {
+        isWxPay = wxPay;
+    }
+
+    public boolean isWxPaySuccess() {
+        return this.isWxPaySuccess;
+    }
+
+    public void setWxPaySuccess(boolean isWxPaySuccess) {
+        this.isWxPaySuccess = isWxPaySuccess;
     }
 
     private void initLeakCanary() {
@@ -353,8 +389,9 @@ public class BaseApplication extends Application {
 
     /**
      * 含有Bundle通过Class跳转界面
-     * @param cls       跳转到activity或者service
-     * @param bundle    用于传递数据
+     *
+     * @param cls    跳转到activity或者service
+     * @param bundle 用于传递数据
      */
     public void start(Activity activity, Class<?> cls, Bundle bundle) {
         Intent intent = new Intent();
@@ -376,7 +413,8 @@ public class BaseApplication extends Application {
 
     /**
      * 通过Class跳转界面
-     * @param cls   跳转到activity或者service
+     *
+     * @param cls 跳转到activity或者service
      */
     public void start(Activity activity, Class<?> cls) {
         start(activity, cls, null);
@@ -392,8 +430,9 @@ public class BaseApplication extends Application {
 
     /**
      * 通过Class跳转界面
-     * @param cls           跳转到activity或者service
-     * @param requestCode   要返回的依据
+     *
+     * @param cls         跳转到activity或者service
+     * @param requestCode 要返回的依据
      */
     public void startForResult(Activity activity, Class<?> cls, int requestCode) {
         startForResult(activity, cls, null, requestCode);
@@ -401,9 +440,10 @@ public class BaseApplication extends Application {
 
     /**
      * 含有Bundle通过Class跳转界面
-     * @param cls           跳转到activity或者service
-     * @param bundle        用于传递数据
-     * @param requestCode   要返回的依据
+     *
+     * @param cls         跳转到activity或者service
+     * @param bundle      用于传递数据
+     * @param requestCode 要返回的依据
      */
     public void startForResult(Activity activity, Class<?> cls, Bundle bundle, int requestCode) {
         Intent intent = new Intent();

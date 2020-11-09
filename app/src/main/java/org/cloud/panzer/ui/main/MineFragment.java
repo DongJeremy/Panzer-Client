@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseImageLoader;

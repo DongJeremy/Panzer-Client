@@ -11,4 +11,19 @@ public class PayModel extends BaseModel implements PayContract.Model {
     public Observable<String> postPay(String paySn) {
         return RetrofitUtils.getRawHttpService().memberPay(paySn);
     }
+
+    @Override
+    public Observable<String> payNew(String paySn, String password, String rcbPay, String pdPay, String paymentCode) {
+        return RetrofitUtils.getRawHttpService().getPayNew(paySn, password, rcbPay, pdPay, paymentCode);
+    }
+
+    @Override
+    public Observable<String> wxAppPay3(String paySn) {
+        return RetrofitUtils.getRawHttpService().wxAppPay3(paySn);
+    }
+
+    @Override
+    public Observable<String> checkPdPwd(String password) {
+        return RetrofitUtils.getRawHttpService().checkPdPwd(password);
+    }
 }

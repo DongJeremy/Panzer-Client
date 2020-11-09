@@ -1,5 +1,7 @@
 package org.cloud.panzer.ui.order;
 
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +13,9 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
 
+import com.alipay.sdk.app.PayTask;
 import com.google.gson.JsonObject;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
@@ -21,8 +25,12 @@ import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
+import org.cloud.panzer.bean.PayResult;
 import org.cloud.panzer.mvp.contract.PayContract;
 import org.cloud.panzer.mvp.presenter.PayPresenter;
+
+import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -71,6 +79,27 @@ public class PayActivity extends BaseMvpActivity<PayPresenter> implements PayCon
     private String pdPayString;
     private String paymentCodeString;
 
+    private final Handler mHandler = new Handler(msg -> {
+        if (msg.what == 1) {
+            @SuppressWarnings("unchecked")
+            PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+            //String resultInfo = payResult.getResult();
+            String resultStatus = payResult.getResultStatus();
+            if (TextUtils.equals(resultStatus, "9000")) {
+                payTextView.setText("订单支付");
+                BaseToast.getInstance().show("支付成功");
+                App.getInstance().finish(getActivity());
+            } else {
+                if (TextUtils.equals(resultStatus, "8000")) {
+                    BaseToast.getInstance().show("支付结果确认中");
+                } else {
+                    BaseToast.getInstance().show("支付失败");
+                }
+            }
+        }
+        return false;
+    });
+
     @Override
     protected boolean useEventBus() {
         return false;
@@ -104,7 +133,45 @@ public class PayActivity extends BaseMvpActivity<PayPresenter> implements PayCon
 
     @Override
     protected void initListener() {
+        preDepositRelativeLayout.setOnClickListener(v -> this.preDepositRadioButton.setChecked(true));
 
+        this.payTextView.setOnClickListener(view -> {
+            boolean isChecked = this.preDepositRadioButton.isChecked();
+            if (this.rechargeCardRadioButton.isChecked()) {
+                isChecked = true;
+            }
+            if (this.aliPayRadioButton.isChecked()) {
+                isChecked = true;
+            }
+            if (this.wxPayRadioButton.isChecked()) {
+                isChecked = true;
+            }
+            if (!isChecked) {
+                BaseToast.getInstance().show("请选择支付方式！");
+            } else {
+                pay();
+            }
+        });
+
+        this.aliPayRadioButton.setOnCheckedChangeListener((compoundButton, z) -> {
+            if (z) {
+                this.paymentCodeString = "alipay";
+                this.preDepositRadioButton.setChecked(false);
+                this.rechargeCardRadioButton.setChecked(false);
+                this.wxPayRadioButton.setChecked(false);
+                this.passwordRelativeLayout.setVisibility(View.GONE);
+            }
+        });
+
+        this.wxPayRadioButton.setOnCheckedChangeListener((compoundButton, z) -> {
+            if (z) {
+                this.paymentCodeString = "wxpay";
+                this.preDepositRadioButton.setChecked(false);
+                this.rechargeCardRadioButton.setChecked(false);
+                this.aliPayRadioButton.setChecked(false);
+                this.passwordRelativeLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -115,15 +182,15 @@ public class PayActivity extends BaseMvpActivity<PayPresenter> implements PayCon
     @Override
     public void onResume() {
         super.onResume();
-//        if (App.getInstance().isWxPay()) {
-//            App.getInstance().setWxPay(false);
-//            if (App.getInstance().isSuccess()) {
-//                BaseToast.getInstance().show("微信支付成功");
-//            } else {
-//                BaseToast.getInstance().show("微信支付失败");
-//            }
-//            App.getInstance().finish(getActivity());
-//        }
+        if (App.getInstance().isWxPay()) {
+            App.getInstance().setWxPay(false);
+            if (App.getInstance().isWxPaySuccess()) {
+                BaseToast.getInstance().show("微信支付成功");
+                App.getInstance().finish(getActivity());
+                return;
+            }
+            BaseToast.getInstance().show("微信支付失败");
+        }
     }
 
     @Override
@@ -132,7 +199,7 @@ public class PayActivity extends BaseMvpActivity<PayPresenter> implements PayCon
     }
 
     @Override
-    public void showPaySuccess(BaseBean baseBean) {
+    public void showPayListSuccess(BaseBean baseBean) {
         JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         JsonObject jsonObject = mainJsonObject.getAsJsonObject("pay_info");
         //站内支付
@@ -169,7 +236,7 @@ public class PayActivity extends BaseMvpActivity<PayPresenter> implements PayCon
     }
 
     @Override
-    public void showPayFail(String reason) {
+    public void showPayListFail(String reason) {
         BaseToast.getInstance().show(reason);
         new BaseCountTime(BaseConstant.TIME_COUNT, BaseConstant.TIME_TICK) {
             @Override
@@ -180,7 +247,128 @@ public class PayActivity extends BaseMvpActivity<PayPresenter> implements PayCon
         }.start();
     }
 
+    @Override
+    public void showPayNewSuccess(BaseBean baseBean) {
+        PayActivity.this.payTextView.setEnabled(true);
+        PayActivity.this.payTextView.setText("订单支付");
+        BaseToast.getInstance().show("支付成功");
+        App.getInstance().finish(PayActivity.this.getActivity());
+    }
+
+    @Override
+    public void showPayNewFail(String reason) {
+        PayActivity.this.payTextView.setEnabled(true);
+        PayActivity.this.payTextView.setText("订单支付");
+        BaseToast.getInstance().show("支付成功");
+        App.getInstance().finish(PayActivity.this.getActivity());
+    }
+
+    @Override
+    public void showWxAppPay3Success(BaseBean baseBean) {
+        PayActivity.this.payTextView.setEnabled(true);
+        PayActivity.this.payTextView.setText("订单支付");
+        Log.e("TAG", "showWxAppPay3Success: ");
+        Log.e("TAG", baseBean.getDatas());
+        JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
+        PayReq payReq = new PayReq();
+        //payReq.appId = jsonObject.get("appid").getAsString();
+        payReq.appId = "wx5e6ad08007dc084d";
+        payReq.partnerId = jsonObject.get("partnerid").getAsString();
+        payReq.prepayId = jsonObject.get("prepayid").getAsString();
+        payReq.nonceStr = jsonObject.get("noncestr").getAsString();
+        payReq.timeStamp = jsonObject.get("timestamp").getAsString();
+        payReq.packageValue = jsonObject.get("package").getAsString();
+        //String wxPaySign = WxPayHelper.createWxPaySign();
+        //payReq.sign = jsonObject.get("sign").getAsString();
+        payReq.extData = "app data";
+        App.getInstance().setWxPay(true);
+        App.getInstance().setWxPaySuccess(false);
+        App.getInstance().getIwxapi().sendReq(payReq);
+    }
+
+    @Override
+    public void showWxAppPay3Fail(String reason) {
+        PayActivity.this.payTextView.setEnabled(true);
+        PayActivity.this.payTextView.setText("订单支付");
+        BaseToast.getInstance().show(reason);
+    }
+
+    @Override
+    public void showCheckPdPwdSuccess(BaseBean baseBean) {
+        if (baseBean.getDatas().equals("1")) {
+            ownPay();
+            return;
+        }
+        PayActivity.this.payTextView.setEnabled(true);
+        PayActivity.this.payTextView.setText("订单支付");
+        BaseToast.getInstance().showFailure();
+    }
+
+    @Override
+    public void showCheckPdPwdFail(String reason) {
+        PayActivity.this.payTextView.setEnabled(true);
+        PayActivity.this.payTextView.setText("订单支付");
+        BaseToast.getInstance().show(reason);
+    }
+
+    @Override
+    public void showAlipayNativePaySuccess(BaseBean baseBean) {
+        payTextView.setEnabled(true);
+        payTextView.setText("订单支付");
+        JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
+        Log.e("TAG", baseBean.getDatas());
+        final String signStr = jsonObject.get("signStr").getAsString();
+        Runnable payRunnable = () -> {
+            PayTask alipay = new PayTask(getActivity());
+            Map<String, String> result = alipay.payV2(signStr, true);
+            Message msg = new Message();
+            msg.what = 1;
+            msg.obj = result;
+            mHandler.sendMessage(msg);
+        };
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
+    }
+
+    @Override
+    public void showAlipayNativePayFail(String reason) {
+        payTextView.setEnabled(true);
+        payTextView.setText("订单支付");
+        BaseToast.getInstance().show(reason);
+    }
+
     private void getData() {
-        mPresenter.requestPay(paySnString);
+        mPresenter.requestPayList(paySnString);
+    }
+
+    private void ownPay() {
+        mPresenter.requestPayNew(this.paySnString, this.passwordString, this.rcbPayString, this.pdPayString);
+    }
+
+    private void pay() {
+        String str = "0";
+        this.pdPayString = this.preDepositRadioButton.isChecked() ? "1" : str;
+        if (this.rechargeCardRadioButton.isChecked()) {
+            str = "1";
+        }
+        this.rcbPayString = str;
+        if (this.pdPayString.equals("1") || this.rcbPayString.equals("1")) {
+            this.passwordString = Objects.requireNonNull(this.passwordEditText.getText()).toString();
+            if (TextUtils.isEmpty(this.passwordString)) {
+                BaseToast.getInstance().show("请输入支付密码！");
+                return;
+            }
+            this.payTextView.setEnabled(false);
+            this.payTextView.setText("支付中...");
+            mPresenter.requestCheckPdPwd(this.passwordString);
+        } else if (this.paymentCodeString.equals("alipay")) {
+            payTextView.setEnabled(false);
+            payTextView.setText("支付中...");
+            mPresenter.requestAlipayNativePay(paySnString);
+        } else if (this.paymentCodeString.equals("wxpay")) {
+            this.payTextView.setEnabled(false);
+            this.payTextView.setText("支付中...");
+            mPresenter.requestWxAppPay3(this.paySnString);
+        }
     }
 }

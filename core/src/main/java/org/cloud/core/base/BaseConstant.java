@@ -40,4 +40,12 @@ public class BaseConstant {
 
     public static final long TIME_COUNT = 2000;
     public static final long TIME_TICK = 1000;
+
+    //第三方
+    public static final String WX_APP_ID = "wx5e6ad08007dc084d";
+
+
+    public static final String DOCUMENT = "https://www.wpccw.com/wap/tmpl/member/document.html";
+
+
 }

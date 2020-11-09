@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.cloud.core.base.BaseViewHolder;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.AddressBean;
-import org.cloud.panzer.bean.StoreBuyBean;
 
 import java.util.ArrayList;
 

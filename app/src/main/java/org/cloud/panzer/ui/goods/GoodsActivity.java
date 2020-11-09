@@ -24,7 +24,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.youth.banner.Banner;
 import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
@@ -65,7 +64,6 @@ import java.util.Objects;
 import butterknife.BindView;
 
 import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_CART_SHOW;
-import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
 import static org.cloud.core.utils.StringUtils.getUrlFromString;
 
 public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements GoodsContract.View {
@@ -638,8 +636,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         marketPriceTextView.setText("￥");
         mobileTextView.setVisibility(View.GONE);
         saleRelativeLayout.setVisibility(View.GONE);
-        if (goodsInfoJSONObject.has("goods_sale_type") && !goodsInfoJSONObject.get(
-                "goods_sale_type").getAsString().equals("0")) {
+        if (goodsInfoJSONObject.has("goods_sale_type") && !goodsInfoJSONObject.get("goods_sale_type").getAsString().equals("0")) {
             activityLinearLayout.setVisibility(View.VISIBLE);
             activityTitleTextView.setText(goodsInfoJSONObject.get("title").getAsString());
             switch (goodsInfoJSONObject.get("sale_type").getAsString()) {

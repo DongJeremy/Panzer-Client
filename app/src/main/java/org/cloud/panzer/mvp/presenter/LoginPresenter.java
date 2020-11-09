@@ -14,7 +14,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.Model, LoginCont
     }
 
     public void requestLogin(String username, String password) {
-        getModel().postLogin(username, password, "wap")
+        getModel().postLogin(username, password)
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
                 .subscribe(new BaseObserver<String>(getView()) {
                     @Override

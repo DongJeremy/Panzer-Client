@@ -1,4 +1,4 @@
-package org.cloud.panzer.api;
+package org.cloud.panzer.api.service;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

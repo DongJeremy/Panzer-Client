@@ -12,6 +12,7 @@ import org.cloud.core.base.BaseApplication;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.GlideImageLoader;
 import org.cloud.panzer.bean.GoodsSearchData;
+import org.cloud.panzer.ui.common.BrowserActivity;
 import org.cloud.panzer.ui.common.FindPassActivity;
 import org.cloud.panzer.ui.common.LoginActivity;
 import org.cloud.panzer.ui.common.RegisterActivity;
@@ -156,6 +157,16 @@ public class App extends BaseApplication {
             imagePicker.setCrop(false);
         }
         start(activity, new Intent(this, ImageGridActivity.class), code);
+    }
+
+    public void startUrl(Activity activity, String str) {
+        if (str.contains("pointspro_list.html")) {
+            startCheckLogin(activity, ListActivity.class);
+        } else {
+            Intent intent5 = new Intent(activity, BrowserActivity.class);
+            intent5.putExtra("url", str);
+            start(activity, intent5);
+        }
     }
 
     public void finishOk(Activity activity) {

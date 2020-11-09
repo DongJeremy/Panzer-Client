@@ -1,4 +1,4 @@
-package org.cloud.panzer.api;
+package org.cloud.panzer.api.service;
 
 import java.util.Map;
 
@@ -6,13 +6,11 @@ import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface MemberService {
-
-    @FormUrlEncoded
-    @POST("index.php?act=login&op=index&client=wap")
-    Observable<String> login(@Field("username") String username, @Field("password") String password, @Field("client") String client);
 
     @POST("index.php?act=member_index&op=index")
     Observable<String> memberIndex();
@@ -65,4 +63,16 @@ public interface MemberService {
     @FormUrlEncoded
     @POST("index.php?act=member_order&op=order_receive")
     Observable<String> memberOrderReceive(@Field("order_id") String orderId);
+
+    @GET("index.php?act=member_payment&op=pay_new")
+    Observable<String> getPayNew(@Query("pay_sn") String paySn, @Query("password") String password, @Query("rcb_pay") String rcbPay,
+                                 @Query("pd_pay") String pdPay, @Query("payment_code") String paymentCode);
+
+    @FormUrlEncoded
+    @POST("index.php?act=member_payment&op=wx_app_pay3")
+    Observable<String> wxAppPay3(@Field("pay_sn") String paySn);
+
+    @FormUrlEncoded
+    @POST("index.php?act=member_payment&op=pay_new")
+    Observable<String> checkPdPwd(@Field("password") String password);
 }

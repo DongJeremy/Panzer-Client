@@ -13,6 +13,6 @@ public interface LoginContract {
     }
 
     interface Model extends IModel {
-        Observable<String> postLogin(String username, String password, String client);
+        Observable<String> postLogin(String username, String password);
     }
 }

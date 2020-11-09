@@ -8,7 +8,7 @@ import io.reactivex.Observable;
 
 public class LoginModel extends BaseModel implements LoginContract.Model {
     @Override
-    public Observable<String> postLogin(String username, String password, String client) {
-        return RetrofitUtils.getRawHttpService().login(username, password, client);
+    public Observable<String> postLogin(String username, String password) {
+        return RetrofitUtils.getRawHttpService().login(username, password, "wap");
     }
 }

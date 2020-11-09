@@ -11,7 +11,7 @@ public class BaseFragmentAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragmentList;
 
     public BaseFragmentAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList) {
-        super(fragmentManager);
+        super(fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.fragmentList = fragmentList;
     }
 
