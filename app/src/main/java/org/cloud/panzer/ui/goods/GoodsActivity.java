@@ -1,5 +1,6 @@
 package org.cloud.panzer.ui.goods;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -50,6 +52,7 @@ import org.cloud.panzer.bean.GoodsCommendBean;
 import org.cloud.panzer.bean.VoucherGoodsBean;
 import org.cloud.panzer.mvp.contract.GoodsContract;
 import org.cloud.panzer.mvp.presenter.GoodsPresenter;
+import org.cloud.panzer.ui.choose.AreaActivity;
 import org.cloud.panzer.view.CenterTextView;
 import org.cloud.panzer.view.CountdownTextView;
 import org.cloud.panzer.view.ScrollDetailsLayout;
@@ -388,8 +391,8 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 setToolbar(this.mainToolbar, "商品介绍");
             }
         });
-        mainScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY,
-                                                                                            oldScrollX, oldScrollY) -> {
+        // 滚动加载
+        mainScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             float scrollYY = (float) v.getScrollY();
             float width =
                     (float) (App.getInstance().getWidth() - App.getInstance().dipToPx(48));
@@ -418,12 +421,13 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         chooseRelativeLayout.setOnClickListener(view -> {
             //仅仅只是为了防止点到暗色标签
         });
+        // 显示购物车
         cartTextView.setOnClickListener(view -> {
             Log.e("TAG", "cart show: ");
             App.getInstance().finish(getActivity());
             RxBus.getInstance().send(RX_BUS_CODE_MAIN_CART_SHOW);
         });
-
+        // 加入购物车
         addCartTextView.setOnClickListener(view -> {
             if (!isHaveGoods) {
                 BaseToast.getInstance().show("没货啦！");
@@ -435,6 +439,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 addCart();
             }
         });
+        // 立即购买
         buyTextView.setOnClickListener(view -> {
             if (!this.isHaveGoods) {
                 BaseToast.getInstance().show("没货啦");
@@ -444,23 +449,52 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 buy();
             }
         });
-
+        // 商品评价
+        this.evaluateRelativeLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), EvaluateActivity.class);
+            intent.putExtra(BaseConstant.DATA_ID, this.goodsId);
+            App.getInstance().start(getActivity(), intent);
+        });
+        // 增加数量
         chooseAddTextView.setOnClickListener(view -> {
             String number = (Integer.parseInt(Objects.requireNonNull(chooseNumberEditText.getText()).toString()) + 1) + "";
             chooseNumberEditText.setText(number);
             changeNumber();
         });
+        // 更改数量
         chooseNumberEditText.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_DONE) {
                 changeNumber();
             }
             return false;
         });
+        // 较少数量
         chooseSubTextView.setOnClickListener(view -> {
             String number = (Integer.parseInt(Objects.requireNonNull(chooseNumberEditText.getText()).toString()) - 1) + "";
             chooseNumberEditText.setText(number);
             changeNumber();
         });
+        // 规格选择
+        specRelativeLayout.setOnClickListener(view -> showChooseLayout());
+        // 地址选择
+        areaRelativeLayout.setOnClickListener(view -> App.getInstance().start(getActivity(), AreaActivity.class, 1000));
+    }
+
+    @Override
+    public void showCalcSuccess(BaseBean baseBean) {
+        JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
+        GoodsActivity.this.areaHaveTextView.setText(jsonObject.get("if_store_cn").getAsString());
+        GoodsActivity.this.areaChooseTextView.setText(jsonObject.get("content").getAsString());
+        boolean unused = GoodsActivity.this.isHaveGoods = jsonObject.get("if_store").getAsBoolean();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == -1 && requestCode == 1000) {
+            this.areaAddressTextView.setText(intent.getStringExtra("area_info"));
+            mPresenter.requestCalc(this.goodsId, intent.getStringExtra("area_id"));
+        }
     }
 
     @Override

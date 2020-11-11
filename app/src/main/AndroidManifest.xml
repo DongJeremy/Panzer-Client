@@ -21,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Main">
-        <activity android:name=".ui.common.BrowserActivity"></activity>
+        <activity android:name=".ui.goods.EvaluateActivity"></activity>
+        <activity android:name=".ui.common.BrowserActivity" />
         <activity
             android:name=".ui.common.SplashActivity"
             android:launchMode="singleTop"
@@ -109,18 +110,7 @@
             android:name="io.github.xudaojie.qrcodelib.CaptureActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" /> <!-- 支付宝支付 -->
-        <activity
-            android:name="com.alipay.sdk.app.H5PayActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name="com.alipay.sdk.app.H5AuthActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" /> <!-- 微信支付 -->
+        <!-- 微信支付 -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

@@ -62,4 +62,20 @@ public class GoodsPresenter extends BasePresenter<GoodsContract.Model, GoodsCont
                     }
                 });
     }
+
+    public void requestCalc(String goodsId, String areaId) {
+        getModel().calc(goodsId, areaId)
+                .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
+                .subscribe(new BaseObserver<String>(getView()) {
+                    @Override
+                    public void onSuccess(String result) {
+                        getView().showCalcSuccess(JsonUtils.parseJsonToBaseBean(result));
+                    }
+
+                    @Override
+                    public void onFailure(String errMsg, boolean isNetError) {
+                        BaseToast.getInstance().show(errMsg);
+                    }
+                });
+    }
 }

@@ -83,8 +83,8 @@ dependencies {
     api "com.jwenfeng.pulltorefresh:library:1.2.7"
     api 'com.github.ybq:Android-SpinKit:1.4.0'
     //手动导入的Jar
+    api files("libs/alipaySdk.aar")
     api files("libs/WxPay.jar")
-    api files("libs/AliPay.jar")
     //Leakcanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'

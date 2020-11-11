@@ -126,7 +126,7 @@ public class HomeFragment extends BaseMvpFragment<HomePresenter> implements Home
         if (articleArrayList.size() != 0) {
             HomeBean homeBean = new HomeBean();
             homeBean.setType("article");
-            homeBean.setArticleList(HomeFragment.this.articleArrayList);
+            homeBean.setArticleList(this.articleArrayList);
             if (mainArrayList.size() == 0) {
                 this.mainArrayList.add(homeBean);
             } else {
