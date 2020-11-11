@@ -1,29 +1,29 @@
 package org.cloud.core.base;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.List;
 
-public class BaseFragmentAdapter extends FragmentStateAdapter {
+public class BaseFragmentAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> fragmentList;
 
-    public BaseFragmentAdapter(@NonNull FragmentActivity fragmentActivity, List<Fragment> fragmentList) {
-        super(fragmentActivity);
+    public BaseFragmentAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList) {
+        super(fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.fragmentList = fragmentList;
     }
 
-    @NonNull
     @Override
-    public Fragment createFragment(int position) {
+    public Fragment getItem(int position) {
         return fragmentList.get(position);
     }
 
     @Override
-    public int getItemCount() {
+    public int getCount() {
         return fragmentList.size();
     }
+
 }
+

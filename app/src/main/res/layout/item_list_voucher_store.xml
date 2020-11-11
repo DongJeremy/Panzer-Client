@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainRelativeLayout"
+    style="@style/Layout.Wrap">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/titleTextView"
+        style="@style/TextView.Money"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/limitTextView"
+        style="@style/TextView.Small"
+        android:layout_below="@+id/titleTextView" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/timeTextView"
+        style="@style/TextView.Small"
+        android:layout_below="@+id/limitTextView"
+        android:layout_marginTop="2dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/getTextView"
+        style="@style/TextView.GoodsActivity"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="4dp"
+        android:text="领取"
+        android:textSize="12sp"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>

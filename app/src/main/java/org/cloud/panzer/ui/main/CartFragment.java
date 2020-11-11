@@ -1,6 +1,5 @@
 package org.cloud.panzer.ui.main;
 
-import android.content.Intent;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,7 +31,6 @@ import org.cloud.panzer.ui.home.ChatListActivity;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import io.github.xudaojie.qrcodelib.CaptureActivity;
 
 import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
 

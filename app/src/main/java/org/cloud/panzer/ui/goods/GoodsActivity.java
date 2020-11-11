@@ -455,6 +455,8 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             intent.putExtra(BaseConstant.DATA_ID, this.goodsId);
             App.getInstance().start(getActivity(), intent);
         });
+        // 店铺信息
+        this.storeRelativeLayout.setOnClickListener(view -> App.getInstance().startStore(getActivity(), this.storeId));
         // 增加数量
         chooseAddTextView.setOnClickListener(view -> {
             String number = (Integer.parseInt(Objects.requireNonNull(chooseNumberEditText.getText()).toString()) + 1) + "";
