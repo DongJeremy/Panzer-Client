@@ -35,8 +35,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
@@ -75,15 +73,12 @@ public class BaseApplication extends Application {
         return !TextUtils.isEmpty(BaseShared.getInstance().getString(BaseConstant.SHARED_KEY));
     }
 
-    private RefWatcher mRefWatcher;
-
     @Override
     public void onCreate() {
         super.onCreate();
         CacheManager.init(this);
         mInstance = this;
         //注册监听每个activity的生命周期,便于堆栈式管理
-        initLeakCanary();
         registerActivityLifecycleCallbacks(mCallbacks);
         BaseShared.getInstance().init(getSharedPreferences(BaseConstant.SHARED_NAME, MODE_PRIVATE));
         BaseToast.getInstance().init(this);
@@ -120,18 +115,6 @@ public class BaseApplication extends Application {
 
     public void setWxPaySuccess(boolean isWxPaySuccess) {
         this.isWxPaySuccess = isWxPaySuccess;
-    }
-
-    private void initLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        mRefWatcher = LeakCanary.install(this);
-    }
-
-    public static RefWatcher getRefWatcher(Context context) {
-        BaseApplication application = (BaseApplication) context.getApplicationContext();
-        return application.mRefWatcher;
     }
 
     private final ActivityLifecycleCallbacks mCallbacks = new ActivityLifecycleCallbacks() {

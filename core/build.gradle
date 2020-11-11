@@ -85,7 +85,4 @@ dependencies {
     //手动导入的Jar
     api files("libs/alipaySdk.aar")
     api files("libs/WxPay.jar")
-    //Leakcanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 }

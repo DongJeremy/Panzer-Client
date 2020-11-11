@@ -1,6 +1,7 @@
 package org.cloud.panzer.ui.common;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,9 +13,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import org.cloud.core.base.BaseActivity;
 import org.cloud.core.base.BaseBean;
+import org.cloud.core.base.BaseConstant;
+import org.cloud.core.base.BaseCountTime;
+import org.cloud.core.base.BaseDialog;
 import org.cloud.core.base.BaseMvpActivity;
+import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
@@ -113,7 +121,7 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
     }
 
     public void onReturn() {
-        //App.getInstance().startHome(getActivity());
+        App.getInstance().startHome(getActivity());
     }
 
     @Override
@@ -140,126 +148,64 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
             return;
         }
         this.isCheck = true;
-        App.getInstance().startApplicationSetting(getActivity(), getPackageName());
+        //App.getInstance().startApplicationSetting(getActivity(), getPackageName());
     }
 
     @Override
     public void showGetAndroidSuccess(BaseBean baseBean) {
-        JSONArray jSONArray = new JSONArray(JsonUtil.getDatasString(baseBean.getDatas(), "android_config"));
-        boolean unused = LoadActivity.this.isSuccess = true;
-        for (int i = 0; i < jSONArray.length(); i++) {
-            JSONObject jSONObject = jSONArray.getJSONObject(i);
-            if (jSONObject.getString(c.e).equals("android_version_control")) {
-                String unused2 = LoadActivity.this.versionControl = jSONObject.getString("value");
-            } else if (jSONObject.getString(c.e).equals("android_update_content")) {
-                String unused3 = LoadActivity.this.updateContent = jSONObject.getString("value");
-            } else if (jSONObject.getString(c.e).equals("android_app_version")) {
-                String unused4 = LoadActivity.this.appVersion = jSONObject.getString("value");
-            } else if (jSONObject.getString(c.e).equals("android_advert_link")) {
-                String unused5 = LoadActivity.this.advertLink = jSONObject.getString("value");
-            } else if (jSONObject.getString(c.e).equals("android_advert_url")) {
-                String unused6 = LoadActivity.this.advertUrl = jSONObject.getString("value");
-            } else if (jSONObject.getString(c.e).equals("android_apk_url")) {
-                String unused7 = LoadActivity.this.apkUrl = jSONObject.getString("value");
+        JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
+        this.isSuccess = true;
+        JsonArray androidConfig = jsonObject.getAsJsonArray("android_config");
+        for (int i = 0; i < androidConfig.size(); i++) {
+            JsonObject item = androidConfig.get(i).getAsJsonObject();
+            String value = item.get("value").getAsString();
+            switch (item.get("name").getAsString()) {
+                case "android_version_control":
+                    this.versionControl = value;
+                    break;
+                case "android_update_content":
+                    this.updateContent = value;
+                    break;
+                case "android_app_version":
+                    this.appVersion = value;
+                    break;
+                case "android_advert_link":
+                    this.advertLink = value;
+                    break;
+                case "android_advert_url":
+                    this.advertUrl = value;
+                    break;
+                case "android_apk_url":
+                    this.apkUrl = value;
+                    break;
             }
         }
-        String access$100 = LoadActivity.this.versionControl;
-        if (!access$100.contains(BaseApplication.get().getVersion() + ":1")) {
-            BaseDialog.get().queryConfirmYourChoice(LoadActivity.this.getActivity(), "当前版本已弃用，请更新", new DialogInterface.OnClickListener() {
-                public final void onClick(DialogInterface dialogInterface, int i) {
-                    this.downloadApk();
-                }
-            }, new DialogInterface.OnClickListener() {
-                public final void onClick(DialogInterface dialogInterface, int i) {
-                    BaseApplication.get().finish(LoadActivity.this.getActivity());
-                }
-            });
-        } else if (!LoadActivity.this.appVersion.equals(BaseApplication.get().getVersion())) {
-            BaseDialog.get().queryConfirmYourChoice(LoadActivity.this.getActivity(), LoadActivity.this.updateContent, new DialogInterface.OnClickListener() {
-                public final void onClick(DialogInterface dialogInterface, int i) {
-                    LoadActivity.this.downloadApk();
-                    //LoadActivity.AnonymousClass1.this.lambda$onSuccess$2$LoadActivity$1(dialogInterface, i);
-                }
-            }, new DialogInterface.OnClickListener() {
-                public final void onClick(DialogInterface dialogInterface, int i) {
-                    LoadActivity.this.startMain();
-                }
-            });
+        if(this.versionControl.contains(App.getInstance().getVersion() + ":1")) {
+            BaseDialog.getInstance().queryConfirmYourChoice(getActivity(), "当前版本已弃用，请更新",
+                    (DialogInterface.OnClickListener) (dialogInterface, i) -> this.downloadApk(),
+                    (DialogInterface.OnClickListener) (dialogInterface, i) -> App.getInstance().finish(getActivity())
+            );
+        } else if (!this.appVersion.equals(App.getInstance().getVersion())) {
+            BaseDialog.getInstance().queryConfirmYourChoice(getActivity(), this.updateContent,
+                    (dialogInterface, i) -> this.downloadApk(),
+                    (dialogInterface, i) -> this.startMain()
+            );
         } else {
-            LoadActivity.this.startMain();
+            this.startMain();
         }
     }
 
     @Override
     public void showGetAndroidFail(String msg) {
-
+        this.isSuccess = false;
+        BaseDialog.getInstance().queryConfirmYourChoice(getActivity(), msg,
+                (dialogInterface, i) -> getConfig(),
+                (dialogInterface, i) -> App.getInstance().startHome(getActivity())
+        );
     }
 
     public void getConfig() {
         mPresenter.requestGetAndroid();
-
-        IndexModel.get().getAndroid(new BaseHttpListener() {
-            public void onSuccess(BaseBean baseBean) {
-                try {
-
-                } catch (JSONException e) {
-                    BaseDialog.get().queryConfirmYourChoice(LoadActivity.this.getActivity(), e.getMessage(), new DialogInterface.OnClickListener() {
-                        public final void onClick(DialogInterface dialogInterface, int i) {
-                            LoadActivity.AnonymousClass1.this.lambda$onSuccess$4$LoadActivity$1(dialogInterface, i);
-                        }
-                    }, new DialogInterface.OnClickListener() {
-                        public final void onClick(DialogInterface dialogInterface, int i) {
-                            LoadActivity.AnonymousClass1.this.lambda$onSuccess$5$LoadActivity$1(dialogInterface, i);
-                        }
-                    });
-                }
-            }
-
-            public /* synthetic */ void lambda$onSuccess$0$LoadActivity$1(DialogInterface dialogInterface, int i) {
-                LoadActivity.this.downloadApk();
-            }
-
-            public /* synthetic */ void lambda$onSuccess$1$LoadActivity$1(DialogInterface dialogInterface, int i) {
-                BaseApplication.get().finish(LoadActivity.this.getActivity());
-            }
-
-            public /* synthetic */ void lambda$onSuccess$2$LoadActivity$1(DialogInterface dialogInterface, int i) {
-                LoadActivity.this.downloadApk();
-            }
-
-            public /* synthetic */ void lambda$onSuccess$3$LoadActivity$1(DialogInterface dialogInterface, int i) {
-                LoadActivity.this.startMain();
-            }
-
-            public /* synthetic */ void lambda$onSuccess$4$LoadActivity$1(DialogInterface dialogInterface, int i) {
-                LoadActivity.this.getConfig();
-            }
-
-            public /* synthetic */ void lambda$onSuccess$5$LoadActivity$1(DialogInterface dialogInterface, int i) {
-                BaseApplication.get().startHome(LoadActivity.this.getActivity());
-            }
-
-            public void onFailure(String str) {
-                boolean unused = LoadActivity.this.isSuccess = false;
-                BaseDialog.get().queryConfirmYourChoice(LoadActivity.this.getActivity(), str, new DialogInterface.OnClickListener() {
-                    public final void onClick(DialogInterface dialogInterface, int i) {
-                        LoadActivity.AnonymousClass1.this.lambda$onFailure$6$LoadActivity$1(dialogInterface, i);
-                    }
-                }, new DialogInterface.OnClickListener() {
-                    public final void onClick(DialogInterface dialogInterface, int i) {
-                        LoadActivity.AnonymousClass1.this.lambda$onFailure$7$LoadActivity$1(dialogInterface, i);
-                    }
-                });
-            }
-
-            public /* synthetic */ void lambda$onFailure$6$LoadActivity$1(DialogInterface dialogInterface, int i) {
-                LoadActivity.this.getConfig();
-            }
-
-            public /* synthetic */ void lambda$onFailure$7$LoadActivity$1(DialogInterface dialogInterface, int i) {
-                BaseApplication.get().startHome(LoadActivity.this.getActivity());
-            }
-        });
     }
 
 
@@ -293,6 +239,18 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
         return arrayList;
     }
 
+    private void startMain() {
+        new BaseCountTime(BaseConstant.TIME_TICK, BaseConstant.TIME_TICK) {
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                App.getInstance().start(getActivity(), MainActivity.class);
+                App.getInstance().finish(getActivity());
+            }
+        }.start();
+    }
 
+    private void downloadApk() {
 
+    }
 }

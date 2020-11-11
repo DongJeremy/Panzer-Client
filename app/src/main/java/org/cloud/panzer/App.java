@@ -6,7 +6,6 @@ import android.content.Intent;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.cloud.core.base.BaseApplication;
 import org.cloud.core.base.BaseConstant;
@@ -38,8 +37,6 @@ public class App extends BaseApplication {
     public static App getInstance() {
         return mInstance;
     }
-
-    private RefWatcher mRefWatcher;
 
     @Override
     public void onCreate() {
@@ -179,4 +176,10 @@ public class App extends BaseApplication {
         finish(activity);
     }
 
+    public void startHome(Activity activity) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.HOME");
+        start(activity, intent);
+    }
 }

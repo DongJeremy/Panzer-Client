@@ -10,7 +10,6 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.squareup.leakcanary.RefWatcher;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import org.cloud.core.rx.RxBus;
@@ -93,7 +92,6 @@ public abstract class BaseFragment extends RxFragment {
         if (useEventBus()) {
             RxBus.getInstance().unRegister(this);
         }
-        initLeakCanary();
     }
 
     public static <T extends BaseFragment> T newInstance(Class<T> mClass, Bundle args) {
@@ -115,14 +113,6 @@ public abstract class BaseFragment extends RxFragment {
      */
     public BaseActivity getBaseActivity() {
         return mActivity;
-    }
-
-    /**
-     * 用来检测所有Fragment的内存泄漏
-     */
-    private void initLeakCanary() {
-        RefWatcher refWatcher = BaseApplication.getRefWatcher(getBaseActivity());
-        refWatcher.watch(this);
     }
 
     /**
