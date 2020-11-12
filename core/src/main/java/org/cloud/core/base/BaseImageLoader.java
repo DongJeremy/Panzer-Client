@@ -1,56 +1,41 @@
 package org.cloud.core.base;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.BaseRequestOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.CustomViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 
 import org.cloud.core.R;
-import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.MessageDigest;
+import java.util.concurrent.ExecutionException;
 
 public class BaseImageLoader {
 
     private static volatile BaseImageLoader instance;
 
     private Context context;
+    private int radius;
 
     public static BaseImageLoader getInstance() {
         if (instance == null) {
@@ -63,8 +48,9 @@ public class BaseImageLoader {
         return instance;
     }
 
-    public void init(Context context) {
+    public void init(Context context, int radius) {
         this.context = context;
+        this.radius = radius;
     }
 
     public Bitmap getSmall(String path) {
@@ -118,7 +104,6 @@ public class BaseImageLoader {
     }
 
     public Bitmap getLocal(String path) {
-
         try {
             FileInputStream fis = new FileInputStream(path);
             return BitmapFactory.decodeStream(fis);
@@ -126,27 +111,64 @@ public class BaseImageLoader {
             e.printStackTrace();
             return null;
         }
-
     }
 
-    /**
-     * 在imageView里面显示图片
-     * @param url
-     * @param imageView
-     */
-    public void display(String url, ImageView imageView) {
-        if (BaseApplication.getInstance().isImage()) {
-            Glide.with(context).load(url).into(imageView);
-        } else {
-            Glide.with(context).load(R.mipmap.ic_launcher).into(imageView);
+    public BitmapFactory.Options getBitmapFromURL(String url) {
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            File gifDownload = Glide.with(context).downloadOnly().load(url).submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+            BitmapFactory.decodeFile(gifDownload.getAbsolutePath(), options);
+            return options;
+        } catch (ExecutionException| InterruptedException e) {
+            return null;
         }
+    }
+
+    public void displayFitWidth(String url, ImageView imageView) {
+        BitmapFactory.Options options = getBitmapFromURL(url);
+        int width = BaseApplication.getInstance().getWidth();
+        int height = BaseApplication.getInstance().getWidth() * options.outHeight / options.outWidth;
+        Glide.with(this.context)
+                .load(url)
+                .apply(new RequestOptions().override(width, height))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+
+//        Glide.with(this.context)
+//                .asDrawable()
+//                .load(url)
+//                .apply(new RequestOptions())
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .dontAnimate()
+//                .placeholder(imageView.getDrawable())
+//                .into(new CustomTarget<Drawable>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+//                        int imageWidth = options.outWidth;
+//                        int imageHeight = options.outHeight;
+//                        int height = BaseApplication.getInstance().getWidth() * imageHeight / imageWidth;
+//
+//                        ViewGroup.LayoutParams para = imageView.getLayoutParams();
+//                        para.height = height;
+//                        para.width = BaseApplication.getInstance().getWidth();
+//                        imageView.setImageBitmap(resource);
+//                    }
+//
+//                    @Override
+//                    public void onLoadCleared(@Nullable Drawable placeholder) {
+//
+//                    }
+//                });
     }
 
     public void displayFitXY(String url, ImageView imageView) {
         if (BaseApplication.getInstance().isImage()) {
             Glide.with(context)
                     .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -154,13 +176,14 @@ public class BaseImageLoader {
                         }
 
                         @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource,
+                                                       boolean isFirstResource) {
                             if (imageView == null) {
                                 return false;
                             }
-                            if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
-                                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                            }
+//                            if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
+//                                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//                            }
                             ViewGroup.LayoutParams params = imageView.getLayoutParams();
                             int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
                             float scale = (float) vw / (float) resource.getIntrinsicWidth();
@@ -190,7 +213,8 @@ public class BaseImageLoader {
                         }
 
                         @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource,
+                                                       boolean isFirstResource) {
                             if (imageView == null) {
                                 return false;
                             }
@@ -214,117 +238,230 @@ public class BaseImageLoader {
         }
     }
 
-    public void displayCircle(String url, ImageView imageView) {
-
-        if (BaseApplication.getInstance().isImage()) {
-            Glide.with(context).load(url).apply(new RequestOptions().transform(new CircleTransform(context))).into(imageView);
-        } else {
-            Glide.with(context).load(R.mipmap.ic_launcher).apply(new RequestOptions().transform(new CircleTransform(context))).into(imageView);
-        }
-
+    /**
+     * 在imageView里面显示图片
+     *
+     * @param i         resourceId
+     * @param imageView image控件
+     */
+    public void display(int i, ImageView imageView) {
+        Glide.with(this.context)
+                .load(i)
+                .apply(new RequestOptions())
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
     }
 
+    /**
+     * 在imageView里面显示图片
+     *
+     * @param url       路径
+     * @param imageView image控件
+     */
+    public void display(String url, ImageView imageView) {
+        Glide.with(this.context)
+                .load(url)
+                .apply(new RequestOptions())
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView里面显示图片
+     *
+     * @param bitmap    位图
+     * @param imageView image控件
+     */
+    public void display(Bitmap bitmap, ImageView imageView) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        Glide.with(this.context)
+                .load(byteArrayOutputStream.toByteArray())
+                .dontAnimate()
+                .apply(new RequestOptions())
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView里面显示图片
+     *
+     * @param i         resourceId
+     * @param width     宽度
+     * @param height    高度
+     * @param imageView image控件
+     */
+    public void display(int i, int width, int height, ImageView imageView) {
+        Glide.with(this.context)
+                .load(i)
+                .apply(new RequestOptions().override(width, height))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView里面显示图片
+     *
+     * @param str       路径
+     * @param width     宽度
+     * @param height    高度
+     * @param imageView image控件
+     */
+    public void display(String str, int width, int height, ImageView imageView) {
+        Glide.with(this.context)
+                .load(str)
+                .apply(new RequestOptions().override(width, height))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView里面显示图片
+     *
+     * @param bitmap    位图
+     * @param width     宽度
+     * @param height    高度
+     * @param imageView image控件
+     */
+    public void display(Bitmap bitmap, int width, int height, ImageView imageView) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        Glide.with(this.context)
+                .load(byteArrayOutputStream.toByteArray())
+                .apply(new RequestOptions().override(width, height))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView里面显示圆形图片
+     *
+     * @param i         resourceId
+     * @param imageView image控件
+     */
+    public void displayCircle(int i, ImageView imageView) {
+        Glide.with(this.context)
+                .load(i)
+                .apply(RequestOptions.circleCropTransform())
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView里面显示圆形图片
+     *
+     * @param str       路径
+     * @param imageView image控件
+     */
+    public void displayCircle(String str, ImageView imageView) {
+        Glide.with(this.context)
+                .load(str)
+                .apply(RequestOptions.circleCropTransform())
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView里面显示圆形图片
+     *
+     * @param bitmap    位图
+     * @param imageView image控件
+     */
+    public void displayCircle(Bitmap bitmap, ImageView imageView) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        Glide.with(this.context)
+                .load(byteArrayOutputStream.toByteArray())
+                .apply(RequestOptions.circleCropTransform())
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView中显示圆角图片
+     *
+     * @param i         resourceId
+     * @param imageView image控件
+     */
+    public void displayRadius(int i, ImageView imageView) {
+        Glide.with(this.context)
+                .load(i)
+                .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView中显示圆角图片
+     *
+     * @param i         resourceId
+     * @param imageView image控件
+     * @param radius    圆角
+     */
+    public void displayRadius(int i, ImageView imageView, int radius) {
+        Glide.with(this.context)
+                .load(i)
+                .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(radius)))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView中显示圆角图片
+     *
+     * @param url       路径
+     * @param imageView image控件
+     * @param radius    圆角
+     */
+    public void displayRadius(String url, ImageView imageView, int radius) {
+        Glide.with(this.context)
+                .load(url)
+                .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(radius)))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
+
+    /**
+     * 在imageView中显示圆角图片
+     *
+     * @param url       路径
+     * @param imageView image控件
+     */
     public void displayRadius(String url, ImageView imageView) {
-        if (BaseApplication.getInstance().isImage()) {
-            Glide.with(context).load(url).apply(new RequestOptions().transform(new RadiusTransform(context, 2))).into(imageView);
-        } else {
-            Glide.with(context).load(R.mipmap.ic_launcher).apply(new RequestOptions().transform(new RadiusTransform(context, 2))).into(imageView);
-        }
+        Glide.with(this.context)
+                .load(url)
+                .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
     }
 
-    public void displayRadius(String url, ImageView imageView, int corner) {
-        RequestOptions requestOptions = new RequestOptions();
-        Transformation[] transformationArr = {new CenterCrop(), new RoundedCorners(corner)};
-        ((RequestBuilder) ((RequestBuilder) Glide.with(this.context)
-                .load(url).apply((BaseRequestOptions<?>) (RequestOptions) requestOptions.transform((Transformation<Bitmap>[]) transformationArr))
-                .dontAnimate()).placeholder(imageView.getDrawable())).into(imageView);
-    }
-
-    public void display(String url, int width, int height, ImageView imageView) {
-        if (BaseApplication.getInstance().isImage()) {
-            Glide.with(context).load(url).apply(new RequestOptions().override(width, height)).into(imageView);
-        } else {
-            Glide.with(context).load(R.mipmap.ic_launcher).apply(new RequestOptions().override(width, height)).into(imageView);
-        }
-    }
-
-    static class CircleTransform extends BitmapTransformation {
-
-        public CircleTransform(Context context) {
-
-        }
-
-        private Bitmap circleCrop(BitmapPool pool, Bitmap source) {
-            if (source == null) return null;
-            int size = Math.min(source.getWidth(), source.getHeight());
-            int x = (source.getWidth() - size) / 2;
-            int y = (source.getHeight() - size) / 2;
-            Bitmap squared = Bitmap.createBitmap(source, x, y, size, size);
-            Bitmap result = pool.get(size, size, Bitmap.Config.ARGB_8888);
-            if (result == null) {
-                result = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-            }
-            Canvas canvas = new Canvas(result);
-            Paint paint = new Paint();
-            paint.setShader(new BitmapShader(squared, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
-            paint.setAntiAlias(true);
-            float r = size / 2f;
-            canvas.drawCircle(r, r, r, paint);
-            return result;
-        }
-
-        @Override
-        public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
-
-        }
-
-        @Override
-        protected Bitmap transform(@NotNull BitmapPool pool, @NotNull Bitmap toTransform, int outWidth, int outHeight) {
-            return circleCrop(pool, toTransform);
-        }
-
-    }
-
-    static class RadiusTransform extends BitmapTransformation {
-
-        private float radius = 0f;
-
-        public RadiusTransform(Context context) {
-
-            this(context, 4);
-
-        }
-
-        public RadiusTransform(Context context, int dip) {
-
-            this.radius = Resources.getSystem().getDisplayMetrics().density * dip;
-
-        }
-
-        private Bitmap roundCrop(BitmapPool pool, Bitmap source) {
-            if (source == null) return null;
-            Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-            if (result == null) {
-                result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-            }
-            Canvas canvas = new Canvas(result);
-            Paint paint = new Paint();
-            paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
-            paint.setAntiAlias(true);
-            RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
-            canvas.drawRoundRect(rectF, radius, radius, paint);
-            return result;
-        }
-
-        @Override
-        public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
-
-        }
-
-        @Override
-        protected Bitmap transform(@NotNull BitmapPool pool, @NotNull Bitmap toTransform, int outWidth, int outHeight) {
-            return roundCrop(pool, toTransform);
-        }
-
+    /**
+     * 在imageView中显示圆角图片
+     *
+     * @param bitmap    位图
+     * @param imageView image控件
+     */
+    public void displayRadius(Bitmap bitmap, ImageView imageView) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        Glide.with(this.context)
+                .load(byteArrayOutputStream.toByteArray())
+                .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
+                .dontAnimate()
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
     }
 }

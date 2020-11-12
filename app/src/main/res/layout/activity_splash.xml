@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mainLinearLayout"
-    style="@style/Layout.Main"
-    android:background="@mipmap/bg_load">
+    style="@style/Layout.Main" >
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/mainImageView"

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -25,8 +26,8 @@ public class BaseDialog {
         return instance;
     }
 
-    public void init(Context context2) {
-        this.context = context2;
+    public void init(Context context) {
+        this.context = context;
     }
 
     public void cancel() {
@@ -78,10 +79,11 @@ public class BaseDialog {
 
     public void queryConfirmYourChoice(Activity activity, String str, DialogInterface.OnClickListener onClickListener, DialogInterface.OnClickListener onClickListener2) {
         try {
-            new AlertDialog.Builder(activity).setTitle(this.context.getString(R.string.confirm_your_choice))
+            AlertDialog.Builder dialog = new AlertDialog.Builder(activity).setTitle(this.context.getString(R.string.confirm_your_choice))
                     .setMessage(str).setCancelable(false).setPositiveButton(this.context.getString(R.string.confirm), onClickListener)
-                    .setNegativeButton(this.context.getString(R.string.cancel), onClickListener2)
-                    .show();
+                    .setNegativeButton(this.context.getString(R.string.cancel), onClickListener2);
+            dialog.show();
+            Log.e("TAG", "alertdialog: ");
         } catch (Exception e) {
             e.printStackTrace();
         }

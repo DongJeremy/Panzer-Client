@@ -1,50 +1,35 @@
 package org.cloud.panzer.ui.common;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.cloud.core.base.BaseActivity;
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseCountTime;
 import org.cloud.core.base.BaseDialog;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.utils.JsonUtils;
-import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
-import org.cloud.panzer.mvp.contract.RegisterContract;
 import org.cloud.panzer.mvp.contract.SplashContract;
-import org.cloud.panzer.mvp.presenter.RegisterPresenter;
 import org.cloud.panzer.mvp.presenter.SplashPresenter;
 import org.cloud.panzer.ui.main.MainActivity;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.dueeeke.videoplayer.player.VideoViewManager.getConfig;
 
 public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements SplashContract.View {
 
@@ -64,9 +49,6 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
     private String pushUrl;
     public String updateContent;
     public String versionControl;
-
-    // 订阅的请求进行统一管理
-    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected int getLayoutId() {
@@ -94,9 +76,11 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
                 "android.permission.CALL_PHONE",
                 "android.permission.RECORD_AUDIO",
                 "android.permission.READ_PHONE_STATE",
+                "android.permission.READ_EXTERNAL_STORAGE",
                 "android.permission.ACCESS_FINE_LOCATION",
                 "android.permission.ACCESS_COARSE_LOCATION",
                 "android.permission.WRITE_EXTERNAL_STORAGE"};
+        mainImageView.setBackgroundResource(R.mipmap.bg_load);
         App.getInstance().setFullScreen(getActivity());
     }
 
@@ -134,21 +118,21 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
         return new SplashPresenter();
     }
 
+    /**
+     * 用户选择允许或拒绝后，会回调onRequestPermissionsResult方法, 该方法类似于onActivityResult
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mCompositeDisposable.clear();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int i, @NonNull String[] strArr, @NonNull int[] iArr) {
-        if (i == -1 || verifyPermissions(iArr)) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == -1 || verifyPermissions(grantResults)) {
             this.isCheck = false;
             getConfig();
             return;
         }
         this.isCheck = true;
-        //App.getInstance().startApplicationSetting(getActivity(), getPackageName());
+        App.getInstance().startApplicationSetting(getActivity(), getPackageName());
     }
 
     @Override
@@ -180,10 +164,10 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
                     break;
             }
         }
-        if(this.versionControl.contains(App.getInstance().getVersion() + ":1")) {
+        if(!this.versionControl.contains(App.getInstance().getVersion() + ":1")) {
             BaseDialog.getInstance().queryConfirmYourChoice(getActivity(), "当前版本已弃用，请更新",
-                    (DialogInterface.OnClickListener) (dialogInterface, i) -> this.downloadApk(),
-                    (DialogInterface.OnClickListener) (dialogInterface, i) -> App.getInstance().finish(getActivity())
+                    (dialog, i) -> downloadApk(),
+                    (dialog, i) -> App.getInstance().finish(getActivity())
             );
         } else if (!this.appVersion.equals(App.getInstance().getVersion())) {
             BaseDialog.getInstance().queryConfirmYourChoice(getActivity(), this.updateContent,
@@ -208,11 +192,10 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
         mPresenter.requestGetAndroid();
     }
 
-
     private void checkPermissions(String... strArr) {
         List<String> findPermissions = findPermissions(strArr);
         if (findPermissions != null && findPermissions.size() > 0) {
-            ActivityCompat.requestPermissions(this, (String[]) findPermissions.toArray(new String[0]), 0);
+            ActivityCompat.requestPermissions(this, findPermissions.toArray(new String[0]), 0);
         } else if (!this.isSuccess) {
             getConfig();
         }
@@ -252,5 +235,28 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
 
     private void downloadApk() {
 
+    }
+
+    private void handlerPush(Intent intent) {
+//        Bundle extras;
+//        if (intent != null && (extras = intent.getExtras()) != null) {
+//            for (String str : extras.keySet()) {
+//                if (str.equals("msg")) {
+//                    this.isPush = true;
+//                    HashMap<String, String> extrasMap = ((MobPushNotifyMessage) Objects.requireNonNull((MobPushNotifyMessage) extras.get(str))).getExtrasMap();
+//                    if (extrasMap != null && extrasMap.containsKey("url")) {
+//                        this.pushUrl = extrasMap.get("url");
+//                        if (BaseApplication.get().inActivityStack(getActivity(), MainActivity.class)) {
+//                            Intent intent = new Intent(getActivity(), MainActivity.class);
+//                            intent.putExtra("url", this.pushUrl);
+//                            BaseApplication.get().start(getActivity(), intent);
+//                            BaseApplication.get().finish(getActivity());
+//                        } else {
+//                            getConfig();
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }

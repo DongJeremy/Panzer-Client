@@ -37,7 +37,7 @@ public class GoodsDetailListAdapter extends RecyclerView.Adapter<GoodsDetailList
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final String bean = arrayList.get(position);
-        BaseImageLoader.getInstance().displayFitXY(bean, holder.detailsImageView);
+        BaseImageLoader.getInstance().displayFitWidth(bean, holder.detailsImageView);
         holder.detailsImageView.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Intent intent = new Intent(v.getContext(), ImageFullScreenActivity.class);
@@ -53,8 +53,7 @@ public class GoodsDetailListAdapter extends RecyclerView.Adapter<GoodsDetailList
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup group, int viewType) {
-        View view = LayoutInflater.from(group.getContext()).inflate(R.layout.item_list_goods_detail, group, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater.from(group.getContext()).inflate(R.layout.item_list_goods_detail, group, false));
     }
 
     static class ViewHolder extends BaseViewHolder {

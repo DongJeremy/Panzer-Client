@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "org.cloud.panzer"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.8"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

@@ -139,6 +139,13 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     AppCompatTextView specOneTextView;
     @BindView(R.id.specTwoTextView)
     AppCompatTextView specTwoTextView;
+    @BindView(R.id.specThrTextView)
+    AppCompatTextView specThrTextView;
+    @BindView(R.id.specFouTextView)
+    AppCompatTextView specFouTextView;
+    @BindView(R.id.specFivTextView)
+    AppCompatTextView specFivTextView;
+
     @BindView(R.id.serviceDescTextView)
     AppCompatTextView serviceDescTextView;
     @BindView(R.id.serviceSevDayTextView)
@@ -199,10 +206,24 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     View chooseLineOneView;
     @BindView(R.id.chooseLineTwoView)
     View chooseLineTwoView;
+    @BindView(R.id.chooseLineThrView)
+    View chooseLineThrView;
+    @BindView(R.id.chooseLineFouView)
+    View chooseLineFouView;
+    @BindView(R.id.chooseLineFivView)
+    View chooseLineFivView;
+
     @BindView(R.id.chooseValueOneTextView)
     AppCompatTextView chooseValueOneTextView;
     @BindView(R.id.chooseValueTwoTextView)
     AppCompatTextView chooseValueTwoTextView;
+    @BindView(R.id.chooseValueThrTextView)
+    AppCompatTextView chooseValueThrTextView;
+    @BindView(R.id.chooseValueFouTextView)
+    AppCompatTextView chooseValueFouTextView;
+    @BindView(R.id.chooseValueFivTextView)
+    AppCompatTextView chooseValueFivTextView;
+
     @BindView(R.id.chooseValueOneRecyclerView)
     RecyclerView chooseValueOneRecyclerView;
     @BindView(R.id.chooseValueTwoRecyclerView)
@@ -223,9 +244,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     LinearLayoutCompat voucherLinearLayout;
     @BindView(R.id.detailsImagesView)
     RecyclerView detailsImagesView;
-
-    //    @BindView(R.id.voucherStoreNameTextView)
-    //    AppCompatTextView voucherStoreNameTextView;
     @BindView(R.id.voucherRecyclerView)
     RecyclerView voucherRecyclerView;
     @BindView(R.id.nightTextView)
@@ -304,8 +322,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         this.mainToolbar.setAlpha(0.0f);
         this.toolbarView.setAlpha(0.0f);
         this.toolbarLineView.setAlpha(0.0f);
-        // 配置WebView
-        //BaseApplication.getInstance().setWebView(this, mainWebView);
         // 配置详情图片页面
         goodsDetailListAdapter = new GoodsDetailListAdapter(goodsImagesList);
         App.getInstance().setRecyclerView(getActivity(), detailsImagesView, goodsDetailListAdapter);
@@ -337,17 +353,30 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         voucherAdapter = new VoucherGoodsListAdapter(voucherArrayList);
         App.getInstance().setRecyclerView(getActivity(), voucherRecyclerView, voucherAdapter);
 
-        chooseValueRecyclerView = new RecyclerView[5];
-        chooseValueRecyclerView[0] = chooseValueOneRecyclerView;
-        chooseValueRecyclerView[1] = chooseValueTwoRecyclerView;
-        chooseValueRecyclerView[2] = chooseValueThrRecyclerView;
-        chooseValueRecyclerView[3] = chooseValueFouRecyclerView;
-        chooseValueRecyclerView[4] = chooseValueFivRecyclerView;
-        chooseValueRecyclerView[0].setVisibility(View.GONE);
-        chooseValueRecyclerView[1].setVisibility(View.GONE);
-        chooseValueRecyclerView[2].setVisibility(View.GONE);
-        chooseValueRecyclerView[3].setVisibility(View.GONE);
-        chooseValueRecyclerView[4].setVisibility(View.GONE);
+        specTextView = new AppCompatTextView[] {
+                specOneTextView, specTwoTextView, specThrTextView, specFouTextView, specFivTextView
+        };
+        for (AppCompatTextView spec : specTextView) {
+            spec.setVisibility(View.GONE);
+        }
+        chooseLineView = new View[] {
+                chooseLineOneView, chooseLineTwoView, chooseLineThrView, chooseLineFouView, chooseLineFivView
+        };
+        for (View view : chooseLineView) {
+            view.setVisibility(View.GONE);
+        }
+        chooseValueTextView = new AppCompatTextView[] {
+                chooseValueOneTextView, chooseValueTwoTextView, chooseValueThrTextView, chooseValueFouTextView, chooseValueFivTextView
+        };
+        for (AppCompatTextView appCompatTextView : chooseValueTextView) {
+            appCompatTextView.setVisibility(View.GONE);
+        }
+        chooseValueRecyclerView = new RecyclerView[]{
+                chooseValueOneRecyclerView, chooseValueTwoRecyclerView, chooseValueThrRecyclerView, chooseValueFouRecyclerView, chooseValueFivRecyclerView
+        };
+        for (RecyclerView recyclerView : chooseValueRecyclerView) {
+            recyclerView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -362,23 +391,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         this.isHaveGoods = true;
         // 获取数据
         getData(goodsIdString);
-
-        specTextView = new AppCompatTextView[2];
-        specTextView[0] = specOneTextView;
-        specTextView[1] = specTwoTextView;
-        chooseLineView = new View[2];
-        chooseLineView[0] = chooseLineOneView;
-        chooseLineView[1] = chooseLineTwoView;
-        chooseValueTextView = new AppCompatTextView[2];
-        chooseValueTextView[0] = chooseValueOneTextView;
-        chooseValueTextView[1] = chooseValueTwoTextView;
-
-        specTextView[0].setVisibility(View.GONE);
-        specTextView[1].setVisibility(View.GONE);
-        chooseLineView[0].setVisibility(View.GONE);
-        chooseLineView[1].setVisibility(View.GONE);
-        chooseValueTextView[0].setVisibility(View.GONE);
-        chooseValueTextView[1].setVisibility(View.GONE);
     }
 
     @Override
@@ -485,9 +497,9 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     @Override
     public void showCalcSuccess(BaseBean baseBean) {
         JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
-        GoodsActivity.this.areaHaveTextView.setText(jsonObject.get("if_store_cn").getAsString());
-        GoodsActivity.this.areaChooseTextView.setText(jsonObject.get("content").getAsString());
-        boolean unused = GoodsActivity.this.isHaveGoods = jsonObject.get("if_store").getAsBoolean();
+        this.areaHaveTextView.setText(jsonObject.get("if_store_cn").getAsString());
+        this.areaChooseTextView.setText(jsonObject.get("content").getAsString());
+        this.isHaveGoods = jsonObject.get("if_store").getAsBoolean();
     }
 
     @Override
@@ -515,7 +527,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     @Override
     public void showAddGoodsSuccess(BaseBean baseBean) {
         BaseToast.getInstance().showSuccess();
-        GoodsActivity.this.goneChooseLayout();
+        this.goneChooseLayout();
     }
 
     @Override
@@ -941,10 +953,10 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             if (i >= this.specListArrayList.size()) {
                 break;
             }
-            String str = (String) this.specListArrayList.get(i).get(BaseConstant.DATA_KEY);
-            if (((String) Objects.requireNonNull(str)).contains(this.specString[0]) && str.contains(this.specString[1]) &&
+            String str = this.specListArrayList.get(i).get(BaseConstant.DATA_KEY);
+            if (Objects.requireNonNull(str).contains(this.specString[0]) && str.contains(this.specString[1]) &&
                     str.contains(this.specString[2]) && str.contains(this.specString[3]) && str.contains(this.specString[4])) {
-                this.goodsId = (String) this.specListArrayList.get(i).get("value");
+                this.goodsId = this.specListArrayList.get(i).get("value");
                 break;
             }
             i++;

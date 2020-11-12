@@ -651,7 +651,7 @@
     </style>
 
     <style name="ImageView.Goods">
-        <item name="android:scaleType">fitXY</item>
+        <item name="android:scaleType">centerCrop</item>
         <item name="android:layout_height">200dip</item>
         <item name="android:src">@mipmap/ic_launcher</item>
         <item name="android:layout_width">match_parent</item>

@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -82,7 +83,8 @@ public class BaseApplication extends Application {
         registerActivityLifecycleCallbacks(mCallbacks);
         BaseShared.getInstance().init(getSharedPreferences(BaseConstant.SHARED_NAME, MODE_PRIVATE));
         BaseToast.getInstance().init(this);
-        BaseImageLoader.getInstance().init(this);
+        BaseImageLoader.getInstance().init(this, 2);
+        BaseDialog.getInstance().init(this);
 
         //微信支付
         this.isWxPay = false;
@@ -435,6 +437,12 @@ public class BaseApplication extends Application {
             intent.putExtras(bundle);
         }
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    public void startApplicationSetting(Activity activity, String str) {
+        Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
+        intent.setData(Uri.fromParts("package", str, (String) null));
+        start(activity, intent);
     }
 
     //Activity销毁

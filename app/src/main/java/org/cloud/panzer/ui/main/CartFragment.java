@@ -110,7 +110,7 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
     protected void initListener() {
         scanImageView.setOnClickListener(v -> App.getInstance().startCapture(getActivity()));
         messageImageView.setOnClickListener(view -> App.getInstance().startCheckLogin(getActivity(), ChatListActivity.class));
-        searchEditText.setOnClickListener(v-> RxBus.getInstance().send(RX_BUS_CODE_MAIN_SEARCH_SHOW));
+        searchEditText.setOnClickListener(v -> RxBus.getInstance().send(RX_BUS_CODE_MAIN_SEARCH_SHOW));
         tipsRelativeLayout.setOnClickListener(v -> {
             if (!App.getInstance().isLogin()) {
                 App.getInstance().startLogin(getActivity());
@@ -208,6 +208,9 @@ public class CartFragment extends BaseMvpFragment<CartPresenter> implements Cart
     @Override
     public void showCartListData(BaseBean baseBean) {
         mainArrayList.clear();
+        if (baseBean.getCode() != 200) {
+            return;
+        }
         JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         JsonArray cartList = mainJsonObject.getAsJsonArray("cart_list");
         this.moneyFloat = mainJsonObject.get("sum").getAsFloat();
