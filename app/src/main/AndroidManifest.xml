@@ -26,7 +26,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Main">
-        <activity android:name=".ui.home.SpecialActivity"></activity>
+        <activity android:name=".ui.home.SpecialActivity" />
         <activity
             android:name=".ui.common.SplashActivity"
             android:launchMode="singleTop"
@@ -45,6 +45,7 @@
         <activity
             android:name=".ui.goods.GoodsActivity"
             android:launchMode="singleTop"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
             android:name=".ui.order.OrderActivity"

@@ -648,20 +648,20 @@
                     android:background="@color/white"
                     android:padding="8dip" />
 
-                <View
-                    style="@style/View.Line"
-                    android:layout_height="16dip" />
-
-                <WebView
-                    android:id="@+id/mainWebView"
-                    style="@style/Layout.Wrap" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:textColor="@color/textTwo"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="下拉查看商品详情"
+                    style="@style/TextView.Small"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.core.widget.NestedScrollView>
 
         <WebView
-            android:id="@+id/mainWebView2"
+            android:id="@+id/mainWebView"
             style="@style/Layout.Wrap" />
 
     </org.cloud.panzer.view.ScrollDetailsLayout>

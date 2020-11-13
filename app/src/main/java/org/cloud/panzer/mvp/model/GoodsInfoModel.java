@@ -21,4 +21,9 @@ public class GoodsInfoModel extends BaseModel implements GoodsContract.Model {
     public Observable<String> calc(String goodsId, String areaId) {
         return RetrofitUtils.getRawHttpService().calc(goodsId, areaId);
     }
+
+    @Override
+    public Observable<String> getGoodsImagesData(String id) {
+        return RetrofitUtils.getRawHttpService().getGoodsImagesData(id);
+    }
 }

@@ -33,6 +33,7 @@
     <color name="backgroundStore">#66000000</color>
     <color name="backgroundName">#aa000000</color>
 
+    <color name="textTwo">#666666</color>
     <color name="textThird">#999999</color>
     <color name="text">#333333</color>
     <color name="backgroundMine">#33000000</color>

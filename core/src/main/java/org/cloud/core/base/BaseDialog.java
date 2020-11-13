@@ -32,6 +32,10 @@ public class BaseDialog {
         this.context = context;
     }
 
+    public void showLoading(Activity activity) {
+        showLoading(activity, "加载中...");
+    }
+
     public void showLoading(Activity activity, String msg) {
         if (mmLoading == null) {
             MMLoading.Builder builder = new MMLoading.Builder(activity)
@@ -56,6 +60,7 @@ public class BaseDialog {
     public void hideLoading() {
         if (mmLoading != null && mmLoading.isShowing()) {
             mmLoading.dismiss();
+            mmLoading = null;
         }
     }
 
@@ -72,6 +77,7 @@ public class BaseDialog {
         try {
             if (this.progressDialog != null) {
                 this.progressDialog.cancel();
+                this.progressDialog = null;
             }
         } catch (Exception e) {
             e.printStackTrace();

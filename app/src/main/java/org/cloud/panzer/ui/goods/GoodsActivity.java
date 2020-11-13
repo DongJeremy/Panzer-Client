@@ -396,6 +396,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
                 setToolbar(this.mainToolbar, "商品详情");
             } else if (i == 1) {
                 setToolbar(this.mainToolbar, "商品介绍");
+                mPresenter.requestGoodsImagesData(goodsIdString);
             }
         });
         // 滚动加载
@@ -495,6 +496,12 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         this.areaHaveTextView.setText(jsonObject.get("if_store_cn").getAsString());
         this.areaChooseTextView.setText(jsonObject.get("content").getAsString());
         this.isHaveGoods = jsonObject.get("if_store").getAsBoolean();
+    }
+
+    @Override
+    public void showGoodsImagesData(String goodsInfoData) {
+        App.getInstance().loadHtml(mainWebView, goodsInfoData);
+        //mainWebView.loadUrl(BaseConstant.URL_GOODS_BODY + goodsIdString);
     }
 
     @Override
@@ -661,7 +668,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         mainBanner.setDatas(goodsImageArrayList);
         mainBanner.start();
         //商品信息
-        mainWebView.loadUrl(BaseConstant.URL_GOODS_BODY + goodsIdString);
 
         nameTextView.setText(goodsInfoJSONObject.get("goods_name").getAsString());
         descTextView.setText(goodsInfoJSONObject.get("goods_jingle").getAsString());

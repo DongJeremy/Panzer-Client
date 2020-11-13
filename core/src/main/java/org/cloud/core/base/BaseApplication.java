@@ -28,6 +28,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -187,14 +188,16 @@ public class BaseApplication extends Application {
     public void setWebView(BaseActivity activity, WebView webView) {
         //声明WebSettings子类
         WebSettings webSettings = webView.getSettings();
-
-        //支持通过JS打开新窗口
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setSupportZoom(true);
+        // 不显示缩放控件
+        webSettings.setDisplayZoomControls(false);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setPluginState(WebSettings.PluginState.ON);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setLoadsImagesAutomatically(true);
         webSettings.setDomStorageEnabled(true);
-
-        //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDatabaseEnabled(true);
         webSettings.setAllowFileAccess(true);
@@ -206,14 +209,12 @@ public class BaseApplication extends Application {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                //activity.showLoadingDialog();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 imgReset(webView);
-                //activity.hideLoadingDialog();
             }
 
             @Override
@@ -224,12 +225,13 @@ public class BaseApplication extends Application {
         });
     }
 
+    public void loadHtml(WebView webView, String str) {
+        String replace = str.replace("style=", "other=").replace("src=\"/system", "src=\"https://www.wpccw.com/system");
+        webView.loadDataWithBaseURL((String) null, "<html><head><style type='text/css'>*{margin:0,padding:0}body{margin:0;padding:1px;line-height:28px;}p,span,section,img,table,embed,input,dl,dd,tr,td,video{width:100%;padding:0;margin:0;color:#333333;line-height:28px;}</style></head><body>" + replace + "</body></html>", "text/html", "UTF-8", (String) null);
+    }
+
     private void imgReset(WebView webView) {
-        webView.loadUrl("javascript:(function(){document.getElementsByTagName('body')[0].style.margin='0';" +
-                "var objs = document.getElementsByTagName('img');" +
-                "for(var i=0;i<objs.length;i++){var img=objs[i];img.onclick=function(){window.imagelistner.openImage(this.src);};" +
-                "img.style.maxWidth='100%';img.style.height='auto';}" +
-                "})()");
+        webView.loadUrl("javascript:(function(){var objs = document.getElementsByTagName('img');for(var i=0;i<objs.length;i++){objs[i].onclick=function(){window.imagelistner.openImage(this.src);}}})()");
     }
 
     public void hideKeyboard(Activity activity) {

@@ -3,6 +3,7 @@ package org.cloud.panzer.ui.home;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,11 +70,9 @@ public class SpecialActivity extends BaseMvpActivity<SpecialPresenter> implement
     @Override
     protected void initListener() {
         this.mainSwipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(new Runnable() {
-                public final void run() {
-                    mainSwipeRefreshLayout.setRefreshing(false);
-                    getData();
-                }
+            new Handler().postDelayed(() -> {
+                mainSwipeRefreshLayout.setRefreshing(false);
+                getData();
             }, 2000);
         });
 
@@ -90,8 +89,9 @@ public class SpecialActivity extends BaseMvpActivity<SpecialPresenter> implement
     }
 
     private void getData() {
+        Log.e("getData", "BaseDialog ");
         if (this.mainArrayList.size() == 0) {
-            BaseDialog.getInstance().progress(getActivity());
+            BaseDialog.getInstance().showLoading(getActivity());
         }
         mPresenter.requestSpecialData(this.specialId);
     }
@@ -99,7 +99,7 @@ public class SpecialActivity extends BaseMvpActivity<SpecialPresenter> implement
     @Override
     public void showSpecialSuccess(BaseBean baseBean) {
         if (SpecialActivity.this.mainArrayList.size() == 0) {
-            BaseDialog.getInstance().cancel();
+            BaseDialog.getInstance().hideLoading();
         }
         this.mainArrayList.clear();
         JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
@@ -109,7 +109,6 @@ public class SpecialActivity extends BaseMvpActivity<SpecialPresenter> implement
             BaseDialog.getInstance().query(this.getActivity(), "数据出错啦~", "此专题无任何数据...",
                     (dialog, which) -> App.getInstance().finish(this.getActivity()),
                     (dialog, which) -> App.getInstance().finish(this.getActivity()));
-            return;
         } else {
             for (int i = 0; i < list.size(); i++) {
                 JsonObject object = list.get(i).getAsJsonObject();
@@ -169,7 +168,7 @@ public class SpecialActivity extends BaseMvpActivity<SpecialPresenter> implement
     @Override
     public void showSpecialFail(String msg) {
         if (this.mainArrayList.size() == 0) {
-            BaseDialog.getInstance().cancel();
+            BaseDialog.getInstance().hideLoading();
         }
         BaseDialog.getInstance().queryLoadingFailure(getActivity(), msg,
                 (dialogInterface, i) -> getData(),

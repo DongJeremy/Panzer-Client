@@ -14,11 +14,14 @@ public interface GoodsContract {
         void showAddGoodsSuccess(BaseBean baseBean);
 
         void showCalcSuccess(BaseBean baseBean);
+
+        void showGoodsImagesData(String goodsInfoData);
     }
 
     interface Model extends IModel {
         Observable<String> getGoodsDetailData(String id);
         Observable<String> cartAddGoods(String goodsId, String quantity);
         Observable<String> calc(String goodsId, String areaId);
+        Observable<String> getGoodsImagesData(String id);
     }
 }

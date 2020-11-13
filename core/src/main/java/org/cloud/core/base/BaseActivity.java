@@ -108,6 +108,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void hideLoadingDialog() {
         if (mmLoading != null && mmLoading.isShowing()) {
             mmLoading.dismiss();
+            mmLoading = null;
         }
     }
 
