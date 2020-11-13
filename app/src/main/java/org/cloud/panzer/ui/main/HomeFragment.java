@@ -64,7 +64,7 @@ public class HomeFragment extends BaseMvpFragment<HomePresenter> implements Home
     protected void initView() {
         this.mainArrayList = new ArrayList<>();
         this.articleArrayList = new ArrayList<>();
-        this.mainAdapter = new HomeListAdapter(getActivity(), this.mainArrayList);
+        this.mainAdapter = new HomeListAdapter(getActivity(), this.mainArrayList, true);
         App.getInstance().setRecyclerView(getActivity(), mainRecyclerView, mainAdapter);
         App.getInstance().setSwipeRefreshLayout(mainSwipeRefreshLayout);
     }

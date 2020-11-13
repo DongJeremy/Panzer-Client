@@ -9,11 +9,13 @@ import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 
 import org.cloud.core.R;
+import org.cloud.core.widget.MMLoading;
 
 public class BaseDialog {
     private static volatile BaseDialog instance;
     private Context context;
     private ProgressDialog progressDialog;
+    private MMLoading mmLoading;
 
     public static BaseDialog getInstance() {
         if (instance == null) {
@@ -28,6 +30,42 @@ public class BaseDialog {
 
     public void init(Context context) {
         this.context = context;
+    }
+
+    public void showLoading(Activity activity, String msg) {
+        if (mmLoading == null) {
+            MMLoading.Builder builder = new MMLoading.Builder(activity)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setCancelOutside(true);
+            mmLoading = builder.create();
+        } else {
+            mmLoading.dismiss();
+            MMLoading.Builder builder = new MMLoading.Builder(activity)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setCancelOutside(false);
+            mmLoading = builder.create();
+        }
+        mmLoading.show();
+    }
+
+    /**
+     * 隐藏加载圈
+     */
+    public void hideLoading() {
+        if (mmLoading != null && mmLoading.isShowing()) {
+            mmLoading.dismiss();
+        }
+    }
+
+    /**
+     * 加载圈是否正在显示
+     *
+     * @return
+     */
+    public boolean isLoading() {
+        return mmLoading != null && mmLoading.isShowing();
     }
 
     public void cancel() {

@@ -10,7 +10,7 @@ public interface GoodsContract {
 
     interface View extends IView {
         void showGoodsDetailSuccess(BaseBean baseBean);
-        void showGoodsImagesData(String goodsInfoData);
+
         void showAddGoodsSuccess(BaseBean baseBean);
 
         void showCalcSuccess(BaseBean baseBean);
@@ -18,7 +18,6 @@ public interface GoodsContract {
 
     interface Model extends IModel {
         Observable<String> getGoodsDetailData(String id);
-        Observable<String> getGoodsImagesData(String id);
         Observable<String> cartAddGoods(String goodsId, String quantity);
         Observable<String> calc(String goodsId, String areaId);
     }

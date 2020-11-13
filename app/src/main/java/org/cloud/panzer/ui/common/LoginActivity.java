@@ -15,7 +15,6 @@ import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseShared;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
-import org.cloud.core.utils.StatusBarUtils;
 import org.cloud.core.utils.StringUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;

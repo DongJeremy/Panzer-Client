@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
@@ -17,7 +18,6 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dueeeke.videocontroller.StandardVideoController;
@@ -44,7 +44,6 @@ import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.EvaluateGoodsSimpleListAdapter;
 import org.cloud.panzer.adapter.GoodsCommendListAdapter;
-import org.cloud.panzer.adapter.GoodsDetailListAdapter;
 import org.cloud.panzer.adapter.SpecListAdapter;
 import org.cloud.panzer.adapter.VoucherGoodsListAdapter;
 import org.cloud.panzer.bean.EvaluateGoodsBean;
@@ -60,14 +59,12 @@ import org.cloud.panzer.view.ScrollDetailsLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
 
 import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_CART_SHOW;
-import static org.cloud.core.utils.StringUtils.getUrlFromString;
 
 public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements GoodsContract.View {
 
@@ -213,6 +210,9 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     @BindView(R.id.chooseLineFivView)
     View chooseLineFivView;
 
+    @BindView(R.id.mainWebView)
+    WebView mainWebView;
+
     @BindView(R.id.chooseValueOneTextView)
     AppCompatTextView chooseValueOneTextView;
     @BindView(R.id.chooseValueTwoTextView)
@@ -242,8 +242,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     AppCompatTextView chooseSubTextView;
     @BindView(R.id.voucherLinearLayout)
     LinearLayoutCompat voucherLinearLayout;
-    @BindView(R.id.detailsImagesView)
-    RecyclerView detailsImagesView;
     @BindView(R.id.voucherRecyclerView)
     RecyclerView voucherRecyclerView;
     @BindView(R.id.nightTextView)
@@ -262,9 +260,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     private VoucherGoodsListAdapter voucherAdapter;
 
     private final ArrayList<String> goodsImageArrayList = new ArrayList<>();
-
-    private final ArrayList<String> goodsImagesList = new ArrayList<>();
-    private GoodsDetailListAdapter goodsDetailListAdapter;
 
     private ArrayList<HashMap<String, String>> specNameArrayList;
     private ArrayList<HashMap<String, String>> specValueArrayList;
@@ -322,10 +317,10 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         this.mainToolbar.setAlpha(0.0f);
         this.toolbarView.setAlpha(0.0f);
         this.toolbarLineView.setAlpha(0.0f);
+
+        App.getInstance().setWebView(this, mainWebView);
+
         // 配置详情图片页面
-        goodsDetailListAdapter = new GoodsDetailListAdapter(goodsImagesList);
-        App.getInstance().setRecyclerView(getActivity(), detailsImagesView, goodsDetailListAdapter);
-        detailsImagesView.setLayoutManager(new LinearLayoutManager(this));
 
         RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.shareImageView.getLayoutParams();
         layoutParams3.height = App.getInstance().getWidth() - App.getInstance().dipToPx(112);
@@ -517,14 +512,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
     }
 
     @Override
-    public void showGoodsImagesData(String goodsInfoData) {
-        List<String> list = getUrlFromString(goodsInfoData);
-        goodsImagesList.clear();
-        goodsImagesList.addAll(list);
-        goodsDetailListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void showAddGoodsSuccess(BaseBean baseBean) {
         BaseToast.getInstance().showSuccess();
         this.goneChooseLayout();
@@ -674,6 +661,8 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         mainBanner.setDatas(goodsImageArrayList);
         mainBanner.start();
         //商品信息
+        mainWebView.loadUrl(BaseConstant.URL_GOODS_BODY + goodsIdString);
+
         nameTextView.setText(goodsInfoJSONObject.get("goods_name").getAsString());
         descTextView.setText(goodsInfoJSONObject.get("goods_jingle").getAsString());
         descTextView.setVisibility(TextUtils.isEmpty(goodsInfoJSONObject.get("goods_jingle").getAsString()) ? View.GONE : View.VISIBLE);
@@ -966,6 +955,6 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
 
     private void getData(String goodsId) {
         mPresenter.requestGoodsDetailData(goodsId);
-        mPresenter.requestGoodsImagesData(goodsId);
+        //mPresenter.requestGoodsImagesData(goodsId);
     }
 }

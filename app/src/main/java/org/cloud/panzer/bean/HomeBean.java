@@ -19,6 +19,14 @@ public class HomeBean implements Serializable {
 
     private Home1Bean home1Bean = null;
 
+    private Home2Bean home2Bean = null;
+
+    private Home3Bean home3Bean = null;
+
+    private Home4Bean home4Bean = null;
+
+    private Home5Bean home5Bean = null;
+
     private ArrayList<ArticleBean> articleList = new ArrayList<>();
 
     private String type = "advList";
@@ -85,6 +93,38 @@ public class HomeBean implements Serializable {
 
     public void setHome1Bean(Home1Bean home1Bean) {
         this.home1Bean = home1Bean;
+    }
+
+    public Home2Bean getHome2Bean() {
+        return home2Bean;
+    }
+
+    public void setHome2Bean(Home2Bean home2Bean) {
+        this.home2Bean = home2Bean;
+    }
+
+    public Home3Bean getHome3Bean() {
+        return home3Bean;
+    }
+
+    public void setHome3Bean(Home3Bean home3Bean) {
+        this.home3Bean = home3Bean;
+    }
+
+    public Home4Bean getHome4Bean() {
+        return home4Bean;
+    }
+
+    public void setHome4Bean(Home4Bean home4Bean) {
+        this.home4Bean = home4Bean;
+    }
+
+    public Home5Bean getHome5Bean() {
+        return home5Bean;
+    }
+
+    public void setHome5Bean(Home5Bean home5Bean) {
+        this.home5Bean = home5Bean;
     }
 
     public static class AdvListBean {
@@ -263,6 +303,426 @@ public class HomeBean implements Serializable {
 
         public void setData(String str) {
             this.data = str;
+        }
+    }
+
+    public class Home2Bean {
+        @SerializedName("rectangle1_data")
+        private String rectangle1Data;
+        @SerializedName("rectangle1_image")
+        private String rectangle1Image;
+        @SerializedName("rectangle1_type")
+        private String rectangle1Type;
+        @SerializedName("rectangle2_data")
+        private String rectangle2Data;
+        @SerializedName("rectangle2_image")
+        private String rectangle2Image;
+        @SerializedName("rectangle2_type")
+        private String rectangle2Type;
+        @SerializedName("square_data")
+        private String squareData;
+        @SerializedName("square_image")
+        private String squareImage;
+        @SerializedName("square_type")
+        private String squareType;
+        @SerializedName("title")
+        private String title;
+
+        public Home2Bean() {
+        }
+
+        public String getTitle() {
+            return this.title;
+        }
+
+        public void setTitle(String str) {
+            this.title = str;
+        }
+
+        public String getSquareImage() {
+            return this.squareImage;
+        }
+
+        public void setSquareImage(String str) {
+            this.squareImage = str;
+        }
+
+        public String getSquareType() {
+            return this.squareType;
+        }
+
+        public void setSquareType(String str) {
+            this.squareType = str;
+        }
+
+        public String getSquareData() {
+            return this.squareData;
+        }
+
+        public void setSquareData(String str) {
+            this.squareData = str;
+        }
+
+        public String getRectangle1Image() {
+            return this.rectangle1Image;
+        }
+
+        public void setRectangle1Image(String str) {
+            this.rectangle1Image = str;
+        }
+
+        public String getRectangle1Type() {
+            return this.rectangle1Type;
+        }
+
+        public void setRectangle1Type(String str) {
+            this.rectangle1Type = str;
+        }
+
+        public String getRectangle1Data() {
+            return this.rectangle1Data;
+        }
+
+        public void setRectangle1Data(String str) {
+            this.rectangle1Data = str;
+        }
+
+        public String getRectangle2Image() {
+            return this.rectangle2Image;
+        }
+
+        public void setRectangle2Image(String str) {
+            this.rectangle2Image = str;
+        }
+
+        public String getRectangle2Type() {
+            return this.rectangle2Type;
+        }
+
+        public void setRectangle2Type(String str) {
+            this.rectangle2Type = str;
+        }
+
+        public String getRectangle2Data() {
+            return this.rectangle2Data;
+        }
+
+        public void setRectangle2Data(String str) {
+            this.rectangle2Data = str;
+        }
+    }
+
+    public class Home3Bean {
+        @SerializedName("item")
+        private ArrayList<ItemBean> item;
+        @SerializedName("title")
+        private String title;
+
+        public Home3Bean() {
+        }
+
+        public String getTitle() {
+            return this.title;
+        }
+
+        public void setTitle(String str) {
+            this.title = str;
+        }
+
+        public ArrayList<ItemBean> getItem() {
+            return this.item;
+        }
+
+        public void setItem(ArrayList<ItemBean> arrayList) {
+            this.item = arrayList;
+        }
+
+        public class ItemBean {
+            @SerializedName("data")
+            private String data;
+            @SerializedName("image")
+            private String image;
+            @SerializedName("type")
+            private String type;
+
+            public ItemBean() {
+            }
+
+            public String getImage() {
+                return this.image;
+            }
+
+            public void setImage(String str) {
+                this.image = str;
+            }
+
+            public String getType() {
+                return this.type;
+            }
+
+            public void setType(String str) {
+                this.type = str;
+            }
+
+            public String getData() {
+                return this.data;
+            }
+
+            public void setData(String str) {
+                this.data = str;
+            }
+        }
+    }
+
+    public class Home4Bean {
+        @SerializedName("rectangle1_data")
+        private String rectangle1Data;
+        @SerializedName("rectangle1_image")
+        private String rectangle1Image;
+        @SerializedName("rectangle1_type")
+        private String rectangle1Type;
+        @SerializedName("rectangle2_data")
+        private String rectangle2Data;
+        @SerializedName("rectangle2_image")
+        private String rectangle2Image;
+        @SerializedName("rectangle2_type")
+        private String rectangle2Type;
+        @SerializedName("square_data")
+        private String squareData;
+        @SerializedName("square_image")
+        private String squareImage;
+        @SerializedName("square_type")
+        private String squareType;
+        @SerializedName("title")
+        private String title;
+
+        public Home4Bean() {
+        }
+
+        public String getTitle() {
+            return this.title;
+        }
+
+        public void setTitle(String str) {
+            this.title = str;
+        }
+
+        public String getRectangle1Image() {
+            return this.rectangle1Image;
+        }
+
+        public void setRectangle1Image(String str) {
+            this.rectangle1Image = str;
+        }
+
+        public String getRectangle1Type() {
+            return this.rectangle1Type;
+        }
+
+        public void setRectangle1Type(String str) {
+            this.rectangle1Type = str;
+        }
+
+        public String getRectangle1Data() {
+            return this.rectangle1Data;
+        }
+
+        public void setRectangle1Data(String str) {
+            this.rectangle1Data = str;
+        }
+
+        public String getRectangle2Image() {
+            return this.rectangle2Image;
+        }
+
+        public void setRectangle2Image(String str) {
+            this.rectangle2Image = str;
+        }
+
+        public String getRectangle2Type() {
+            return this.rectangle2Type;
+        }
+
+        public void setRectangle2Type(String str) {
+            this.rectangle2Type = str;
+        }
+
+        public String getRectangle2Data() {
+            return this.rectangle2Data;
+        }
+
+        public void setRectangle2Data(String str) {
+            this.rectangle2Data = str;
+        }
+
+        public String getSquareImage() {
+            return this.squareImage;
+        }
+
+        public void setSquareImage(String str) {
+            this.squareImage = str;
+        }
+
+        public String getSquareType() {
+            return this.squareType;
+        }
+
+        public void setSquareType(String str) {
+            this.squareType = str;
+        }
+
+        public String getSquareData() {
+            return this.squareData;
+        }
+
+        public void setSquareData(String str) {
+            this.squareData = str;
+        }
+    }
+
+    public class Home5Bean {
+        @SerializedName("rectangle1_data")
+        private String rectangle1Data;
+        @SerializedName("rectangle1_image")
+        private String rectangle1Image;
+        @SerializedName("rectangle1_type")
+        private String rectangle1Type;
+        @SerializedName("rectangle2_data")
+        private String rectangle2Data;
+        @SerializedName("rectangle2_image")
+        private String rectangle2Image;
+        @SerializedName("rectangle2_type")
+        private String rectangle2Type;
+        @SerializedName("rectangle3_data")
+        private String rectangle3Data;
+        @SerializedName("rectangle3_image")
+        private String rectangle3Image;
+        @SerializedName("rectangle3_type")
+        private String rectangle3Type;
+        @SerializedName("square_data")
+        private String squareData;
+        @SerializedName("square_image")
+        private String squareImage;
+        @SerializedName("square_type")
+        private String squareType;
+        @SerializedName("stitle")
+        private String stitle;
+        @SerializedName("title")
+        private String title;
+
+        public Home5Bean() {
+        }
+
+        public String getTitle() {
+            return this.title;
+        }
+
+        public void setTitle(String str) {
+            this.title = str;
+        }
+
+        public String getStitle() {
+            return this.stitle;
+        }
+
+        public void setStitle(String str) {
+            this.stitle = str;
+        }
+
+        public String getSquareImage() {
+            return this.squareImage;
+        }
+
+        public void setSquareImage(String str) {
+            this.squareImage = str;
+        }
+
+        public String getSquareType() {
+            return this.squareType;
+        }
+
+        public void setSquareType(String str) {
+            this.squareType = str;
+        }
+
+        public String getSquareData() {
+            return this.squareData;
+        }
+
+        public void setSquareData(String str) {
+            this.squareData = str;
+        }
+
+        public String getRectangle1Image() {
+            return this.rectangle1Image;
+        }
+
+        public void setRectangle1Image(String str) {
+            this.rectangle1Image = str;
+        }
+
+        public String getRectangle1Type() {
+            return this.rectangle1Type;
+        }
+
+        public void setRectangle1Type(String str) {
+            this.rectangle1Type = str;
+        }
+
+        public String getRectangle1Data() {
+            return this.rectangle1Data;
+        }
+
+        public void setRectangle1Data(String str) {
+            this.rectangle1Data = str;
+        }
+
+        public String getRectangle2Image() {
+            return this.rectangle2Image;
+        }
+
+        public void setRectangle2Image(String str) {
+            this.rectangle2Image = str;
+        }
+
+        public String getRectangle2Type() {
+            return this.rectangle2Type;
+        }
+
+        public void setRectangle2Type(String str) {
+            this.rectangle2Type = str;
+        }
+
+        public String getRectangle2Data() {
+            return this.rectangle2Data;
+        }
+
+        public void setRectangle2Data(String str) {
+            this.rectangle2Data = str;
+        }
+
+        public String getRectangle3Image() {
+            return this.rectangle3Image;
+        }
+
+        public void setRectangle3Image(String str) {
+            this.rectangle3Image = str;
+        }
+
+        public String getRectangle3Type() {
+            return this.rectangle3Type;
+        }
+
+        public void setRectangle3Type(String str) {
+            this.rectangle3Type = str;
+        }
+
+        public String getRectangle3Data() {
+            return this.rectangle3Data;
+        }
+
+        public void setRectangle3Data(String str) {
+            this.rectangle3Data = str;
         }
     }
 

@@ -32,10 +32,12 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ViewHo
 
     private final Activity activity;
     private final ArrayList<HomeBean> arrayList;
+    private final boolean isHome;
 
-    public HomeListAdapter(Activity activity, ArrayList<HomeBean> arrayList) {
+    public HomeListAdapter(Activity activity, ArrayList<HomeBean> arrayList, boolean isHome) {
         this.activity = activity;
         this.arrayList = arrayList;
+        this.isHome = isHome;
     }
 
     @NonNull

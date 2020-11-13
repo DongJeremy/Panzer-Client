@@ -15,6 +15,9 @@ public interface IndexService {
     @GET("index.php?act=index&op=getgg&ac_id=1")
     Observable<String> getArticleListData();
 
+    @GET("index.php?act=index&op=special")
+    Observable<String> special(@Query("special_id") String id);
+
     @GET("index.php?act=index&op=get_android")
     Observable<String> getAndroid();
 

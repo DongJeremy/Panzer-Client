@@ -1,6 +1,7 @@
 package org.cloud.panzer.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class HomeNavListAdapter extends RecyclerView.Adapter<HomeNavListAdapter.
         BaseImageLoader.getInstance().display(bean.getImage(), holder.mainImageView);
         holder.mainTextView.setText(bean.getWord());
         holder.mainLinearLayout.setOnClickListener(v -> {
+            Log.e("TAG", bean.getType());
             App.getInstance().startTypeValue(this.activity, bean.getType(), bean.getData());
         });
     }

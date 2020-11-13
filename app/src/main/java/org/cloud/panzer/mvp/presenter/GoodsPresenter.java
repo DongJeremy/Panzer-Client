@@ -30,22 +30,6 @@ public class GoodsPresenter extends BasePresenter<GoodsContract.Model, GoodsCont
                 });
     }
 
-    public void requestGoodsImagesData(String id) {
-        getModel().getGoodsImagesData(id)
-                .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))
-                .subscribe(new BaseObserver<String>(getView()) {
-                    @Override
-                    public void onSuccess(String result) {
-                        getView().showGoodsImagesData(result);
-                    }
-
-                    @Override
-                    public void onFailure(String errMsg, boolean isNetError) {
-                        getView().showError(errMsg);
-                    }
-                });
-    }
-
     public void requestCartAdd(String id, String quantity) {
         getModel().cartAddGoods(id, quantity)
                 .compose(RxSchedulers.applySchedulers(getLifecycleProvider()))

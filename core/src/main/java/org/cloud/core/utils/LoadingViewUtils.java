@@ -1,67 +1,53 @@
 package org.cloud.core.utils;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.FrameLayout;
-
-import org.cloud.core.R;
 import org.cloud.core.base.BaseActivity;
 import org.cloud.core.widget.MMLoading;
 
 public class LoadingViewUtils {
 
     private static MMLoading mmLoading;
+
     /**
      * 显示加载圈
+     *
      * @param activity
-     * @param isCover 是否需要遮罩 防止点击
+     * @param msg  是否需要遮罩 防止点击
      */
 
-    public static void showLoading(BaseActivity activity , boolean isCover){
-        if (isLoading(activity)){
-            return;
+    public static void showLoading(BaseActivity activity, String msg) {
+        if (mmLoading == null) {
+            MMLoading.Builder builder = new MMLoading.Builder(activity)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setCancelOutside(true);
+            mmLoading = builder.create();
+        } else {
+            mmLoading.dismiss();
+            MMLoading.Builder builder = new MMLoading.Builder(activity)
+                    .setMessage(msg)
+                    .setCancelable(false)
+                    .setCancelOutside(false);
+            mmLoading = builder.create();
         }
-        FrameLayout root = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-        if (root != null){
-            View loadingView = LayoutInflater.from(activity).inflate(R.layout.lyt_loading, null);
-            if (isCover) {
-                //遮罩层设置点击事件，拦截底层视图的点击事件
-                loadingView.findViewById(R.id.cover).setOnClickListener(v -> {
-                });
-            }
-            loadingView.findViewById(R.id.cover).setVisibility(isCover ? View.VISIBLE : View.GONE);
-//            ProgressBar progressBar = loadingView.findViewById(R.id.spin_kit);
-//            progressBar.setIndeterminateDrawable(new FadingCircle());
-            root.removeView(loadingView);
-            root.addView(loadingView);
-        }
+        mmLoading.show();
     }
 
     /**
      * 隐藏加载圈
-     * @param activity
      */
-    public static void hideLoading(BaseActivity activity){
-        FrameLayout root = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-        if (root != null){
-            View loadingView = root.findViewById(R.id.cover_root);
-            if (loadingView != null) {
-                root.removeView(loadingView);
-            }
+    public static void hideLoading() {
+        if (mmLoading != null && mmLoading.isShowing()) {
+            mmLoading.dismiss();
         }
     }
 
     /**
      * 加载圈是否正在显示
+     *
      * @param activity
      * @return
      */
     public static boolean isLoading(BaseActivity activity) {
-        FrameLayout root = activity.getWindow().getDecorView().findViewById(android.R.id.content);
-        if (root != null){
-            View loadingView = root.findViewById(R.id.cover_root);
-            return loadingView != null && root.indexOfChild(loadingView) != -1;
-        }
-        return false;
+        return mmLoading != null && mmLoading.isShowing();
     }
 }

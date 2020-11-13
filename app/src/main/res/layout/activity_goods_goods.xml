@@ -652,17 +652,16 @@
                     style="@style/View.Line"
                     android:layout_height="16dip" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/detailsImagesView"
-                    style="@style/Layout.Wrap"
-                    android:layout_marginTop="8dp" />
+                <WebView
+                    android:id="@+id/mainWebView"
+                    style="@style/Layout.Wrap" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.core.widget.NestedScrollView>
 
         <WebView
-            android:id="@+id/mainWebView"
+            android:id="@+id/mainWebView2"
             style="@style/Layout.Wrap" />
 
     </org.cloud.panzer.view.ScrollDetailsLayout>

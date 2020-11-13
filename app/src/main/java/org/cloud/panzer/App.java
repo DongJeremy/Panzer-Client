@@ -19,6 +19,7 @@ import org.cloud.panzer.ui.goods.BuyActivity;
 import org.cloud.panzer.ui.goods.GoodsActivity;
 import org.cloud.panzer.ui.goods.ListActivity;
 import org.cloud.panzer.ui.home.ChatListActivity;
+import org.cloud.panzer.ui.home.SpecialActivity;
 import org.cloud.panzer.ui.main.MainActivity;
 import org.cloud.panzer.ui.order.OrderActivity;
 import org.cloud.panzer.ui.order.PayActivity;
@@ -181,5 +182,66 @@ public class App extends BaseApplication {
         intent.setAction("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.HOME");
         start(activity, intent);
+    }
+
+    public void startTypeValue(Activity activity, String type, String value) {
+        Intent intent = null;
+
+        switch (type) {
+            case "2":
+            case "goods":
+                startGoods(activity, value);
+                break;
+            case "url":
+                switch (value) {
+//                    case "html/member/signin.html":
+//                        startCheckLogin(activity, SignActivity.class);
+//                        break;
+//                    case "html/product_robbuy.html":
+//                        intent = new Intent(activity, RobBuyActivity.class);
+//                        intent.putExtra(BaseConstant.DATA_POSITION, 1);
+//                        start(activity, intent);
+//                        break;
+//                    case "html/product_dazhe.html":
+//                        intent = new Intent(activity, RobBuyActivity.class);
+//                        intent.putExtra(BaseConstant.DATA_POSITION, 0);
+//                        start(activity, intent);
+//                        break;
+//                    case "html/coupon_list.html":
+//                        intent = new Intent(activity, VoucherActivity.class);
+//                        intent.putExtra(BaseConstant.DATA_POSITION, 0);
+//                        start(activity, intent);
+//                        break;
+//                    case "html/voucher_list.html":
+//                        intent = new Intent(activity, VoucherActivity.class);
+//                        intent.putExtra(BaseConstant.DATA_POSITION, 1);
+//                        start(activity, intent);
+//                        break;
+                    case "html/pointspro_list.html":
+                    case "html/product_list.html":
+                        start(activity, ListActivity.class);
+                        break;
+//                    case "shop.html":
+//                        start(activity, StreetActivity.class);
+//                        break;
+//                    case "html/red_packet.html?id=1":
+//                        intent = new Intent(activity, RedPacketActivity.class);
+//                        intent.putExtra(BaseConstant.DATA_ID, value.substring(value.indexOf("=") + 1, value.length()));
+//                        start(activity, intent);
+//                        break;
+                    default:
+//                        startBrowser(activity, value);
+                        break;
+                }
+                break;
+            case "special":
+                intent = new Intent(activity, SpecialActivity.class);
+                intent.putExtra(BaseConstant.DATA_ID, value);
+                start(activity, intent);
+                break;
+            case "keyword":
+//                startGoodsList(activity, value);
+                break;
+        }
     }
 }

@@ -41,8 +41,8 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.cloud.core.R;
 import org.cloud.core.app.AppManager;
-import org.cloud.core.utils.LoadingViewUtils;
 import org.cloud.core.utils.cache.CacheManager;
+import org.cloud.core.widget.JavascriptInterface;
 
 import java.util.List;
 
@@ -185,32 +185,35 @@ public class BaseApplication extends Application {
 
     @SuppressLint("SetJavaScriptEnabled")
     public void setWebView(BaseActivity activity, WebView webView) {
+        //声明WebSettings子类
         WebSettings webSettings = webView.getSettings();
+
+        //支持通过JS打开新窗口
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setLoadsImagesAutomatically(true);
         webSettings.setDomStorageEnabled(true);
+
+        //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDatabaseEnabled(true);
         webSettings.setAllowFileAccess(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
+        webView.addJavascriptInterface(new JavascriptInterface(this), "imagelistner");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                LoadingViewUtils.showLoading(activity, true);
+                //activity.showLoadingDialog();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 imgReset(webView);
-                if (LoadingViewUtils.isLoading(activity)) {
-                    LoadingViewUtils.hideLoading(activity);
-                }
+                //activity.hideLoadingDialog();
             }
 
             @Override
@@ -224,7 +227,8 @@ public class BaseApplication extends Application {
     private void imgReset(WebView webView) {
         webView.loadUrl("javascript:(function(){document.getElementsByTagName('body')[0].style.margin='0';" +
                 "var objs = document.getElementsByTagName('img');" +
-                "for(var i=0;i<objs.length;i++){var img=objs[i];img.style.maxWidth='100%';img.style.height='auto';}" +
+                "for(var i=0;i<objs.length;i++){var img=objs[i];img.onclick=function(){window.imagelistner.openImage(this.src);};" +
+                "img.style.maxWidth='100%';img.style.height='auto';}" +
                 "})()");
     }
 
@@ -366,10 +370,6 @@ public class BaseApplication extends Application {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
         return name.equals(cls.getName());
-    }
-
-    public void startTypeValue(Activity activity, String type, String value) {
-        Intent intent = null;
     }
 
     /**

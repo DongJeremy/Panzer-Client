@@ -4,31 +4,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 
 import org.cloud.core.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 public class BaseImageLoader {
 
@@ -113,131 +103,6 @@ public class BaseImageLoader {
         }
     }
 
-    public BitmapFactory.Options getBitmapFromURL(String url) {
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            File gifDownload = Glide.with(context).downloadOnly().load(url).submit(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-            BitmapFactory.decodeFile(gifDownload.getAbsolutePath(), options);
-            return options;
-        } catch (ExecutionException| InterruptedException e) {
-            return null;
-        }
-    }
-
-    public void displayFitWidth(String url, ImageView imageView) {
-        BitmapFactory.Options options = getBitmapFromURL(url);
-        int width = BaseApplication.getInstance().getWidth();
-        int height = BaseApplication.getInstance().getWidth() * options.outHeight / options.outWidth;
-        Glide.with(this.context)
-                .load(url)
-                .apply(new RequestOptions().override(width, height))
-                .dontAnimate()
-                .placeholder(imageView.getDrawable())
-                .into(imageView);
-
-//        Glide.with(this.context)
-//                .asDrawable()
-//                .load(url)
-//                .apply(new RequestOptions())
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .dontAnimate()
-//                .placeholder(imageView.getDrawable())
-//                .into(new CustomTarget<Drawable>() {
-//                    @Override
-//                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-//                        int imageWidth = options.outWidth;
-//                        int imageHeight = options.outHeight;
-//                        int height = BaseApplication.getInstance().getWidth() * imageHeight / imageWidth;
-//
-//                        ViewGroup.LayoutParams para = imageView.getLayoutParams();
-//                        para.height = height;
-//                        para.width = BaseApplication.getInstance().getWidth();
-//                        imageView.setImageBitmap(resource);
-//                    }
-//
-//                    @Override
-//                    public void onLoadCleared(@Nullable Drawable placeholder) {
-//
-//                    }
-//                });
-    }
-
-    public void displayFitXY(String url, ImageView imageView) {
-        if (BaseApplication.getInstance().isImage()) {
-            Glide.with(context)
-                    .load(url)
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource,
-                                                       boolean isFirstResource) {
-                            if (imageView == null) {
-                                return false;
-                            }
-//                            if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
-//                                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-//                            }
-                            ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                            int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
-                            float scale = (float) vw / (float) resource.getIntrinsicWidth();
-                            int vh = Math.round(resource.getIntrinsicHeight() * scale);
-                            params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
-                            imageView.setLayoutParams(params);
-                            return false;
-                        }
-                    })
-                    .placeholder(R.mipmap.ic_launcher)
-                    .error(R.mipmap.ic_launcher)
-                    .into(imageView);
-        } else {
-            Glide.with(context).load(R.mipmap.ic_launcher).into(imageView);
-        }
-    }
-
-    public void displayFitCenter(String url, ImageView imageView) {
-        if (BaseApplication.getInstance().isImage()) {
-            Glide.with(context)
-                    .load(url)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource,
-                                                       boolean isFirstResource) {
-                            if (imageView == null) {
-                                return false;
-                            }
-                            if (imageView.getScaleType() != ImageView.ScaleType.FIT_CENTER) {
-                                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                            }
-                            ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                            int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
-                            float scale = (float) vw / (float) resource.getIntrinsicWidth();
-                            int vh = Math.round(resource.getIntrinsicHeight() * scale);
-                            params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
-                            imageView.setLayoutParams(params);
-                            return false;
-                        }
-                    })
-                    .placeholder(R.mipmap.ic_launcher)
-                    .error(R.mipmap.ic_launcher)
-                    .into(imageView);
-        } else {
-            Glide.with(context).load(R.mipmap.ic_launcher).into(imageView);
-        }
-    }
-
     /**
      * 在imageView里面显示图片
      *
@@ -249,7 +114,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(new RequestOptions())
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -264,7 +129,7 @@ public class BaseImageLoader {
                 .load(url)
                 .apply(new RequestOptions())
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -282,7 +147,7 @@ public class BaseImageLoader {
                 .dontAnimate()
                 .apply(new RequestOptions())
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -299,7 +164,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(new RequestOptions().override(width, height))
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -316,7 +181,7 @@ public class BaseImageLoader {
                 .load(str)
                 .apply(new RequestOptions().override(width, height))
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -335,7 +200,7 @@ public class BaseImageLoader {
                 .load(byteArrayOutputStream.toByteArray())
                 .apply(new RequestOptions().override(width, height))
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -350,7 +215,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(RequestOptions.circleCropTransform())
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -365,7 +230,7 @@ public class BaseImageLoader {
                 .load(str)
                 .apply(RequestOptions.circleCropTransform())
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -382,7 +247,7 @@ public class BaseImageLoader {
                 .load(byteArrayOutputStream.toByteArray())
                 .apply(RequestOptions.circleCropTransform())
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -397,7 +262,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -413,7 +278,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(radius)))
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -429,7 +294,7 @@ public class BaseImageLoader {
                 .load(url)
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(radius)))
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -444,7 +309,7 @@ public class BaseImageLoader {
                 .load(url)
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 
@@ -461,7 +326,7 @@ public class BaseImageLoader {
                 .load(byteArrayOutputStream.toByteArray())
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
                 .dontAnimate()
-                .placeholder(imageView.getDrawable())
+                .placeholder(R.mipmap.empty)
                 .into(imageView);
     }
 }
