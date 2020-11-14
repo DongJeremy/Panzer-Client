@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <paths>
+        <external-path name="files_root" path="Android/data/org.cloud.panzer/down/"/>
+        <external-path name="external_storage_root" path="."/>
+    </paths>
+    <paths>
+        <external-path name="files_root" path="Android/data/org.cloud.panzer/cache/"/>
+        <external-path name="external_storage_root" path="."/>
+    </paths>
+    <paths>
+        <external-path name="files_root" path="Android/data/org.cloud.panzer/image/"/>
+        <external-path name="external_storage_root" path="."/>
+    </paths>
+</resources>

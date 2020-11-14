@@ -84,6 +84,7 @@ public class BaseApplication extends Application {
         ImageUtils.getInstance().init(this, 2);
         BaseToast.getInstance().init(this);
         BaseDialog.getInstance().init(this);
+        BaseFileClient.getInstance().init(getPackageName());
 
         //微信支付
         this.isWxPay = false;

@@ -58,11 +58,7 @@ public class RxSchedulers {
                 .retryWhen(new RetryWithDelay())
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
-                    dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override public void onCancel(DialogInterface dialog1) {
-                            disposable.dispose();
-                        }
-                    });
+                    dialog.setOnCancelListener(dialog1 -> disposable.dispose());
                     dialog.show();
                 })
                 .observeOn(AndroidSchedulers.mainThread())

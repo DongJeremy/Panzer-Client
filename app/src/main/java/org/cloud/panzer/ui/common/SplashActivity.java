@@ -1,8 +1,11 @@
 package org.cloud.panzer.ui.common;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -12,11 +15,14 @@ import androidx.core.content.ContextCompat;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.cloud.core.app.AppManager;
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseCountTime;
 import org.cloud.core.base.BaseDialog;
+import org.cloud.core.base.BaseFileClient;
 import org.cloud.core.base.BaseMvpActivity;
+import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.AppUtils;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.utils.Utils;
@@ -26,6 +32,7 @@ import org.cloud.panzer.mvp.contract.SplashContract;
 import org.cloud.panzer.mvp.presenter.SplashPresenter;
 import org.cloud.panzer.ui.main.MainActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -194,7 +201,7 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
 
     private void checkPermissions(String... strArr) {
         List<String> findPermissions = findPermissions(strArr);
-        if (findPermissions != null && findPermissions.size() > 0) {
+        if (findPermissions.size() > 0) {
             ActivityCompat.requestPermissions(this, findPermissions.toArray(new String[0]), 0);
         } else if (!this.isSuccess) {
             getConfig();
@@ -233,8 +240,54 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
         }.start();
     }
 
-    private void downloadApk() {
+    @Override
+    public void showDownloadSuccess(File file) {
+        AppUtils.installApp(getActivity(), file);
+        this.progressDialog.dismiss();
+        AppManager.getInstance().AppExit();
+    }
 
+    @Override
+    public void showDownloadFail() {
+        this.progressDialog.dismiss();
+    }
+
+    @Override
+    public void showDownloadStart() {
+        BaseToast.getInstance().show("准备开始下载...");
+        this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        this.progressDialog.setMessage("正在下载中...");
+        this.progressDialog.show();
+    }
+
+    @Override
+    public void showDownloadProgress(int progress, long total) {
+        //this.progressDialog.show();
+        this.progressDialog.setMax((int) total);
+        this.progressDialog.setProgress(progress);
+        this.progressDialog.setProgressNumberFormat(" ");
+    }
+
+    private void downloadApk() {
+        this.progressDialog = new ProgressDialog(getActivity());
+        mPresenter.requestDownloadApk(this.apkUrl, BaseFileClient.getInstance().getDownPath(), "panzer.apk");
+    }
+
+    /**
+     * 重启app
+     * @param context
+     */
+    public static void restartApp(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        if (null == packageManager) {
+            //LogUtils.errorLog("null == packageManager");
+            return;
+        }
+        final Intent intent = packageManager.getLaunchIntentForPackage(context.getPackageName());
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(intent);
+        }
     }
 
     private void handlerPush(Intent intent) {

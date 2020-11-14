@@ -44,6 +44,7 @@ public class IntentUtils {
     public static Intent getInstallAppIntent(File file) {
         if (file == null) return null;
         Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         String type;
 
         if (Build.VERSION.SDK_INT < 23) {
@@ -53,10 +54,12 @@ public class IntentUtils {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(Utils.getContext(), "com.your.package.fileProvider", file);
-            intent.setDataAndType(contentUri, type);
+            Uri contentUri = FileProvider.getUriForFile(Utils.getContext(), Utils.getContext().getApplicationContext().getPackageName()+".fileProvider", file);
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
         }
-        intent.setDataAndType(Uri.fromFile(file), type);
+        //intent.setDataAndType(Uri.fromFile(file), type);
         return intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 

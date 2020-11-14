@@ -135,7 +135,6 @@ public class AppUtils {
         return commandResult.successMsg != null && commandResult.successMsg.toLowerCase().contains("success");
     }
 
-
     /**
      * 判断App是否有root权限
      *

@@ -127,7 +127,6 @@ public class BaseDialog {
                     .setMessage(str).setCancelable(false).setPositiveButton(this.context.getString(R.string.confirm), onClickListener)
                     .setNegativeButton(this.context.getString(R.string.cancel), onClickListener2);
             dialog.show();
-            Log.e("TAG", "alertdialog: ");
         } catch (Exception e) {
             e.printStackTrace();
         }
