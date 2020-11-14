@@ -1,9 +1,6 @@
 package org.cloud.panzer.api;
 
-import android.util.Log;
-
 import org.cloud.core.net.BaseLocalRetrofit;
-import org.cloud.core.net.BaseRetrofit;
 import org.cloud.panzer.app.Constant;
 
 /**

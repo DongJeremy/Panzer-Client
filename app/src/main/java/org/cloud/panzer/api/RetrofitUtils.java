@@ -1,7 +1,5 @@
 package org.cloud.panzer.api;
 
-import android.util.Log;
-
 import org.cloud.core.net.BaseRetrofit;
 import org.cloud.panzer.app.Constant;
 
@@ -23,15 +21,7 @@ public class RetrofitUtils extends BaseRetrofit {
     public static ApiService getRawHttpService() {
         if (httpService == null) {
             httpService = getRawRetrofit(Constant.BASE_URL).create(ApiService.class);
-            Log.e("ApiService", "getRawHttpService: " + Constant.BASE_URL);
         }
         return httpService;
-    }
-
-    public static LocalApiService getLocalService() {
-        if (localHttpService == null) {
-            localHttpService = getRawRetrofit(Constant.LOCAL_URL).create(LocalApiService.class);
-        }
-        return localHttpService;
     }
 }

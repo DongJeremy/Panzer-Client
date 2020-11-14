@@ -1,5 +1,7 @@
 package org.cloud.panzer.ui.common;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -244,8 +246,16 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
     public void showDownloadSuccess(File file) {
         AppUtils.installApp(getActivity(), file);
         this.progressDialog.dismiss();
-        AppManager.getInstance().AppExit();
+        //reStartApp();
     }
+
+//    public void reStartApp(Context context) {
+//        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        context.startActivity(intent);
+//        AppManager.getInstance().
+//        context.getAppManager().finishAllActivity();
+//    }
 
     @Override
     public void showDownloadFail() {

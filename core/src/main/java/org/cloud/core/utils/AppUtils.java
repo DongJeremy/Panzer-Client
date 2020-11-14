@@ -56,6 +56,7 @@ public class AppUtils {
     public static void installApp(Context context, File file) {
         if (!FileUtils.isFileExists(file)) return;
         context.startActivity(IntentUtils.getInstallAppIntent(file));
+        //android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     /**
