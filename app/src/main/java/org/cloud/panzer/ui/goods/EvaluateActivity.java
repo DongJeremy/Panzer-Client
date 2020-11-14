@@ -13,6 +13,7 @@ import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.Utils;
 import org.cloud.core.widget.PullRefreshView;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
@@ -105,10 +106,10 @@ public class EvaluateActivity extends BaseMvpActivity<GoodsEvaluatePresenter> im
 
     private void updateNavigation(int i) {
         for (AppCompatTextView appCompatTextView : this.navigationTextView) {
-            appCompatTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
+            appCompatTextView.setTextColor(Utils.getColors(R.color.greyAdd));
             appCompatTextView.setBackgroundResource(R.drawable.border_evaluate);
         }
-        this.navigationTextView[i].setTextColor(App.getInstance().getColors(R.color.white));
+        this.navigationTextView[i].setTextColor(Utils.getColors(R.color.white));
         this.navigationTextView[i].setBackgroundResource(R.drawable.border_evaluate_press);
         this.page = 1;
         String str = "";

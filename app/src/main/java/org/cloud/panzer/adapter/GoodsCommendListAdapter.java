@@ -10,15 +10,18 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
-import org.cloud.panzer.App;
+import org.cloud.core.utils.ConvertUtils;
+import org.cloud.core.utils.ImageUtils;
+import org.cloud.core.utils.ScreenUtils;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.GoodsCommendBean;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+
+//import org.cloud.panzer.App;
 
 public class GoodsCommendListAdapter extends RecyclerView.Adapter<GoodsCommendListAdapter.ViewHolder> {
 
@@ -40,13 +43,12 @@ public class GoodsCommendListAdapter extends RecyclerView.Adapter<GoodsCommendLi
         final int positionInt = position;
         final GoodsCommendBean bean = arrayList.get(position);
 
-        BaseImageLoader.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
+        ImageUtils.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
         holder.nameTextView.setText(bean.getGoodsName());
         holder.moneyTextView.setText("￥");
         holder.moneyTextView.append(bean.getGoodsSalePrice());
         ViewGroup.LayoutParams layoutParams = holder.mainImageView.getLayoutParams();
-        layoutParams.height = App.getInstance().getWidth() / 4 - App.getInstance().dipToPx(16);
-
+        layoutParams.height = ScreenUtils.getScreenWidth() / 4 - ConvertUtils.dp2px(16);
         holder.mainImageView.setLayoutParams(layoutParams);
 
         holder.mainLinearLayout.setOnClickListener(view -> {

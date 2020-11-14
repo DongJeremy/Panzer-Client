@@ -1,4 +1,4 @@
-package org.cloud.core.utils;
+package org.cloud.core.utils.old;
 
 import org.cloud.core.base.BaseActivity;
 import org.cloud.core.widget.MMLoading;

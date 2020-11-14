@@ -12,9 +12,9 @@ import com.google.gson.JsonObject;
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpActivity;
-import org.cloud.core.base.BaseShared;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.SPUtils;
 import org.cloud.core.utils.StringUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
@@ -107,7 +107,7 @@ public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements Lo
         }
         JsonObject jsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         String key = jsonObject.get("key").getAsString();
-        BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, key);
+        SPUtils.getInstance().putString(BaseConstant.SHARED_KEY, key);
         App.getInstance().startMain(getActivity());
         App.getInstance().finish(getActivity());
     }

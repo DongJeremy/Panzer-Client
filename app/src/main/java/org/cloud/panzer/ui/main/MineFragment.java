@@ -1,6 +1,5 @@
 package org.cloud.panzer.ui.main;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -11,8 +10,9 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import com.google.gson.JsonObject;
 
 import org.cloud.core.base.BaseBean;
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseMvpFragment;
+import org.cloud.core.utils.ConvertUtils;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.core.utils.JsonUtils;
 import org.cloud.core.utils.TimeUtils;
 import org.cloud.panzer.App;
@@ -113,7 +113,7 @@ public class MineFragment extends BaseMvpFragment<MinePresenter> implements Mine
     public void showMemberIndexSuccess(BaseBean baseBean) {
         JsonObject mainJsonObject = JsonUtils.parseJsonToJsonObject(baseBean.getDatas());
         MemberBean memberInfo = JsonUtils.jsonToBean(mainJsonObject.getAsJsonObject("member_info"), MemberBean.class);
-        BaseImageLoader.getInstance().displayRadius(memberInfo.getAvatar() + "?id=" + TimeUtils.getStampAll(), avatarImageView, App.getInstance().dipToPx(8));
+        ImageUtils.getInstance().displayRadius(memberInfo.getAvatar() + "?id=" + TimeUtils.getStampAll(), avatarImageView, ConvertUtils.dp2px(8));
 
         nameTextView.setText(memberInfo.getUserName());
         goodsTextView.setText(memberInfo.getFavoritesGoods());

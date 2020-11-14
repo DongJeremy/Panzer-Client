@@ -11,8 +11,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.OrderBean;
@@ -52,7 +52,7 @@ public class StoreOrderListAdapter extends RecyclerView.Adapter<StoreOrderListAd
             holder.zenPinView.setVisibility(View.VISIBLE);
             holder.zengPinLinearLayout.setVisibility(View.VISIBLE);
             holder.zengPinDescTextView.setText(bean.getZengpinList().get(0).getGoodsName());
-            BaseImageLoader.getInstance().display(bean.getZengpinList().get(0).getGoodsImageUrl(), holder.zengPinGoodsImageView);
+            ImageUtils.getInstance().display(bean.getZengpinList().get(0).getGoodsImageUrl(), holder.zengPinGoodsImageView);
         }
 
         holder.storeNameTextView.setText(bean.getStoreName());

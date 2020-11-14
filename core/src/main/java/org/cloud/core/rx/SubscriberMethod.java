@@ -31,9 +31,7 @@ public class SubscriberMethod {
             } else if (parameterType == null || parameterType.length == 0) {
                 method.invoke(subscriber);
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }

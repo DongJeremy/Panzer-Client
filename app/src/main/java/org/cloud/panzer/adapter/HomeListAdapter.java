@@ -16,8 +16,9 @@ import com.youth.banner.Banner;
 import com.youth.banner.indicator.RectangleIndicator;
 import com.youth.banner.util.BannerUtils;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ConvertUtils;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.ArticleBean;
@@ -95,7 +96,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ViewHo
                 break;
             case "home1":
                 holder.home1ImageView.setVisibility(View.VISIBLE);
-                BaseImageLoader.getInstance().display(bean.getHome1Bean().getImage(), holder.home1ImageView);
+                ImageUtils.getInstance().display(bean.getHome1Bean().getImage(), holder.home1ImageView);
                 holder.home1ImageView.setOnClickListener(view -> App.getInstance().startTypeValue(activity, bean.getHome1Bean().getType(), bean.getHome1Bean().getData()));
                 break;
             case "goods":
@@ -103,8 +104,9 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.ViewHo
                 HomeGoodsListAdapter homeGoodsListAdapter = new HomeGoodsListAdapter(activity, bean.getGoodsBean().getItem());
                 App.getInstance().setRecyclerView(App.getInstance(), holder.mainRecyclerView, homeGoodsListAdapter);
                 holder.mainRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));
-                holder.mainRecyclerView.setPadding(App.getInstance().dipToPx(2), 0, App.getInstance().dipToPx(2), 0);
+                holder.mainRecyclerView.setPadding(ConvertUtils.dp2px(2), 0, ConvertUtils.dp2px(2), 0);
                 break;
+
         }
     }
 

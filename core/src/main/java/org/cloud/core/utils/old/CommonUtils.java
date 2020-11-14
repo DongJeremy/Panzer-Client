@@ -1,4 +1,4 @@
-package org.cloud.core.utils;
+package org.cloud.core.utils.old;
 
 import android.app.Activity;
 import android.content.res.Resources;

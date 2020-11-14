@@ -11,8 +11,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.CartBean;
@@ -61,7 +61,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.ViewHo
             holder.mansongLineView.setVisibility(View.VISIBLE);
             holder.manSongLinearLayout.setVisibility(View.VISIBLE);
             holder.manSongDescTextView.setText(bean.getMansong().get(0).getDesc());
-            BaseImageLoader.getInstance().display(bean.getMansong().get(0).getUrl(), holder.manSongGoodsImageView);
+            ImageUtils.getInstance().display(bean.getMansong().get(0).getUrl(), holder.manSongGoodsImageView);
         }
 
         goodsCartListAdapter.setOnItemClickListener(new GoodsCartListAdapter.OnItemClickListener() {

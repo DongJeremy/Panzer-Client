@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import org.cloud.core.R;
-import org.cloud.core.base.BaseImageLoader;
+import org.cloud.core.utils.ImageUtils;
 
 /**
  * FileName: ImageFullScreenActivity
@@ -27,7 +27,7 @@ public class ImageActivity extends AppCompatActivity {
         }
         String img = getIntent().getStringExtra("img");
         ImageView imageView = findViewById(R.id.imageView);
-        BaseImageLoader.getInstance().display(img, imageView);
+        ImageUtils.getInstance().display(img, imageView);
 
         imageView.setOnClickListener(v -> {
             // 注意这里不使用finish

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.youth.banner.adapter.BannerAdapter;
 import com.youth.banner.util.BannerUtils;
 
-import org.cloud.core.base.BaseImageLoader;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.R;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class HomeBannerAdapter extends BannerAdapter<String, HomeBannerAdapter.B
 
     @Override
     public void onBindView(BannerViewHolder holder, String data, int position, int size) {
-        BaseImageLoader.getInstance().display(data, holder.imageView);
+        ImageUtils.getInstance().display(data, holder.imageView);
     }
 
     public static class BannerViewHolder extends RecyclerView.ViewHolder {

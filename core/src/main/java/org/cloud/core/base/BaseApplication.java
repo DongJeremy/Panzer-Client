@@ -9,17 +9,12 @@ import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -28,9 +23,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -42,6 +35,10 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.cloud.core.R;
 import org.cloud.core.app.AppManager;
+import org.cloud.core.utils.ImageUtils;
+import org.cloud.core.utils.SPUtils;
+import org.cloud.core.utils.StringUtils;
+import org.cloud.core.utils.Utils;
 import org.cloud.core.utils.cache.CacheManager;
 import org.cloud.core.widget.JavascriptInterface;
 
@@ -72,7 +69,7 @@ public class BaseApplication extends Application {
     }
 
     public boolean isLogin() {
-        return !TextUtils.isEmpty(BaseShared.getInstance().getString(BaseConstant.SHARED_KEY));
+        return !StringUtils.isEmpty(SPUtils.getInstance().getString(BaseConstant.SHARED_KEY));
     }
 
     @Override
@@ -82,9 +79,10 @@ public class BaseApplication extends Application {
         mInstance = this;
         //注册监听每个activity的生命周期,便于堆栈式管理
         registerActivityLifecycleCallbacks(mCallbacks);
-        BaseShared.getInstance().init(getSharedPreferences(BaseConstant.SHARED_NAME, MODE_PRIVATE));
+        Utils.init(this);
+        SPUtils.getInstance().init(BaseConstant.SHARED_NAME);
+        ImageUtils.getInstance().init(this, 2);
         BaseToast.getInstance().init(this);
-        BaseImageLoader.getInstance().init(this, 2);
         BaseDialog.getInstance().init(this);
 
         //微信支付
@@ -93,7 +91,7 @@ public class BaseApplication extends Application {
         iwxapi = WXAPIFactory.createWXAPI(this, null);
         iwxapi.registerApp(BaseConstant.WX_APP_ID);
 
-        isImage = BaseShared.getInstance().getBoolean(BaseConstant.SHARED_SETTING_IMAGE, true);
+        isImage = SPUtils.getInstance().getBoolean(BaseConstant.SHARED_SETTING_IMAGE, true);
     }
 
     public IWXAPI getIwxapi() {
@@ -152,38 +150,6 @@ public class BaseApplication extends Application {
         }
     };
 
-    //公共方法
-    public int getWidth() {
-        return getResources().getDisplayMetrics().widthPixels;
-    }
-
-    public int getHeight() {
-        return getResources().getDisplayMetrics().heightPixels;
-    }
-
-    public int dipToSp(int dip) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, dip, getResources().getDisplayMetrics());
-    }
-
-    public int dipToPx(int dip) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, getResources().getDisplayMetrics());
-    }
-
-    public int getColors(int id) {
-        return ContextCompat.getColor(this, id);
-    }
-
-    public int getStatusBarHeight() {
-        return getResources().getDimensionPixelSize(getResources().getIdentifier("status_bar_height", "dimen", "android"));
-    }
-
-    public void setFocus(View view) {
-        view.setFocusable(true);
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.requestFocusFromTouch();
-    }
-
     @SuppressLint("SetJavaScriptEnabled")
     public void setWebView(BaseActivity activity, WebView webView) {
         //声明WebSettings子类
@@ -227,11 +193,14 @@ public class BaseApplication extends Application {
 
     public void loadHtml(WebView webView, String str) {
         String replace = str.replace("style=", "other=").replace("src=\"/system", "src=\"https://www.wpccw.com/system");
-        webView.loadDataWithBaseURL((String) null, "<html><head><style type='text/css'>*{margin:0,padding:0}body{margin:0;padding:1px;line-height:28px;}p,span,section,img,table,embed,input,dl,dd,tr,td,video{width:100%;padding:0;margin:0;color:#333333;line-height:28px;}</style></head><body>" + replace + "</body></html>", "text/html", "UTF-8", (String) null);
+        webView.loadDataWithBaseURL((String) null, "<html><head><style type='text/css'>*{margin:0,padding:0}body{margin:0;padding:1px;" +
+                "line-height:28px;}p,span,section,img,table,embed,input,dl,dd,tr,td,video{width:100%;padding:0;margin:0;color:#333333;" +
+                "line-height:28px;}</style></head><body>" + replace + "</body></html>", "text/html", "UTF-8", (String) null);
     }
 
     private void imgReset(WebView webView) {
-        webView.loadUrl("javascript:(function(){var objs = document.getElementsByTagName('img');for(var i=0;i<objs.length;i++){objs[i].onclick=function(){window.imagelistner.openImage(this.src);}}})()");
+        webView.loadUrl("javascript:(function(){var objs = document.getElementsByTagName('img');for(var i=0;i<objs.length;i++){objs[i]" +
+                ".onclick=function(){window.imagelistner.openImage(this.src);}}})()");
     }
 
     public void hideKeyboard(Activity activity) {
@@ -265,8 +234,8 @@ public class BaseApplication extends Application {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabsFromPagerAdapter(adapter);
-        tabLayout.setSelectedTabIndicatorColor(getColors(R.color.primary));
-        tabLayout.setTabTextColors(getColors(R.color.greyAdd), getColors(R.color.primary));
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.primary));
+        tabLayout.setTabTextColors(ContextCompat.getColor(this, R.color.greyAdd), ContextCompat.getColor(this, R.color.primary));
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
@@ -288,34 +257,6 @@ public class BaseApplication extends Application {
         recyclerView.setItemAnimator(null);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-    }
-
-    public String getVersion() {
-        try {
-            PackageManager manager = this.getPackageManager();
-            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-            return info.versionName;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "0.0";
-        }
-    }
-
-    public Drawable getMipmap(int id) {
-        return ContextCompat.getDrawable(this, id);
-    }
-
-    public Drawable getMipmap(int id, int color) {
-        Drawable mDrawable = ContextCompat.getDrawable(this, id);
-        mDrawable = DrawableCompat.wrap(mDrawable);
-        DrawableCompat.setTint(mDrawable, ContextCompat.getColor(this, color));
-        return mDrawable;
-    }
-
-    public Drawable getMipmap(Drawable drawable, int color) {
-        Drawable mDrawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(mDrawable, ContextCompat.getColor(this, color));
-        return mDrawable;
     }
 
     public GradientDrawable getGradientDrawable(float radius, int color) {

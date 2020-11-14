@@ -1,12 +1,8 @@
-package org.cloud.core.base;
+package org.cloud.core.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.widget.ImageView;
-
-import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -16,22 +12,25 @@ import com.bumptech.glide.request.RequestOptions;
 import org.cloud.core.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
-public class BaseImageLoader {
+/**
+* FileName: BaseImageLoader
+* Author: Admin
+* Date: 2020/11/14 8:40
+* Description: 图片加载工具类
+*/
+public class ImageUtils {
 
-    private static volatile BaseImageLoader instance;
+    private static volatile ImageUtils instance;
 
     private Context context;
     private int radius;
 
-    public static BaseImageLoader getInstance() {
+    public static ImageUtils getInstance() {
         if (instance == null) {
-            synchronized (BaseImageLoader.class) {
+            synchronized (ImageUtils.class) {
                 if (instance == null) {
-                    instance = new BaseImageLoader();
+                    instance = new ImageUtils();
                 }
             }
         }
@@ -41,66 +40,6 @@ public class BaseImageLoader {
     public void init(Context context, int radius) {
         this.context = context;
         this.radius = radius;
-    }
-
-    public Bitmap getSmall(String path) {
-
-        int degree = 0;
-        ExifInterface exif = null;
-
-        try {
-            exif = new ExifInterface(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (exif != null) {
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    degree = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    degree = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    degree = 270;
-                    break;
-            }
-        }
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-
-        int height = options.outHeight;
-        int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > 800 || width > 480) {
-            int heightRatio = Math.round((float) height / (float) 800);
-            int widthRatio = Math.round((float) width / (float) 480);
-            inSampleSize = Math.min(heightRatio, widthRatio);
-        }
-
-        options.inSampleSize = inSampleSize;
-        options.inJustDecodeBounds = false;
-        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-
-    }
-
-    public Bitmap getLocal(String path) {
-        try {
-            FileInputStream fis = new FileInputStream(path);
-            return BitmapFactory.decodeStream(fis);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**
@@ -114,7 +53,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(new RequestOptions())
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -129,7 +68,7 @@ public class BaseImageLoader {
                 .load(url)
                 .apply(new RequestOptions())
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -147,7 +86,7 @@ public class BaseImageLoader {
                 .dontAnimate()
                 .apply(new RequestOptions())
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -164,7 +103,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(new RequestOptions().override(width, height))
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -181,7 +120,7 @@ public class BaseImageLoader {
                 .load(str)
                 .apply(new RequestOptions().override(width, height))
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -200,7 +139,7 @@ public class BaseImageLoader {
                 .load(byteArrayOutputStream.toByteArray())
                 .apply(new RequestOptions().override(width, height))
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -215,7 +154,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(RequestOptions.circleCropTransform())
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -230,7 +169,7 @@ public class BaseImageLoader {
                 .load(str)
                 .apply(RequestOptions.circleCropTransform())
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -247,7 +186,7 @@ public class BaseImageLoader {
                 .load(byteArrayOutputStream.toByteArray())
                 .apply(RequestOptions.circleCropTransform())
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -262,7 +201,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -278,7 +217,7 @@ public class BaseImageLoader {
                 .load(i)
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(radius)))
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -294,7 +233,7 @@ public class BaseImageLoader {
                 .load(url)
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(radius)))
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -309,7 +248,7 @@ public class BaseImageLoader {
                 .load(url)
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 
@@ -326,7 +265,7 @@ public class BaseImageLoader {
                 .load(byteArrayOutputStream.toByteArray())
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(this.radius)))
                 .dontAnimate()
-                .placeholder(R.mipmap.empty)
+                .placeholder(R.mipmap.goods_default_img)
                 .into(imageView);
     }
 }

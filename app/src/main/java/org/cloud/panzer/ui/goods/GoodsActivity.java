@@ -33,12 +33,16 @@ import com.youth.banner.holder.BannerImageHolder;
 import org.cloud.core.base.BaseAnimClient;
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.rx.RxBus;
+import org.cloud.core.utils.BarUtils;
+import org.cloud.core.utils.ConvertUtils;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.ScreenUtils;
 import org.cloud.core.utils.StatusBarUtils;
+import org.cloud.core.utils.Utils;
 import org.cloud.core.widget.FlowLayoutManager;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
@@ -64,7 +68,9 @@ import java.util.Objects;
 
 import butterknife.BindView;
 
-import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_CART_SHOW;
+import static org.cloud.panzer.event.RxBusCode.RX_BUS_CODE_MAIN_CART_SHOW;
+
+//import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_CART_SHOW;
 
 public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements GoodsContract.View {
 
@@ -306,11 +312,11 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
 
         //headerRelativeLayout配置
         LinearLayoutCompat.LayoutParams layoutParams = (LinearLayoutCompat.LayoutParams) this.headerRelativeLayout.getLayoutParams();
-        layoutParams.height = App.getInstance().getWidth();
+        layoutParams.height = ScreenUtils.getScreenWidth();
         headerRelativeLayout.setLayoutParams(layoutParams);
         // toolbar虚拟高度配置增加StatusBarHeight
         LinearLayoutCompat.LayoutParams layoutParams2 = (LinearLayoutCompat.LayoutParams) this.toolbarView.getLayoutParams();
-        layoutParams2.height = App.getInstance().getStatusBarHeight();
+        layoutParams2.height = BarUtils.getStatusBarHeight(Utils.getContext());
         toolbarView.setLayoutParams(layoutParams2);
         setToolbar(this.mainToolbar, "商品详情");
         // toolbar初始状态透明
@@ -323,14 +329,14 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         // 配置详情图片页面
 
         RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.shareImageView.getLayoutParams();
-        layoutParams3.height = App.getInstance().getWidth() - App.getInstance().dipToPx(112);
+        layoutParams3.height = ScreenUtils.getScreenWidth() - ConvertUtils.dp2px(112);
         this.shareImageView.setLayoutParams(layoutParams3);
 
         // 配置Banner
         mainBanner.setAdapter(new BannerImageAdapter<String>(goodsImageArrayList) {
             @Override
             public void onBindView(BannerImageHolder holder, String data, int position, int size) {
-                BaseImageLoader.getInstance().display(data, holder.imageView);
+                ImageUtils.getInstance().display(data, holder.imageView);
             }
         });
         // 评价
@@ -402,8 +408,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         // 滚动加载
         mainScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             float scrollYY = (float) v.getScrollY();
-            float width =
-                    (float) (App.getInstance().getWidth() - App.getInstance().dipToPx(48));
+            float width = (float) (ScreenUtils.getScreenWidth() - ConvertUtils.dp2px(48));
             int i5 = Float.compare(scrollYY, 0.0f);
             if (i5 == 0) {
                 this.mainToolbar.setAlpha(0.0f);
@@ -618,7 +623,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         }
         if (this.chooseRelativeLayout.getVisibility() == View.GONE) {
             this.chooseRelativeLayout.setVisibility(View.VISIBLE);
-            BaseAnimClient.objectAnimator(this.chooseRelativeLayout, BaseAnimClient.TRABSLATION_Y, (float) App.getInstance().getHeight(), 0.0f);
+            BaseAnimClient.objectAnimator(this.chooseRelativeLayout, BaseAnimClient.TRABSLATION_Y, (float) ScreenUtils.getScreenHeight(), 0.0f);
         }
     }
 
@@ -631,7 +636,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         if (chooseRelativeLayout.getVisibility() == View.VISIBLE) {
             chooseRelativeLayout.setVisibility(View.GONE);
             BaseAnimClient.objectAnimator(this.chooseRelativeLayout, BaseAnimClient.TRABSLATION_Y,
-                    () -> this.chooseRelativeLayout.setVisibility(View.GONE), 0.0f, (float) App.getInstance().getHeight());
+                    () -> this.chooseRelativeLayout.setVisibility(View.GONE), 0.0f, (float) ScreenUtils.getScreenHeight());
         }
 
     }
@@ -730,7 +735,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
             temp = "单笔订单满￥" + manSongJsonObject.get("price").getAsString() + "，立减￥" + manSongJsonObject.get("discount").getAsString() + "，送礼品";
             manSongDescTextView.setText(temp);
             if (manSongJsonObject.has("goods_image_url")) {
-                BaseImageLoader.getInstance().display(manSongJsonObject.get("goods_image_url").getAsString(), manSongGoodsImageView);
+                ImageUtils.getInstance().display(manSongJsonObject.get("goods_image_url").getAsString(), manSongGoodsImageView);
             }
         }
         //代金券
@@ -930,7 +935,7 @@ public class GoodsActivity extends BaseMvpActivity<GoodsPresenter> implements Go
         commendArrayList.addAll(JsonUtils.jsonToList(mainJsonObject.getAsJsonArray("goods_commend_list"), GoodsCommendBean.class));
         commendAdapter.notifyDataSetChanged();
         //选择页面
-        BaseImageLoader.getInstance().display(goodsImageArrayList.get(0), chooseGoodsImageView);
+        ImageUtils.getInstance().display(goodsImageArrayList.get(0), chooseGoodsImageView);
         chooseNameTextView.setText(nameTextView.getText().toString());
         choosePriceTextView.setText(moneyTextView.getText().toString());
         chooseStorageTextView.setText("库存：");

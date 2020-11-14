@@ -19,10 +19,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * @author xuhao
- * @date 2018/6/9 17:12
- * @desc fragment 基类
- */
+* FileName: BaseFragment
+* Author: Admin
+* Date: 2020/11/14 8:39
+* Description: fragment 基类
+*/
 public abstract class BaseFragment extends RxFragment {
 
     protected Context mContext;
@@ -60,14 +61,6 @@ public abstract class BaseFragment extends RxFragment {
         initListener();
     }
 
-    /**
-     * 供子类添加功能
-     *
-     * @return
-     */
-    protected void initPreparedData() {
-    }
-
     @Override
     public void onAttach(@NotNull Context context) {
         super.onAttach(context);
@@ -99,9 +92,7 @@ public abstract class BaseFragment extends RxFragment {
             T instance = mClass.newInstance();
             instance.setArguments(args);
             return instance;
-        } catch (java.lang.InstantiationException e) {
-            e.printStackTrace();
-        } catch (java.lang.IllegalAccessException e) {
+        } catch (java.lang.InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;
@@ -115,6 +106,10 @@ public abstract class BaseFragment extends RxFragment {
         return mActivity;
     }
 
+    /**
+     * 供子类添加功能
+     */
+    protected void initPreparedData() {}
     /**
      * 返回一个用于显示界面的布局id
      */
@@ -135,5 +130,4 @@ public abstract class BaseFragment extends RxFragment {
      * 是否使用eventbus
      */
     protected abstract boolean useEventBus();
-
 }

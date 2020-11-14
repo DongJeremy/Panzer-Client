@@ -14,11 +14,10 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
-import org.cloud.panzer.bean.AreaBean;
 import org.cloud.panzer.bean.StoreBuyBean;
 
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class StoreBuyListAdapter extends RecyclerView.Adapter<StoreBuyListAdapte
             holder.mansongLineView.setVisibility(View.VISIBLE);
             holder.manSongLinearLayout.setVisibility(View.VISIBLE);
             holder.manSongDescTextView.setText(bean.getStoreMansongRuleList().getDesc().getDesc());
-            BaseImageLoader.getInstance().display(bean.getStoreMansongRuleList().getDesc().getUrl(), holder.manSongGoodsImageView);
+            ImageUtils.getInstance().display(bean.getStoreMansongRuleList().getDesc().getUrl(), holder.manSongGoodsImageView);
         }
         holder.messageEditText.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable editable) {

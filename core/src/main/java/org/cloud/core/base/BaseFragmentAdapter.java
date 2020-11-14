@@ -4,8 +4,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
+/**
+* FileName: BaseFragmentAdapter
+* Author: Admin
+* Date: 2020/11/14 8:40
+* Description: FragmentAdapter 基类
+*/
 public class BaseFragmentAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> fragmentList;
@@ -15,6 +23,7 @@ public class BaseFragmentAdapter extends FragmentPagerAdapter {
         this.fragmentList = fragmentList;
     }
 
+    @NotNull
     @Override
     public Fragment getItem(int position) {
         return fragmentList.get(position);

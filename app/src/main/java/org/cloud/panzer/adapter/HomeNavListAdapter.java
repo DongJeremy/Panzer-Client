@@ -12,8 +12,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.HomeBean;
@@ -42,7 +42,7 @@ public class HomeNavListAdapter extends RecyclerView.Adapter<HomeNavListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final HomeBean.HomeNavBean.ItemBean bean = mList.get(position);
-        BaseImageLoader.getInstance().display(bean.getImage(), holder.mainImageView);
+        ImageUtils.getInstance().display(bean.getImage(), holder.mainImageView);
         holder.mainTextView.setText(bean.getWord());
         holder.mainLinearLayout.setOnClickListener(v -> {
             Log.e("TAG", bean.getType());

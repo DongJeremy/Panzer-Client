@@ -11,8 +11,9 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
+import org.cloud.core.utils.ScreenUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.HomeBean;
@@ -41,8 +42,8 @@ public class HomeGoodsListAdapter extends RecyclerView.Adapter<HomeGoodsListAdap
 
         final HomeBean.GoodsBean.ItemBean bean = arrayList.get(position);
 
-        int width = App.getInstance().getWidth() / 2 - 16;
-        BaseImageLoader.getInstance().displayRadius(bean.getGoodsImage(), holder.mainImageView);
+        int width = ScreenUtils.getScreenWidth() / 2 - 16;
+        ImageUtils.getInstance().displayRadius(bean.getGoodsImage(), holder.mainImageView);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, width);
         holder.mainImageView.setLayoutParams(layoutParams);
         holder.nameTextView.setText(bean.getGoodsName());

@@ -1,146 +1,307 @@
 package org.cloud.core.utils;
 
+import android.os.Environment;
 import android.util.Log;
 
-import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.FormatStrategy;
-import com.orhanobut.logger.Logger;
-import com.orhanobut.logger.PrettyFormatStrategy;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+/**
+ * FileName: LogUtils
+ * Author: Admin
+ * Date: 2020/11/14 10:47
+ * Description: 日志相关工具类
+ */
 public class LogUtils {
-    private static boolean debug = true;
-
     private LogUtils() {
+        throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
-    public static void init(String tag, boolean appDebug) {
-        debug = appDebug;
-        FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder().tag(tag).build();
-        Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
-            @Override public boolean isLoggable(int priority, String tag) {
-                return debug;
-            }
-        });
-        t(tag);
-    }
-
-    public static void t(String tag) {
-        if (debug) {
-            Logger.t(tag);
-        }
-    }
-
-    public static void log(int priority, String tag, String message, Throwable throwable) {
-        if (debug) {
-            Logger.log(priority, tag, message, throwable);
-        }
-    }
-
-    public static void d(String message, Object... args) {
-        if (debug) {
-            Logger.d(message, args);
-        }
-    }
-
-    public static void d(Object object) {
-        if (debug) {
-            Logger.d(object);
-
-        }
-    }
+    private static boolean logSwitch = true;
+    private static boolean log2FileSwitch = false;
+    private static char logFilter = 'v';
+    private static String tag = "TAG";
+    private static String dir = null;
 
     /**
-     * 截断输出日志
-     * @param msg
-     */
-    public static void debug(String msg) {
-        if (msg == null || msg.length() == 0)
-            return;
-
-        int segmentSize = 3 * 1024;
-        long length = msg.length();
-        // 打印剩余日志
-        if (length > segmentSize ) {// 大于等于
-            while (msg.length() > segmentSize ) {// 循环分段打印日志
-                String logContent = msg.substring(0, segmentSize );
-                msg = msg.replace(logContent, "");
-                Logger.e(logContent);
-            }
-        }
-        Logger.e(msg);
-    }
-
-    public static void e(String message, Object... args) {
-        if (debug) {
-            Logger.e(message, args);
-        }
-    }
-
-    public static void e(Throwable throwable, String message, Object... args) {
-        if (debug) {
-            Logger.e(throwable, message, args);
-        }
-    }
-
-    public static void i(String message, Object... args) {
-        if (debug) {
-            Logger.i(message, args);
-        }
-    }
-
-    public static void v(String message, Object... args) {
-        if (debug) {
-            Logger.v(message, args);
-        }
-    }
-
-    public static void w(String message, Object... args) {
-        if (debug) {
-            Logger.w(message, args);
-        }
-    }
-
-    public static void wtf(String message, Object... args) {
-        if (debug) {
-            Logger.wtf(message, args);
-        }
-    }
-
-    /**
-     * Formats the json content and print it
+     * 初始化函数
+     * <p>与{@link #getBuilder()}两者选其一</p>
      *
-     * @param json the json content
+     * @param logSwitch      日志总开关
+     * @param log2FileSwitch 日志写入文件开关，设为true需添加权限 {@code <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>}
+     * @param logFilter      输入日志类型有{@code v, d, i, w, e}<br>v代表输出所有信息，w则只输出警告...
+     * @param tag            标签
      */
-    public static void json(String json) {
-        if (debug) {
-            Logger.json(json);
+    public static void init(boolean logSwitch, boolean log2FileSwitch, char logFilter, String tag) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            dir = Utils.getContext().getExternalCacheDir().getPath() + File.separator;
+        } else {
+            dir = Utils.getContext().getCacheDir().getPath() + File.separator;
+        }
+        LogUtils.logSwitch = logSwitch;
+        LogUtils.log2FileSwitch = log2FileSwitch;
+        LogUtils.logFilter = logFilter;
+        LogUtils.tag = tag;
+    }
+
+    /**
+     * 获取LogUtils建造者
+     * <p>与{@link #init(boolean, boolean, char, String)}两者选其一</p>
+     *
+     * @return Builder对象
+     */
+    public static Builder getBuilder() {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            dir = Utils.getContext().getExternalCacheDir().getPath() + File.separator + "log" + File.separator;
+        } else {
+            dir = Utils.getContext().getCacheDir().getPath() + File.separator + "log" + File.separator;
+        }
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private boolean logSwitch = true;
+        private boolean log2FileSwitch = false;
+        private char logFilter = 'v';
+        private String tag = "TAG";
+
+        public Builder setLogSwitch(boolean logSwitch) {
+            this.logSwitch = logSwitch;
+            return this;
+        }
+
+        public Builder setLog2FileSwitch(boolean log2FileSwitch) {
+            this.log2FileSwitch = log2FileSwitch;
+            return this;
+        }
+
+        public Builder setLogFilter(char logFilter) {
+            this.logFilter = logFilter;
+            return this;
+        }
+
+        public Builder setTag(String tag) {
+            this.tag = tag;
+            return this;
+        }
+
+        public void create() {
+            LogUtils.logSwitch = logSwitch;
+            LogUtils.log2FileSwitch = log2FileSwitch;
+            LogUtils.logFilter = logFilter;
+            LogUtils.tag = tag;
         }
     }
 
     /**
-     * Formats the json content and print it
+     * Verbose日志
      *
-     * @param xml the xml content
+     * @param msg 消息
      */
-    public static void xml(String xml) {
-        if (debug) {
-            Logger.xml(xml);
+    public static void v(Object msg) {
+        v(tag, msg);
+    }
+
+    /**
+     * Verbose日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     */
+    public static void v(String tag, Object msg) {
+        v(tag, msg, null);
+    }
+
+    /**
+     * Verbose日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     * @param tr  异常
+     */
+    public static void v(String tag, Object msg, Throwable tr) {
+        log(tag, msg.toString(), tr, 'v');
+    }
+
+    /**
+     * Debug日志
+     *
+     * @param msg 消息
+     */
+    public static void d(Object msg) {
+        d(tag, msg);
+    }
+
+    /**
+     * Debug日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     */
+    public static void d(String tag, Object msg) {// 调试信息
+        d(tag, msg, null);
+    }
+
+    /**
+     * Debug日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     * @param tr  异常
+     */
+    public static void d(String tag, Object msg, Throwable tr) {
+        log(tag, msg.toString(), tr, 'd');
+    }
+
+    /**
+     * Info日志
+     *
+     * @param msg 消息
+     */
+    public static void i(Object msg) {
+        i(tag, msg);
+    }
+
+    /**
+     * Info日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     */
+    public static void i(String tag, Object msg) {
+        i(tag, msg, null);
+    }
+
+    /**
+     * Info日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     * @param tr  异常
+     */
+    public static void i(String tag, Object msg, Throwable tr) {
+        log(tag, msg.toString(), tr, 'i');
+    }
+
+    /**
+     * Warn日志
+     *
+     * @param msg 消息
+     */
+    public static void w(Object msg) {
+        w(tag, msg);
+    }
+
+    /**
+     * Warn日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     */
+    public static void w(String tag, Object msg) {
+        w(tag, msg, null);
+    }
+
+    /**
+     * Warn日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     * @param tr  异常
+     */
+    public static void w(String tag, Object msg, Throwable tr) {
+        log(tag, msg.toString(), tr, 'w');
+    }
+
+    /**
+     * Error日志
+     *
+     * @param msg 消息
+     */
+    public static void e(Object msg) {
+        e(tag, msg);
+    }
+
+    /**
+     * Error日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     */
+    public static void e(String tag, Object msg) {
+        e(tag, msg, null);
+    }
+
+    /**
+     * Error日志
+     *
+     * @param tag 标签
+     * @param msg 消息
+     * @param tr  异常
+     */
+    public static void e(String tag, Object msg, Throwable tr) {
+        log(tag, msg.toString(), tr, 'e');
+    }
+
+    /**
+     * 根据tag, msg和等级，输出日志
+     *
+     * @param tag  标签
+     * @param msg  消息
+     * @param tr   异常
+     * @param type 日志类型
+     */
+    private static void log(String tag, String msg, Throwable tr, char type) {
+        if (logSwitch) {
+            if ('e' == type && ('e' == logFilter || 'v' == logFilter)) {
+                Log.e(tag, msg, tr);
+            } else if ('w' == type && ('w' == logFilter || 'v' == logFilter)) {
+                Log.w(tag, msg, tr);
+            } else if ('d' == type && ('d' == logFilter || 'v' == logFilter)) {
+                Log.d(tag, msg, tr);
+            } else if ('i' == type && ('d' == logFilter || 'v' == logFilter)) {
+                Log.i(tag, msg, tr);
+            }
+            if (log2FileSwitch) {
+                log2File(type, tag, msg + '\n' + Log.getStackTraceString(tr));
+            }
         }
     }
 
-    public static void d(String tag, String msg) {
-        if (debug) {
-            Log.d(tag, msg);
-        }
-    }
-    public static void i(String tag, String msg) {
-        if (debug) {
-            Log.i(tag, msg);
-        }
-    }
-    public static void v(String tag, String msg) {
-        if (debug) {
-            Log.v(tag, msg);
-        }
+    /**
+     * 打开日志文件并写入日志
+     *
+     * @param type    日志类型
+     * @param tag     标签
+     * @param content 内容
+     **/
+    private synchronized static void log2File(final char type, final String tag, final String content) {
+        if (content == null) return;
+        Date now = new Date();
+        String date = new SimpleDateFormat("MM-dd", Locale.getDefault()).format(now);
+        final String fullPath = dir + date + ".txt";
+        if (!FileUtils.createOrExistsFile(fullPath)) return;
+        String time = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(now);
+        final String dateLogContent = time + ":" + type + ":" + tag + ":" + content + '\n';
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BufferedWriter bw = null;
+                try {
+                    bw = new BufferedWriter(new FileWriter(fullPath, true));
+                    bw.write(dateLogContent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    CloseUtils.closeIO(bw);
+                }
+            }
+        }).start();
     }
 }

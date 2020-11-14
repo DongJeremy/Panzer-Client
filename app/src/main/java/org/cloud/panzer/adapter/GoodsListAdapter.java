@@ -11,9 +11,9 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
-import org.cloud.panzer.App;
+import org.cloud.core.utils.ImageUtils;
+import org.cloud.core.utils.ScreenUtils;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.GoodsBean;
 
@@ -47,8 +47,8 @@ public class GoodsListAdapter extends RecyclerView.Adapter<GoodsListAdapter.View
         final int positionInt = position;
         final GoodsBean goodsBean = arrayList.get(position);
 
-        int width = (App.getInstance().getWidth() / 2) - 16;
-        BaseImageLoader.getInstance().displayRadius(goodsBean.getGoodsImageUrl(), holder.mainImageView);
+        int width = ScreenUtils.getScreenWidth() / 2 - 16;
+        ImageUtils.getInstance().displayRadius(goodsBean.getGoodsImageUrl(), holder.mainImageView);
         ViewGroup.LayoutParams layoutParams = holder.mainImageView.getLayoutParams();
         if (this.isGridModel) {
             layoutParams.width = width;

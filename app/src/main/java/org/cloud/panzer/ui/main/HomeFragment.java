@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 
-import static org.cloud.core.rx.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
+import static org.cloud.panzer.event.RxBusCode.RX_BUS_CODE_MAIN_SEARCH_SHOW;
 
 public class HomeFragment extends BaseMvpFragment<HomePresenter> implements HomeContract.View {
 

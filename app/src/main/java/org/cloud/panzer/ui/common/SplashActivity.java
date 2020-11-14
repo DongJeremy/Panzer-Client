@@ -2,7 +2,6 @@ package org.cloud.panzer.ui.common;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,9 @@ import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseCountTime;
 import org.cloud.core.base.BaseDialog;
 import org.cloud.core.base.BaseMvpActivity;
+import org.cloud.core.utils.AppUtils;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.Utils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.mvp.contract.SplashContract;
@@ -26,7 +27,6 @@ import org.cloud.panzer.mvp.presenter.SplashPresenter;
 import org.cloud.panzer.ui.main.MainActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -164,12 +164,12 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
                     break;
             }
         }
-        if(!this.versionControl.contains(App.getInstance().getVersion() + ":1")) {
+        if(!this.versionControl.contains(AppUtils.getAppVersionName(Utils.getContext()) + ":1")) {
             BaseDialog.getInstance().queryConfirmYourChoice(getActivity(), "当前版本已弃用，请更新",
                     (dialog, i) -> downloadApk(),
                     (dialog, i) -> App.getInstance().finish(getActivity())
             );
-        } else if (!this.appVersion.equals(App.getInstance().getVersion())) {
+        } else if (!this.appVersion.equals(AppUtils.getAppVersionName(Utils.getContext()))) {
             BaseDialog.getInstance().queryConfirmYourChoice(getActivity(), this.updateContent,
                     (dialogInterface, i) -> this.downloadApk(),
                     (dialogInterface, i) -> this.startMain()

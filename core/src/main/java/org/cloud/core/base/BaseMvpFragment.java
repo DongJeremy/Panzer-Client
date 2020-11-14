@@ -4,10 +4,12 @@ import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.mvp.IView;
 
 /**
- * @author xuhao
- * @date 2018/6/9 17:12
- * @desc fragment 基类
- */
+* FileName: BaseMvpFragment
+* Author: Admin
+* Date: 2020/11/14 9:08
+* Description: fragment 基类
+*/
+@SuppressWarnings("ALL")
 public abstract class BaseMvpFragment<T extends BasePresenter> extends BaseFragment implements IView {
 
     /**

@@ -10,8 +10,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.StoreBuyBean;
 
@@ -39,7 +39,7 @@ public class GoodsBuyListAdapter extends RecyclerView.Adapter<GoodsBuyListAdapte
         final int positionInt = position;
         final StoreBuyBean.GoodsListBean bean = arrayList.get(position);
 
-        BaseImageLoader.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
+        ImageUtils.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
         holder.nameTextView.setText(bean.getGoodsName());
         holder.moneyTextView.setText("￥");
         holder.moneyTextView.append(bean.getGoodsPrice());

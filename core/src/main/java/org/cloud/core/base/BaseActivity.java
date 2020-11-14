@@ -32,6 +32,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     private Unbinder unBinder;
 
+    // loading加载
     private MMLoading mmLoading;
 
     @Override
@@ -48,14 +49,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         initView();
         initData();
         initListener();
-    }
-
-    /**
-     * 供子类添加功能
-     *
-     * @return
-     */
-    protected void initPreparedData() {
     }
 
     @Override
@@ -130,27 +123,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    /**
-     * 是否使用eventBus
-     */
-    protected abstract boolean useEventBus();
-    /**
-     * 获取布局 Id
-     */
-    protected abstract @LayoutRes int getLayoutId();
-    /**
-     * 初始化View的代码写在这个方法中
-     */
-    protected abstract void initView();
-    /**
-     * 初始化监听器的代码写在这个方法中
-     */
-    protected abstract void initListener();
-    /**
-     * 初始数据的代码写在这个方法中，用于从服务器获取数据
-     */
-    protected abstract void initData();
-
     public void onReturn() {
         finish();
     }
@@ -190,4 +162,28 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         setToolbar(toolbar, title);
         StatusBarUtils.setStatusBarMode(this, true, colorId);
     }
+    /**
+     * 供子类添加功能
+     */
+    protected void initPreparedData() {}
+    /**
+     * 是否使用eventBus
+     */
+    protected abstract boolean useEventBus();
+    /**
+     * 获取布局 Id
+     */
+    protected abstract @LayoutRes int getLayoutId();
+    /**
+     * 初始化View的代码写在这个方法中
+     */
+    protected abstract void initView();
+    /**
+     * 初始化监听器的代码写在这个方法中
+     */
+    protected abstract void initListener();
+    /**
+     * 初始数据的代码写在这个方法中，用于从服务器获取数据
+     */
+    protected abstract void initData();
 }

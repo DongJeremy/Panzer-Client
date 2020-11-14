@@ -5,9 +5,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpActivity;
-import org.cloud.core.base.BaseShared;
 import org.cloud.core.base.BaseToast;
-import org.cloud.core.utils.StatusBarUtils;
+import org.cloud.core.utils.SPUtils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.mvp.contract.CenterContract;
@@ -58,11 +57,11 @@ public class CenterActivity extends BaseMvpActivity<CenterPresenter> implements 
     private void logout() {
         BaseToast.getInstance().show("注销成功！");
         App.getInstance().setNormalMember(true);
-        BaseShared.getInstance().putString(BaseConstant.SHARED_C_LEVEL_HHR, "2");
-        BaseShared.getInstance().putString(BaseConstant.SHARED_C_LEVEL_TYD, "2");
-        BaseShared.getInstance().putString(BaseConstant.SHARED_B_LEVEL_TYD, "2");
-        BaseShared.getInstance().putString(BaseConstant.SHARED_A_LEVEL_TYD, "2");
-        BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, "");
+        SPUtils.getInstance().putString(BaseConstant.SHARED_C_LEVEL_HHR, "2");
+        SPUtils.getInstance().putString(BaseConstant.SHARED_C_LEVEL_TYD, "2");
+        SPUtils.getInstance().putString(BaseConstant.SHARED_B_LEVEL_TYD, "2");
+        SPUtils.getInstance().putString(BaseConstant.SHARED_A_LEVEL_TYD, "2");
+        SPUtils.getInstance().putString(BaseConstant.SHARED_KEY, "");
         App.getInstance().startMain(getActivity());
         App.getInstance().finish(getActivity());
     }

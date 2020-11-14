@@ -1,6 +1,5 @@
 package org.cloud.panzer.ui.store;
 
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
@@ -23,6 +22,7 @@ import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.rx.RxBus;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.Utils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.VoucherStoreListAdapter;
@@ -100,16 +100,16 @@ public class StoreActivity extends BaseMvpActivity<StorePresenter> implements St
                 homeTextView, goodsTextView, newTextView, activityTextView
         };
         this.navigationNormalDrawable = new Drawable[]{
-                App.getInstance().getMipmap(R.mipmap.ic_navigation_store_home, R.color.grey),
-                App.getInstance().getMipmap(R.mipmap.ic_navigation_store_goods, R.color.grey),
-                App.getInstance().getMipmap(R.mipmap.ic_navigation_store_new, R.color.grey),
-                App.getInstance().getMipmap(R.mipmap.ic_navigation_store_activity, R.color.grey)
+                Utils.getMipmap(R.mipmap.ic_navigation_store_home, R.color.grey),
+                Utils.getMipmap(R.mipmap.ic_navigation_store_goods, R.color.grey),
+                Utils.getMipmap(R.mipmap.ic_navigation_store_new, R.color.grey),
+                Utils.getMipmap(R.mipmap.ic_navigation_store_activity, R.color.grey)
         };
         this.navigationPressDrawable = new Drawable[]{
-                App.getInstance().getMipmap(R.mipmap.ic_navigation_store_home_press),
-                App.getInstance().getMipmap(R.mipmap.ic_navigation_store_goods_press),
-                App.getInstance().getMipmap(R.mipmap.ic_navigation_store_new_press),
-                App.getInstance().getMipmap(R.mipmap.ic_navigation_store_activity_press)
+                Utils.getMipmap(R.mipmap.ic_navigation_store_home_press),
+                Utils.getMipmap(R.mipmap.ic_navigation_store_goods_press),
+                Utils.getMipmap(R.mipmap.ic_navigation_store_new_press),
+                Utils.getMipmap(R.mipmap.ic_navigation_store_activity_press)
         };
         ArrayList<Fragment> arrayList = new ArrayList<>();
         arrayList.add(new StoreHomeFragment());
@@ -188,11 +188,11 @@ public class StoreActivity extends BaseMvpActivity<StorePresenter> implements St
         while (true) {
             AppCompatTextView[] appCompatTextViewArr = this.navigationTextView;
             if (i < appCompatTextViewArr.length) {
-                appCompatTextViewArr[i].setTextColor(App.getInstance().getColors(R.color.grey));
+                appCompatTextViewArr[i].setTextColor(Utils.getColors(R.color.grey));
                 this.navigationTextView[i].setCompoundDrawablesWithIntrinsicBounds(null, this.navigationNormalDrawable[i], null, null);
                 i++;
             } else {
-                appCompatTextViewArr[position].setTextColor(App.getInstance().getColors(R.color.primary));
+                appCompatTextViewArr[position].setTextColor(Utils.getColors(R.color.primary));
                 this.navigationTextView[position].setCompoundDrawablesWithIntrinsicBounds(null, this.navigationPressDrawable[position], null, null);
                 this.mainViewPager.setCurrentItem(position);
                 return;

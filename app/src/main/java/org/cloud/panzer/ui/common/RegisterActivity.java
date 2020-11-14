@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -15,18 +14,15 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.gson.JsonObject;
-
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseCountTime;
-import org.cloud.core.base.BaseDialog;
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseMvpActivity;
-import org.cloud.core.base.BaseShared;
 import org.cloud.core.base.BaseToast;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.SPUtils;
 import org.cloud.core.utils.StringUtils;
+import org.cloud.core.utils.Utils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.mvp.contract.RegisterContract;
@@ -119,10 +115,10 @@ public class RegisterActivity extends BaseMvpActivity<RegisterPresenter> impleme
 
     @Override
     protected void initView() {
-        this.normalDrawable = App.getInstance().getMipmap(R.mipmap.ic_register_normal, R.color.greyAdd);
-        this.mobileDrawable = App.getInstance().getMipmap(R.mipmap.ic_register_mobile, R.color.greyAdd);
-        this.normalPressDrawable = App.getInstance().getMipmap(R.mipmap.ic_register_normal_press);
-        this.mobilePressDrawable = App.getInstance().getMipmap(R.mipmap.ic_register_mobile_press);
+        this.normalDrawable = Utils.getMipmap(R.mipmap.ic_register_normal, R.color.greyAdd);
+        this.mobileDrawable = Utils.getMipmap(R.mipmap.ic_register_mobile, R.color.greyAdd);
+        this.normalPressDrawable = Utils.getMipmap(R.mipmap.ic_register_normal_press);
+        this.mobilePressDrawable = Utils.getMipmap(R.mipmap.ic_register_mobile_press);
         setToolbar(this.mainToolbar, "会员注册");
         this.codeKeyString = "";
         makeCodeKey();
@@ -131,17 +127,17 @@ public class RegisterActivity extends BaseMvpActivity<RegisterPresenter> impleme
     @Override
     protected void initListener() {
         this.normalTextView.setOnClickListener(view -> {
-            this.normalTextView.setTextColor(App.getInstance().getColors(R.color.primary));
+            this.normalTextView.setTextColor(Utils.getColors(R.color.primary));
             this.normalTextView.setCompoundDrawablesWithIntrinsicBounds(this.normalPressDrawable, null, null, null);
-            this.mobileTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
+            this.mobileTextView.setTextColor(Utils.getColors(R.color.greyAdd));
             this.mobileTextView.setCompoundDrawablesWithIntrinsicBounds(this.mobileDrawable, null, null, null);
             this.normalLinearLayout.setVisibility(View.VISIBLE);
             this.mobileLinearLayout.setVisibility(View.GONE);
         });
         this.mobileTextView.setOnClickListener(view -> {
-            this.normalTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
+            this.normalTextView.setTextColor(Utils.getColors(R.color.greyAdd));
             this.normalTextView.setCompoundDrawablesWithIntrinsicBounds(this.normalDrawable, null, null, null);
-            this.mobileTextView.setTextColor(App.getInstance().getColors(R.color.primary));
+            this.mobileTextView.setTextColor(Utils.getColors(R.color.primary));
             this.mobileTextView.setCompoundDrawablesWithIntrinsicBounds(this.mobilePressDrawable, null, null, null);
             this.normalLinearLayout.setVisibility(View.GONE);
             this.mobileLinearLayout.setVisibility(View.VISIBLE);
@@ -279,10 +275,10 @@ public class RegisterActivity extends BaseMvpActivity<RegisterPresenter> impleme
     @Override
     public void showStateSuccess(BaseBean baseBean) {
         if (baseBean.getDatas().equals("1")) {
-            RegisterActivity.this.normalTextView.setTextColor(App.getInstance().getColors(R.color.primary));
+            RegisterActivity.this.normalTextView.setTextColor(Utils.getColors(R.color.primary));
             RegisterActivity.this.normalTextView.setCompoundDrawablesWithIntrinsicBounds(RegisterActivity.this.normalPressDrawable,
                     null, null, null);
-            RegisterActivity.this.mobileTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
+            RegisterActivity.this.mobileTextView.setTextColor(Utils.getColors(R.color.greyAdd));
             RegisterActivity.this.mobileTextView.setCompoundDrawablesWithIntrinsicBounds(RegisterActivity.this.mobileDrawable,
                     null, null, null);
             RegisterActivity.this.typeLinearLayout.setVisibility(View.VISIBLE);
@@ -310,7 +306,7 @@ public class RegisterActivity extends BaseMvpActivity<RegisterPresenter> impleme
         RegisterActivity.this.registerTextView.setText("注册账号");
         BaseToast.getInstance().show("注册成功！");
         String key = JsonUtils.parseJsonToJsonObject(baseBean.getDatas()).get(BaseConstant.DATA_KEY).getAsString();
-        BaseShared.getInstance().putString(BaseConstant.SHARED_KEY, key);
+        SPUtils.getInstance().putString(BaseConstant.SHARED_KEY, key);
         App.getInstance().start(RegisterActivity.this.getActivity(), MainActivity.class);
         App.getInstance().finish(RegisterActivity.this.getActivity());
     }

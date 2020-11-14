@@ -8,10 +8,12 @@ import org.cloud.core.mvp.BasePresenter;
 import org.cloud.core.mvp.IView;
 
 /**
- * @author ddw
- * @date 2020/11/1 17:12
- * @desc 基类 BaseMvpActivity
- */
+* FileName: BaseMvpActivity
+* Author: Admin
+* Date: 2020/11/14 8:41
+* Description: 基类 BaseMvpActivity
+*/
+@SuppressWarnings("ALL")
 public abstract class BaseMvpActivity<T extends BasePresenter> extends BaseActivity implements IView {
     protected T mPresenter;
 
@@ -52,5 +54,4 @@ public abstract class BaseMvpActivity<T extends BasePresenter> extends BaseActiv
     public void showError(String msg) {
         BaseToast.getInstance().show(msg);
     }
-
 }

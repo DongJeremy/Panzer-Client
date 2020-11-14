@@ -1,6 +1,5 @@
 package org.cloud.panzer.ui.home;
 
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.cloud.core.base.BaseBean;

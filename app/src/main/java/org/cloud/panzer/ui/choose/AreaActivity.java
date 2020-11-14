@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseMvpActivity;
 import org.cloud.core.utils.JsonUtils;
-import org.cloud.core.utils.StatusBarUtils;
+import org.cloud.core.utils.Utils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.AreaListAdapter;
@@ -101,9 +101,9 @@ public class AreaActivity extends BaseMvpActivity<AreaPresenter> implements Area
             this.areaTextView.setText("地区");
             this.cityTextView.setText("城市");
             this.provinceTextView.setText(this.provinceNameString);
-            this.areaTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
-            this.cityTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
-            this.provinceTextView.setTextColor(App.getInstance().getColors(R.color.primary));
+            this.areaTextView.setTextColor(Utils.getColors(R.color.greyAdd));
+            this.cityTextView.setTextColor(Utils.getColors(R.color.greyAdd));
+            this.provinceTextView.setTextColor(Utils.getColors(R.color.primary));
             getCity();
         });
 
@@ -114,8 +114,8 @@ public class AreaActivity extends BaseMvpActivity<AreaPresenter> implements Area
             cityNameString = areaBean.getAreaName();
             areaTextView.setText("地区");
             cityTextView.setText(cityNameString);
-            areaTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
-            cityTextView.setTextColor(App.getInstance().getColors(R.color.primary));
+            areaTextView.setTextColor(Utils.getColors(R.color.greyAdd));
+            cityTextView.setTextColor(Utils.getColors(R.color.primary));
             getArea();
         });
 

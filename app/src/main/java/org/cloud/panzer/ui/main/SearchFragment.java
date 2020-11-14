@@ -13,6 +13,7 @@ import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.core.utils.JsonUtils;
+import org.cloud.core.utils.Utils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.SearchHistoryListAdapter;
@@ -236,11 +237,11 @@ public class SearchFragment extends BaseMvpFragment<SearchPresenter> implements 
     private void clickCondition(int i) {
         for (AppCompatTextView appCompatTextView : this.conditionTextView) {
             appCompatTextView.setBackgroundResource(R.drawable.selector_border_white_24dip);
-            appCompatTextView.setTextColor(App.getInstance().getColors(R.color.title));
+            appCompatTextView.setTextColor(Utils.getColors(R.color.title));
         }
         if (i != this.position) {
             this.conditionTextView[i].setBackgroundResource(R.drawable.selector_border_primary_24dip);
-            this.conditionTextView[i].setTextColor(App.getInstance().getColors(R.color.white));
+            this.conditionTextView[i].setTextColor(Utils.getColors(R.color.white));
             this.position = i;
             return;
         }

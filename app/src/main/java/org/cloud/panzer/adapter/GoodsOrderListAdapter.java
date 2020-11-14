@@ -10,8 +10,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.OrderBean;
 
@@ -39,7 +39,7 @@ public class GoodsOrderListAdapter extends RecyclerView.Adapter<GoodsOrderListAd
         final int positionInt = position;
         final OrderBean.OrderListBean.ExtendOrderGoodsBean bean = arrayList.get(position);
 
-        BaseImageLoader.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
+        ImageUtils.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
         holder.nameTextView.setText(bean.getGoodsName());
         holder.specTextView.setText(bean.getGoodsSpec());
         holder.moneyTextView.setText("￥");

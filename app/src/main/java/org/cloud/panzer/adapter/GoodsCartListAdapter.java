@@ -12,8 +12,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.CartBean;
 
@@ -42,7 +42,7 @@ class GoodsCartListAdapter extends RecyclerView.Adapter<GoodsCartListAdapter.Vie
         final CartBean.GoodsBean bean = arrayList.get(position);
 
         holder.mainCheckBox.setChecked(bean.isCheck());
-        BaseImageLoader.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
+        ImageUtils.getInstance().displayRadius(bean.getGoodsImageUrl(), holder.mainImageView);
         holder.nameTextView.setText(bean.getGoodsName());
         holder.moneyTextView.setText("￥");
         holder.moneyTextView.append(bean.getGoodsPrice());

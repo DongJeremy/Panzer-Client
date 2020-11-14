@@ -12,8 +12,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.cloud.core.base.BaseImageLoader;
 import org.cloud.core.base.BaseViewHolder;
+import org.cloud.core.utils.ImageUtils;
 import org.cloud.panzer.R;
 import org.cloud.panzer.bean.EvaluateGoodsBean;
 
@@ -47,7 +47,7 @@ public class EvaluateGoodsListAdapter extends RecyclerView.Adapter<EvaluateGoods
         final EvaluateGoodsBean evaluateGoodsBean = this.arrayList.get(position);
         final int positionInt = position;
 
-        BaseImageLoader.getInstance().display(evaluateGoodsBean.getMemberAvatar(), holder.mainImageView);
+        ImageUtils.getInstance().display(evaluateGoodsBean.getMemberAvatar(), holder.mainImageView);
         holder.nameTextView.setText(evaluateGoodsBean.getGevalFrommembername());
         holder.timeTextView.setText(evaluateGoodsBean.getGevalAddtimeDate());
         holder.scoreRatingBar.setRating(Float.parseFloat(evaluateGoodsBean.getGevalScores()));
@@ -68,7 +68,7 @@ public class EvaluateGoodsListAdapter extends RecyclerView.Adapter<EvaluateGoods
             for (int i = 0; i < evaluateGoodsBean.getGevalImage240().size(); i++) {
                 if (i < 5) {
                     holder.evaImageView[i].setVisibility(View.VISIBLE);
-                    BaseImageLoader.getInstance().display(evaluateGoodsBean.getGevalImage240().get(i), holder.evaImageView[i]);
+                    ImageUtils.getInstance().display(evaluateGoodsBean.getGevalImage240().get(i), holder.evaImageView[i]);
                 }
             }
         }
@@ -103,7 +103,7 @@ public class EvaluateGoodsListAdapter extends RecyclerView.Adapter<EvaluateGoods
                 for (int i = 0; i < evaluateGoodsBean.getGevalImageAgain240().size(); i++) {
                     if (i < 5) {
                         holder.appendImageView[i].setVisibility(View.VISIBLE);
-                        BaseImageLoader.getInstance().display(evaluateGoodsBean.getGevalImageAgain240().get(i), holder.appendImageView[i]);
+                        ImageUtils.getInstance().display(evaluateGoodsBean.getGevalImageAgain240().get(i), holder.appendImageView[i]);
                     }
                 }
             }

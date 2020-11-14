@@ -6,7 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
+/**
+* FileName: TimeUtils
+* Author: Admin
+* Date: 2020/11/14 9:18
+* Description: 时间工具类
+*/
 public class TimeUtils {
     private static final Time localTime = new Time("Asia/Hong_Kong");
 

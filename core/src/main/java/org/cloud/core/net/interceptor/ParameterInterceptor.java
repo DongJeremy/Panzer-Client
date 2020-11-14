@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.cloud.core.base.BaseConstant;
-import org.cloud.core.base.BaseShared;
+import org.cloud.core.utils.SPUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class ParameterInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        String key = BaseShared.getInstance().getString(BaseConstant.SHARED_KEY);
+        String key = SPUtils.getInstance().getString(BaseConstant.SHARED_KEY);
 
         if (request.method().equals("GET")) {// 为GET方式统一添加请求参数
             HttpUrl.Builder modifiedUrl = request.url().newBuilder()

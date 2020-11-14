@@ -12,6 +12,7 @@ import com.youth.banner.Banner;
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseMvpFragment;
 import org.cloud.core.base.BaseToast;
+import org.cloud.core.utils.Utils;
 import org.cloud.panzer.App;
 import org.cloud.panzer.R;
 import org.cloud.panzer.adapter.GoodsListAdapter;
@@ -118,15 +119,15 @@ public class StoreHomeFragment extends BaseMvpFragment<StoreHomePresenter> imple
             }
         });
         this.favoritesRankTextView.setOnClickListener(view -> {
-            this.favoritesRankTextView.setTextColor(App.getInstance().getColors(R.color.primary));
+            this.favoritesRankTextView.setTextColor(Utils.getColors(R.color.primary));
             this.favoritesRankLinearLayout.setVisibility(View.VISIBLE);
-            this.saleRankTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
+            this.saleRankTextView.setTextColor(Utils.getColors(R.color.greyAdd));
             this.saleRankLinearLayout.setVisibility(View.GONE);
         });
         this.saleRankTextView.setOnClickListener(view -> {
-            this.favoritesRankTextView.setTextColor(App.getInstance().getColors(R.color.greyAdd));
+            this.favoritesRankTextView.setTextColor(Utils.getColors(R.color.greyAdd));
             this.favoritesRankLinearLayout.setVisibility(View.GONE);
-            this.saleRankTextView.setTextColor(App.getInstance().getColors(R.color.primary));
+            this.saleRankTextView.setTextColor(Utils.getColors(R.color.primary));
             this.saleRankLinearLayout.setVisibility(View.VISIBLE);
         });
         this.mainAdapter.setOnItemClickListener(new GoodsListAdapter.OnItemClickListener() {
