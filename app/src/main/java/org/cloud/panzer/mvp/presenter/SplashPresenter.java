@@ -74,7 +74,7 @@ public class SplashPresenter extends BasePresenter<SplashContract.Model, SplashC
             }
 
             @Override
-            public void onProgress(int progress, long total) {
+            public void onProgress(int progress, int total) {
                 getView().showDownloadProgress(progress, total);
             }
         });

@@ -1,7 +1,5 @@
 package org.cloud.panzer.ui.common;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +15,6 @@ import androidx.core.content.ContextCompat;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.cloud.core.app.AppManager;
 import org.cloud.core.base.BaseBean;
 import org.cloud.core.base.BaseConstant;
 import org.cloud.core.base.BaseCountTime;
@@ -245,17 +242,8 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
     @Override
     public void showDownloadSuccess(File file) {
         AppUtils.installApp(getActivity(), file);
-        this.progressDialog.dismiss();
-        //reStartApp();
+        progressDialog.dismiss();
     }
-
-//    public void reStartApp(Context context) {
-//        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        context.startActivity(intent);
-//        AppManager.getInstance().
-//        context.getAppManager().finishAllActivity();
-//    }
 
     @Override
     public void showDownloadFail() {
@@ -271,11 +259,11 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
     }
 
     @Override
-    public void showDownloadProgress(int progress, long total) {
-        //this.progressDialog.show();
-        this.progressDialog.setMax((int) total);
+    public void showDownloadProgress(int progress, int total) {
+        this.progressDialog.setIndeterminate(false);
+        this.progressDialog.setMax(total);
+        Log.e("TAG Progress", progress + ", " + total );
         this.progressDialog.setProgress(progress);
-        this.progressDialog.setProgressNumberFormat(" ");
     }
 
     private void downloadApk() {

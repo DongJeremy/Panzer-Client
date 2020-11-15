@@ -55,7 +55,7 @@ public abstract class FileDownLoadObserver<T> extends DefaultObserver<T> {
     public abstract void onDownLoadFail(Throwable throwable);
 
     //下载进度监听
-    public abstract void onProgress(int progress, long total);
+    public abstract void onProgress(int progress, int total);
 
     public File saveFile(ResponseBody responseBody, String destFileDir, String destFileName) throws IOException {
         InputStream is = null;
@@ -77,8 +77,13 @@ public abstract class FileDownLoadObserver<T> extends DefaultObserver<T> {
                 sum += len;
                 fos.write(buf, 0, len);
                 final long finalSum = sum;
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 //这里就是对进度的监听回调
-                onProgress((int) (finalSum * 100 / total), total);
+                onProgress((int) (finalSum * 100 / total), 100);
             }
             fos.flush();
 

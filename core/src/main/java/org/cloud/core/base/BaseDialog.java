@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -15,6 +15,7 @@ public class BaseDialog {
     private static volatile BaseDialog instance;
     private Context context;
     private ProgressDialog progressDialog;
+    private ProgressBar progressBar;
     private MMLoading mmLoading;
 
     public static BaseDialog getInstance() {

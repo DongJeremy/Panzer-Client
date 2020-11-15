@@ -18,7 +18,7 @@ public interface SplashContract {
         void showDownloadSuccess(File file);
         void showDownloadFail();
         void showDownloadStart();
-        void showDownloadProgress(int progress, long total);
+        void showDownloadProgress(int progress, int total);
     }
 
     interface Model extends IModel {
