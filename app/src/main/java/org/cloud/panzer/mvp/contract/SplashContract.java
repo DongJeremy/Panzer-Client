@@ -23,6 +23,5 @@ public interface SplashContract {
 
     interface Model extends IModel {
         Observable<String> getAndroid();
-        Observable<ResponseBody> download(String url);
     }
 }

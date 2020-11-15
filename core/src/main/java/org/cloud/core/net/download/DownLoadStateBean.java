@@ -6,9 +6,10 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 /**
- * @author xuhao
- * @date 2018/6/12 13:15
- * @desc
+ * FileName: DownLoadStateBean
+ * Author: Admin
+ * Date: 2020/11/14 10:45
+ * Description: DownLoadStateBean
  */
 public class DownLoadStateBean implements Serializable, Parcelable {
     long total; //  文件总大小

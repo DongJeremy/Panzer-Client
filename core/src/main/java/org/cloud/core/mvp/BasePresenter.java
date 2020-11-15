@@ -1,6 +1,6 @@
 package org.cloud.core.mvp;
 
-import com.trello.rxlifecycle2.LifecycleProvider;
+import com.trello.rxlifecycle3.LifecycleProvider;
 
 import org.cloud.core.utils.Preconditions;
 

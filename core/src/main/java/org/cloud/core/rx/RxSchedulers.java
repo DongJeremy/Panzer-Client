@@ -5,12 +5,12 @@ import android.content.DialogInterface;
 
 import androidx.annotation.NonNull;
 
-import com.trello.rxlifecycle2.LifecycleProvider;
-import com.trello.rxlifecycle2.LifecycleTransformer;
-import com.trello.rxlifecycle2.android.ActivityEvent;
-import com.trello.rxlifecycle2.android.FragmentEvent;
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
-import com.trello.rxlifecycle2.components.support.RxFragment;
+import com.trello.rxlifecycle3.LifecycleProvider;
+import com.trello.rxlifecycle3.LifecycleTransformer;
+import com.trello.rxlifecycle3.android.ActivityEvent;
+import com.trello.rxlifecycle3.android.FragmentEvent;
+import com.trello.rxlifecycle3.components.support.RxAppCompatActivity;
+import com.trello.rxlifecycle3.components.support.RxFragment;
 
 import org.cloud.core.net.function.RetryWithDelay;
 

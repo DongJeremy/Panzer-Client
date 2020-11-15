@@ -10,7 +10,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.trello.rxlifecycle2.components.support.RxFragment;
+import com.trello.rxlifecycle3.components.support.RxFragment;
 
 import org.cloud.core.rx.RxBus;
 import org.jetbrains.annotations.NotNull;

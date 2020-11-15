@@ -2,7 +2,8 @@ package org.cloud.core.net.converter;
 
 import androidx.annotation.Nullable;
 
-import java.io.IOException;
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -16,21 +17,17 @@ public class StringConverterFactory extends Converter.Factory {
     private static final MediaType MEDIA_TYPE = MediaType.parse("text/plain");
 
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+    public Converter<ResponseBody, ?> responseBodyConverter(@NotNull Type type, @NotNull Annotation[] annotations, @NotNull Retrofit retrofit) {
         if (String.class.equals(type)) {
-            return new Converter<ResponseBody, String>() {
-                @Override
-                public String convert(ResponseBody value) throws IOException {
-                    return value.string();
-                }
-            };
+            return (Converter<ResponseBody, String>) ResponseBody::string;
         }
         return null;
     }
 
     @Nullable
     @Override
-    public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
+    public Converter<?, RequestBody> requestBodyConverter(@NotNull Type type, @NotNull Annotation[] parameterAnnotations,
+                                                          @NotNull Annotation[] methodAnnotations, @NotNull Retrofit retrofit) {
         if (String.class.equals(type)) {
             return (Converter<String, RequestBody>) value -> RequestBody.create(value, MEDIA_TYPE);
         }

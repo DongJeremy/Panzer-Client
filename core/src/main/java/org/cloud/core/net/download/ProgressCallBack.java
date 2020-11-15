@@ -6,31 +6,31 @@ import android.util.Log;
 import org.cloud.core.rx.RxBus;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
 
 /**
- * 下载进度的 CallBack
- * @param <T>
+ * FileName: ProgressCallBack
+ * Author: Admin
+ * Date: 2020/11/14 10:45
+ * Description: 下载进度的 CallBack
  */
 public abstract class ProgressCallBack<T> {
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private String destFileDir; // 本地文件存放路径
-    private String destFileName; // 文件名
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    private final String destFileDir; // 本地文件存放路径
+    private final String destFileName; // 文件名
     private Disposable mSubscription;
     private final Handler handler;
 
     /**
-     *
-     * @param destFileDir 本地文件存放路径
+     * @param destFileDir  本地文件存放路径
      * @param destFileName 文件名
      */
     public ProgressCallBack(String destFileDir, String destFileName) {
@@ -40,19 +40,18 @@ public abstract class ProgressCallBack<T> {
         subscribeLoadProgress();
     }
 
-    public abstract void onSuccess(T t);
+    protected abstract void onSuccess(T t);
 
-    public abstract void progress(long progress, long total);
+    protected abstract void progress(long progress, long total);
 
-    public void onStart() {
-    }
+    protected abstract void onError(Throwable e);
+
+    protected abstract void onStart();
 
     public void onCompleted() {
     }
 
-    public abstract void onError(Throwable e);
-
-    public void saveFile(ResponseBody body) {
+    public File saveFile(ResponseBody body) {
         InputStream is = null;
         byte[] buf = new byte[2048];
         int len;
@@ -70,9 +69,8 @@ public abstract class ProgressCallBack<T> {
             }
             fos.flush();
             unsubscribe();
+            return file;
             //onCompleted();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -83,27 +81,17 @@ public abstract class ProgressCallBack<T> {
                 Log.e("saveFile", e.getMessage());
             }
         }
+        return null;
     }
 
     /**
      * 订阅加载的进度条
      */
     public void subscribeLoadProgress() {
-//        mSubscription = RxBus.getDefault().toObservable(DownLoadStateBean.class)
-//                .subscribe(new Consumer<DownLoadStateBean>() {
-//                    @Override
-//                    public void accept(final DownLoadStateBean downLoadStateBean) {
-//                        // 回调到主线程更新UI
-//                        handler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                progress(downLoadStateBean.getBytesLoaded(), downLoadStateBean.getTotal());
-//                            }
-//                        });
-//                    }
-//                });
-//        //将订阅者加入管理站
-//        addDispose(mSubscription);
+        mSubscription = RxBus.getInstance().toObservable(DownLoadStateBean.class)
+                .subscribe(downLoadStateBean -> handler.post(() -> progress(downLoadStateBean.getBytesLoaded(), downLoadStateBean.getTotal())));
+        //将订阅者加入管理站
+        addDispose(mSubscription);
     }
 
     /**
@@ -113,14 +101,12 @@ public abstract class ProgressCallBack<T> {
         compositeDisposable.remove(mSubscription);
     }
 
-
     /**
-     * @param disposable
+     * @param disposable Disposable
      */
     public void addDispose(Disposable disposable) {
         if (disposable != null) {
             compositeDisposable.add(disposable);// 将所有 Disposable 放入集中处理
         }
     }
-
 }

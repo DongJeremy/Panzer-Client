@@ -253,8 +253,6 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
     @Override
     public void showDownloadStart() {
         BaseToast.getInstance().show("准备开始下载...");
-        this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        this.progressDialog.setMessage("正在下载中...");
         this.progressDialog.show();
     }
 
@@ -262,12 +260,16 @@ public class SplashActivity extends BaseMvpActivity<SplashPresenter> implements 
     public void showDownloadProgress(int progress, int total) {
         this.progressDialog.setIndeterminate(false);
         this.progressDialog.setMax(total);
-        Log.e("TAG Progress", progress + ", " + total );
         this.progressDialog.setProgress(progress);
     }
 
     private void downloadApk() {
         this.progressDialog = new ProgressDialog(getActivity());
+        this.progressDialog.setCancelable(false);
+        this.progressDialog.setCanceledOnTouchOutside(false);
+        this.progressDialog.setMessage("正在下载中...");
+        this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        this.progressDialog.setIndeterminate(true);
         mPresenter.requestDownloadApk(this.apkUrl, BaseFileClient.getInstance().getDownPath(), "panzer.apk");
     }
 
